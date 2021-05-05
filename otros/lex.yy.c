@@ -162,8 +162,27 @@ extern FILE *yyin, *yyout;
 #define EOB_ACT_END_OF_FILE 1
 #define EOB_ACT_LAST_MATCH 2
     
-    #define YY_LESS_LINENO(n)
-    #define YY_LINENO_REWIND_TO(ptr)
+    /* Note: We specifically omit the test for yy_rule_can_match_eol because it requires
+     *       access to the local variable yy_act. Since yyless() is a macro, it would break
+     *       existing scanners that call yyless() from OUTSIDE yylex.
+     *       One obvious solution it to make yy_act a global. I tried that, and saw
+     *       a 5% performance hit in a non-yylineno scanner, because yy_act is
+     *       normally declared as a register variable-- so it is not worth it.
+     */
+    #define  YY_LESS_LINENO(n) \
+            do { \
+                int yyl;\
+                for ( yyl = n; yyl < yyleng; ++yyl )\
+                    if ( yytext[yyl] == '\n' )\
+                        --yylineno;\
+            }while(0)
+    #define YY_LINENO_REWIND_TO(dst) \
+            do {\
+                const char *p;\
+                for ( p = yy_cp-1; p >= (dst); --p)\
+                    if ( *p == '\n' )\
+                        --yylineno;\
+            }while(0)
     
 /* Return all but the first "n" matched characters back to the input stream. */
 #define yyless(n) \
@@ -526,6 +545,12 @@ static const flex_int16_t yy_chk[287] =
       114,  114,  114,  114,  114,  114
     } ;
 
+/* Table of booleans, true if rule could match eol. */
+static const flex_int32_t yy_rule_can_match_eol[39] =
+    {   0,
+0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,     };
+
 static yy_state_type yy_last_accepting_state;
 static char *yy_last_accepting_cpos;
 
@@ -541,12 +566,12 @@ int yy_flex_debug = 0;
 #define YY_RESTORE_YY_MORE_OFFSET
 char *yytext;
 #line 1 "src/flex.l"
-#line 4 "src/flex.l"
+#line 2 "src/flex.l"
 #include <stdio.h>
 #include "y.tab.h"
 
-#line 549 "lex.yy.c"
-#line 550 "lex.yy.c"
+#line 574 "lex.yy.c"
+#line 575 "lex.yy.c"
 
 #define INITIAL 0
 
@@ -763,10 +788,10 @@ YY_DECL
 		}
 
 	{
-#line 36 "src/flex.l"
+#line 37 "src/flex.l"
 
 
-#line 770 "lex.yy.c"
+#line 795 "lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -812,6 +837,16 @@ yy_find_action:
 
 		YY_DO_BEFORE_ACTION;
 
+		if ( yy_act != YY_END_OF_BUFFER && yy_rule_can_match_eol[yy_act] )
+			{
+			int yyl;
+			for ( yyl = 0; yyl < yyleng; ++yyl )
+				if ( yytext[yyl] == '\n' )
+					
+    yylineno++;
+;
+			}
+
 do_action:	/* This label is used only to access EOF actions. */
 
 		switch ( yy_act )
@@ -825,196 +860,196 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 38 "src/flex.l"
+#line 39 "src/flex.l"
 ;
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 39 "src/flex.l"
+#line 40 "src/flex.l"
 {return WHILE;}
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 40 "src/flex.l"
+#line 41 "src/flex.l"
 {return FOR;}
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 41 "src/flex.l"
+#line 42 "src/flex.l"
 {return CASE;}
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 42 "src/flex.l"
+#line 43 "src/flex.l"
 {return WHEN;}
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 43 "src/flex.l"
+#line 44 "src/flex.l"
 {return IS;}
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 44 "src/flex.l"
+#line 45 "src/flex.l"
 {return OTHERS;}
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 45 "src/flex.l"
+#line 46 "src/flex.l"
 {return END;}
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 46 "src/flex.l"
+#line 47 "src/flex.l"
 {return LOOP;}
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 47 "src/flex.l"
+#line 48 "src/flex.l"
 {return THEN;}
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 48 "src/flex.l"
+#line 49 "src/flex.l"
 {return IF;}
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 49 "src/flex.l"
+#line 50 "src/flex.l"
 {return ELSE;}
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 50 "src/flex.l"
+#line 51 "src/flex.l"
 {return ELSEIF;}
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 51 "src/flex.l"
+#line 52 "src/flex.l"
 {return TRUE;} 
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 52 "src/flex.l"
+#line 53 "src/flex.l"
 {return FALSE;}
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 53 "src/flex.l"
+#line 54 "src/flex.l"
 {yylval.fval = atof(yytext); return FLOAT;}
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 54 "src/flex.l"
+#line 55 "src/flex.l"
 {yylval.eval = atoi(yytext); return ENTERO;}
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 55 "src/flex.l"
+#line 56 "src/flex.l"
 {yylval.sval = strdup(yytext); return NOMBRE_VARIABLE;}
 	YY_BREAK
 case 19:
 /* rule 19 can match eol */
 YY_RULE_SETUP
-#line 56 "src/flex.l"
+#line 57 "src/flex.l"
 {return NEWLINE;}
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 57 "src/flex.l"
+#line 58 "src/flex.l"
 {return ABRIR_LLAVE;}
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 58 "src/flex.l"
+#line 59 "src/flex.l"
 {return CERRAR_LLAVE;}
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 59 "src/flex.l"
+#line 60 "src/flex.l"
 {return SUMA;}
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 60 "src/flex.l"
+#line 61 "src/flex.l"
 {return RESTA;}
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 61 "src/flex.l"
+#line 62 "src/flex.l"
 {return MULT;}
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 62 "src/flex.l"
+#line 63 "src/flex.l"
 {return DIV;}
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 63 "src/flex.l"
+#line 64 "src/flex.l"
 {return ABRIR_PARENTESIS;}
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 64 "src/flex.l"
+#line 65 "src/flex.l"
 {return CERRAR_PARENTESIS;}
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 65 "src/flex.l"
+#line 66 "src/flex.l"
 {return MENOR;}
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 66 "src/flex.l"
+#line 67 "src/flex.l"
 {return MAYOR;}
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 67 "src/flex.l"
+#line 68 "src/flex.l"
 {return EQUAL;}
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 68 "src/flex.l"
+#line 69 "src/flex.l"
 {return COMMENT;}
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 69 "src/flex.l"
+#line 70 "src/flex.l"
 {return MAYOR_IGUAL;}
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 70 "src/flex.l"
+#line 71 "src/flex.l"
 {return MENOR_IGUAL;}
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 71 "src/flex.l"
+#line 72 "src/flex.l"
 {return DESIGUAL;}
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 72 "src/flex.l"
+#line 73 "src/flex.l"
 {return IGUAL;}
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 73 "src/flex.l"
+#line 74 "src/flex.l"
 {return SEMICOLON;}
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 74 "src/flex.l"
+#line 75 "src/flex.l"
 {return FLECHA;}
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 76 "src/flex.l"
+#line 77 "src/flex.l"
 ECHO;
 	YY_BREAK
-#line 1018 "lex.yy.c"
+#line 1053 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1382,6 +1417,10 @@ static int yy_get_next_buffer (void)
 
 	*--yy_cp = (char) c;
 
+    if ( c == '\n' ){
+        --yylineno;
+    }
+
 	(yytext_ptr) = yy_bp;
 	(yy_hold_char) = *yy_cp;
 	(yy_c_buf_p) = yy_cp;
@@ -1458,6 +1497,11 @@ static int yy_get_next_buffer (void)
 	c = *(unsigned char *) (yy_c_buf_p);	/* cast for 8-bit char's */
 	*(yy_c_buf_p) = '\0';	/* preserve yytext */
 	(yy_hold_char) = *++(yy_c_buf_p);
+
+	if ( c == '\n' )
+		
+    yylineno++;
+;
 
 	return c;
 }
@@ -1925,6 +1969,9 @@ static int yy_init_globals (void)
      * This function is called from yylex_destroy(), so don't allocate here.
      */
 
+    /* We do not touch yylineno unless the option is enabled. */
+    yylineno =  1;
+    
     (yy_buffer_stack) = NULL;
     (yy_buffer_stack_top) = 0;
     (yy_buffer_stack_max) = 0;
@@ -2019,5 +2066,10 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 76 "src/flex.l"
+#line 77 "src/flex.l"
 
+
+void yyerror(const char* s) {
+	fprintf(stderr, "Lex error: %s\t%d\n", s, yylineno);
+	exit(1);
+}

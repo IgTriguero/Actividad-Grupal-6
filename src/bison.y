@@ -6,16 +6,20 @@
 
 extern int yylex();
 extern int yyparse();
+extern int yylineno;
 extern FILE* yyin;
 
 void yyerror(const char* s);
 %}
+%locations
 
 %union {
 	int eval;
 	float fval;
 	char* sval;
-
+	struct atributos{
+		
+	}st;
 }
 //TERMINALES
 
@@ -54,18 +58,19 @@ void yyerror(const char* s);
 
 %%
 statement:
-    | statement line
+    | statement line 
 ;
-
+//-1 porque newline suma una linea
 line:  
-	NEWLINE {printf("New Line");}
-	| ARIT NEWLINE { printf("%s\n", $1); }
-	| BOOL NEWLINE {printf("%s\n", $1);} 
-    | BUCLE_WHILE NEWLINE {printf("%s\n", $1);}
-	| BUCLE_FOR NEWLINE {printf("%s\n", $1);}
-	| BUCLE_CASE NEWLINE {printf("%s\n", $1);}
-	| SENTENCIA_IF NEWLINE {printf("%s\n", $1);}
-	| COMENTARIO NEWLINE {printf("%s\n", $1);}
+	NEWLINE {}
+	| ARIT {printf("%s\t%d\n", $1, yylineno-1); }
+	| BOOL {printf("%s\t%d\n", $1, yylineno);} 
+    | BUCLE_WHILE {printf("%s\t%d\n", $1, yylineno);}
+	| BUCLE_FOR {printf("%s\t%d\n", $1, yylineno);}
+	| BUCLE_CASE {printf("%s\t%d\n", $1, yylineno);}
+	| SENTENCIA_IF {printf("%s\t%d\n", $1, yylineno);}
+	| COMENTARIO {printf("%s\t%d\n", $1, yylineno);}
+	| {}
 ;
 
 OPERADOR_ARITMETICO: SUMA 	{$$ = "SUMA";}
@@ -105,7 +110,7 @@ BUCLE_FOR: FOR BOOL LOOP  	{$$ = "FOR BOOL LOOP";}
 
 BUCLE_CASE: CASE BOOL IS	{$$ = "CASE BOOL IS";}
 	| WHEN ENTERO FLECHA	{$$ = "WHEN ENTERO FLECHA";}
-	| WHEN FLOAT FLECHA	{$$ = "WHEN FLOAT FLECHA";}
+	| WHEN FLOAT FLECHA		{$$ = "WHEN FLOAT FLECHA";}
 	//| WHEN STRING FLECHA	{$$ = "WHEN STRING FLECHA";}
 	| WHEN OTHERS FLECHA	{$$ = "WHEN OTHERS FLECHA";}
 	| END CASE SEMICOLON	{$$ = "END CASE SEMICOLON";}
@@ -122,12 +127,23 @@ COMENTARIO: COMMENT		{$$ = "COMENTARIO";}
 
 %%
 
-int main()
-{ return yyparse();
+int main(int argc, char *argv[]) {
+	if(argc == 1){
+		yyparse();
+	} 
+
+	if(argc == 2){
+		if ((yyin = fopen(argv[1], "rt")) == NULL) {
+			printf("\nNo se puede abrir el archivo: %s\n", argv[1]);
+		}
+		yyparse();
+	}
+	
 }
 
 
-void yyerror(const char* s) {
-	fprintf(stderr, "Parse error: %s\n", s);
-	exit(1);
-}
+
+// void yyerror(const char* s) {
+// 	fprintf(stderr, "Parse error: %s\n", s);
+// 	exit(1);
+// }
