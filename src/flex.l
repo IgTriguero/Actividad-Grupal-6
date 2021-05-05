@@ -3,7 +3,6 @@
 %{
 #include <stdio.h>
 #include "y.tab.h"
-// #include "bison.tab.h"
 
 %}
 
@@ -19,6 +18,9 @@ enum ([0-9])+
 while (while|WHILE)
 for (for|FOR)
 case (case|CASE)
+when (when|WHEN)
+is (is|IS)
+others (others|OTHERS)
 end (end|END)
 loop (loop|LOOP)
 
@@ -37,6 +39,9 @@ then (then|THEN)
 {while} {return WHILE;}
 {for}   {return FOR;}
 {case}  {return CASE;}
+{when}  {return WHEN;}
+{is}  {return IS;}
+{others}  {return OTHERS;}
 {end}   {return END;}
 {loop}  {return LOOP;}
 {then}  {return THEN;}
@@ -66,5 +71,6 @@ then (then|THEN)
 "!="    {return DESIGUAL;}
 "=="    {return IGUAL;}
 ";"     {return SEMICOLON;}
+"=>"    {return FLECHA;}
 
 %%

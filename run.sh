@@ -1,4 +1,6 @@
 #!/bin/bash
+
+
 bison -dy src/bison.y
 flex src/flex.l
 mv lex.yy.c otros/

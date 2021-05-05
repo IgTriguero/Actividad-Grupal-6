@@ -53,39 +53,43 @@ extern int yydebug;
     FLOAT = 259,
     NOMBRE_VARIABLE = 260,
     EQUAL = 261,
-    SUMA = 262,
-    RESTA = 263,
-    MULT = 264,
-    DIV = 265,
-    ABRIR_LLAVE = 266,
-    CERRAR_LLAVE = 267,
-    ABRIR_PARENTESIS = 268,
-    CERRAR_PARENTESIS = 269,
-    WHILE = 270,
-    FOR = 271,
-    CASE = 272,
-    LOOP = 273,
-    IF = 274,
-    THEN = 275,
-    ELSE = 276,
-    ELSEIF = 277,
-    END = 278,
-    COMMENT = 279,
-    NEWLINE = 280,
-    SEMICOLON = 281,
-    QUIT = 282,
-    TRUE = 283,
-    FALSE = 284,
-    MENOR = 285,
-    MAYOR = 286,
-    MENOR_IGUAL = 287,
-    MAYOR_IGUAL = 288,
-    DESIGUAL = 289,
-    IGUAL = 290,
-    PLUS = 291,
-    MINUS = 292,
-    MULTIPLY = 293,
-    DIVIDE = 294
+    FLECHA = 262,
+    SUMA = 263,
+    RESTA = 264,
+    MULT = 265,
+    DIV = 266,
+    ABRIR_LLAVE = 267,
+    CERRAR_LLAVE = 268,
+    ABRIR_PARENTESIS = 269,
+    CERRAR_PARENTESIS = 270,
+    WHILE = 271,
+    FOR = 272,
+    CASE = 273,
+    LOOP = 274,
+    IF = 275,
+    THEN = 276,
+    ELSE = 277,
+    ELSEIF = 278,
+    END = 279,
+    WHEN = 280,
+    IS = 281,
+    OTHERS = 282,
+    COMMENT = 283,
+    NEWLINE = 284,
+    SEMICOLON = 285,
+    QUIT = 286,
+    TRUE = 287,
+    FALSE = 288,
+    MENOR = 289,
+    MAYOR = 290,
+    MENOR_IGUAL = 291,
+    MAYOR_IGUAL = 292,
+    DESIGUAL = 293,
+    IGUAL = 294,
+    PLUS = 295,
+    MINUS = 296,
+    MULTIPLY = 297,
+    DIVIDE = 298
   };
 #endif
 /* Tokens.  */
@@ -93,39 +97,43 @@ extern int yydebug;
 #define FLOAT 259
 #define NOMBRE_VARIABLE 260
 #define EQUAL 261
-#define SUMA 262
-#define RESTA 263
-#define MULT 264
-#define DIV 265
-#define ABRIR_LLAVE 266
-#define CERRAR_LLAVE 267
-#define ABRIR_PARENTESIS 268
-#define CERRAR_PARENTESIS 269
-#define WHILE 270
-#define FOR 271
-#define CASE 272
-#define LOOP 273
-#define IF 274
-#define THEN 275
-#define ELSE 276
-#define ELSEIF 277
-#define END 278
-#define COMMENT 279
-#define NEWLINE 280
-#define SEMICOLON 281
-#define QUIT 282
-#define TRUE 283
-#define FALSE 284
-#define MENOR 285
-#define MAYOR 286
-#define MENOR_IGUAL 287
-#define MAYOR_IGUAL 288
-#define DESIGUAL 289
-#define IGUAL 290
-#define PLUS 291
-#define MINUS 292
-#define MULTIPLY 293
-#define DIVIDE 294
+#define FLECHA 262
+#define SUMA 263
+#define RESTA 264
+#define MULT 265
+#define DIV 266
+#define ABRIR_LLAVE 267
+#define CERRAR_LLAVE 268
+#define ABRIR_PARENTESIS 269
+#define CERRAR_PARENTESIS 270
+#define WHILE 271
+#define FOR 272
+#define CASE 273
+#define LOOP 274
+#define IF 275
+#define THEN 276
+#define ELSE 277
+#define ELSEIF 278
+#define END 279
+#define WHEN 280
+#define IS 281
+#define OTHERS 282
+#define COMMENT 283
+#define NEWLINE 284
+#define SEMICOLON 285
+#define QUIT 286
+#define TRUE 287
+#define FALSE 288
+#define MENOR 289
+#define MAYOR 290
+#define MENOR_IGUAL 291
+#define MAYOR_IGUAL 292
+#define DESIGUAL 293
+#define IGUAL 294
+#define PLUS 295
+#define MINUS 296
+#define MULTIPLY 297
+#define DIVIDE 298
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
@@ -138,7 +146,7 @@ union YYSTYPE
 	char* sval;
 
 
-#line 142 "y.tab.h"
+#line 150 "y.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;
