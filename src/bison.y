@@ -10,6 +10,30 @@ extern int yylineno;
 extern FILE* yyin;
 
 void yyerror(const char* s);
+
+/* nodes in the abstract syntax tree */
+struct ast {
+	char*  nodetype;
+	struct ast *l;
+	struct ast *r;
+};
+struct numval {
+	char* nodetype;
+	double number;
+};
+
+struct strval {
+	char* nodetype;
+	char* str;
+};
+
+// funciones ast
+struct ast *newast(char* nodetype, struct ast *l, struct ast *r);
+struct ast *newnum(double d);
+
+double eval(struct ast *);
+
+
 %}
 %locations
 
@@ -17,8 +41,19 @@ void yyerror(const char* s);
 	int eval;
 	float fval;
 	char* sval;
+
 	struct atributos{
-		
+		int i;
+		float f;
+		int i2;
+		float f2;
+		char* operador;
+		char* s;
+		char *temp1;
+		char *temp2;
+		char *temp3;
+		char* type;
+		struct ast *a;
 	}st;
 }
 //TERMINALES
@@ -26,9 +61,12 @@ void yyerror(const char* s);
 %token<eval> ENTERO
 %token<fval> FLOAT
 %token<sval> NOMBRE_VARIABLE
+%token<sval> SUMA
+%token<sval> RESTA
+%token<sval> MULT
+%token<sval> DIV
 
 %token EQUAL FLECHA
-%token SUMA RESTA MULT DIV
 %token ABRIR_LLAVE CERRAR_LLAVE ABRIR_PARENTESIS CERRAR_PARENTESIS
 %token WHILE FOR CASE LOOP
 %token IF THEN ELSE ELSEIF END WHEN IS OTHERS
@@ -45,7 +83,8 @@ void yyerror(const char* s);
 //NO TERMINALES
 %type<sval> line
 %type<sval> OPERADOR_ARITMETICO
-%type<sval> ARIT
+%type<st> ARIT
+%type<st> ARIT2
 %type<sval> OPERADOR_BOOLEANO
 %type<sval> BOOL
 %type<sval> BUCLE_WHILE
@@ -63,7 +102,8 @@ statement:
 //-1 porque newline suma una linea
 line:  
 	NEWLINE {}
-	| ARIT {printf("%s\t%d\n", $1, yylineno-1); }
+	| ARIT {printf("%d\t%d\n", $1.i, yylineno-1); }
+	| ARIT2 {printf("%f\t%d\n", $1.f, yylineno-1); }
 	| BOOL {printf("%s\t%d\n", $1, yylineno);} 
     | BUCLE_WHILE {printf("%s\t%d\n", $1, yylineno);}
 	| BUCLE_FOR {printf("%s\t%d\n", $1, yylineno);}
@@ -73,16 +113,29 @@ line:
 	| {}
 ;
 
-OPERADOR_ARITMETICO: SUMA 	{$$ = "SUMA";}
-    | RESTA 				{$$ = "RESTA";}
-    | MULT 					{$$ = "MULT";}
-    | DIV 					{$$ = "DIV";}
+OPERADOR_ARITMETICO: 
+	SUMA 					{$$ = "+";}
+    | RESTA 				{$$ = "-";}
+    | MULT 					{$$ = "*";}
+    | DIV 					{$$ = "/";}
 ;
 
-ARIT: ARIT OPERADOR_ARITMETICO ARIT 			{$$ = "OPERACION ARITMETICA";}
-	| ABRIR_PARENTESIS ARIT CERRAR_PARENTESIS 	{$$ = "PARENTESIS ARIT PARENTESIS";}
-	| FLOAT 									{$$ = "FLOAT";}
-	| ENTERO 									{$$ = "ENTERO";}
+ARIT: 
+	ARIT SUMA ARIT 									{$$.i = $1.i + $3.i; $$.a = newast("+",$1.a,$3.a);}
+	| ARIT RESTA ARIT 								{$$.i = $1.i - $3.i; $$.a = newast($2,$1.a,$3.a);}
+	| ARIT MULT ARIT 									{$$.i = $1.i * $3.i; $$.a = newast($2,$1.a,$3.a);}
+	| ARIT DIV ARIT 									{$$.i = $1.i / $3.i; $$.a = newast($2,$1.a,$3.a);}
+	//| ABRIR_PARENTESIS ARIT CERRAR_PARENTESIS 	{$$.i = $2.i;}
+	| ENTERO 										{$$.i = $1; $$.a = newnum($1);}
+;
+
+ARIT2: 
+	ARIT2 SUMA ARIT2 									{$$.f = $1.f + $3.f; $$.a = newast("+",$1.a,$3.a);}
+	| ARIT2 RESTA ARIT2 								{$$.f = $1.f - $3.f; $$.a = newast($2,$1.a,$3.a);}
+	| ARIT2 MULT ARIT2 									{$$.f = $1.f * $3.f; $$.a = newast($2,$1.a,$3.a);}
+	| ARIT2 DIV ARIT2 									{$$.f = $1.f / $3.f; $$.a = newast($2,$1.a,$3.a);}
+	//| ABRIR_PARENTESIS ARIT2 CERRAR_PARENTESIS 	{$$.f = $2.f;}
+	| FLOAT 									{$$.f = $1; $$.a = newnum($1);}
 ;
 
 OPERADOR_BOOLEANO: IGUAL  	{$$ = "IGUAL";}
@@ -126,7 +179,42 @@ COMENTARIO: COMMENT		{$$ = "COMENTARIO";}
 ;
 
 %%
+//FUNCIONES 
 
+
+
+
+
+
+//FUNCIONES DE AST
+struct ast *newast(char* nodetype, struct ast *l, struct ast *r) {
+	struct ast *a = malloc(sizeof(struct ast));
+
+	if(!a) {
+		yyerror("out of space");
+		exit(0);
+	}
+	a->nodetype = nodetype;
+	a->l = l;
+	a->r = r;
+	return a;
+}
+
+struct ast *newnum(double d)
+{
+ 	struct numval *a = malloc(sizeof(struct numval));
+  	if(!a) {
+ 		yyerror("out of space");
+ 		exit(0);
+ 	}
+ 	a->nodetype = "Constante";
+ 	a->number = d;
+ 	return (struct ast *)a;
+}
+
+
+
+//FUNCIONES 
 int main(int argc, char *argv[]) {
 	if(argc == 1){
 		yyparse();

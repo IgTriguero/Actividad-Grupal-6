@@ -52,12 +52,12 @@ extern int yydebug;
     ENTERO = 258,
     FLOAT = 259,
     NOMBRE_VARIABLE = 260,
-    EQUAL = 261,
-    FLECHA = 262,
-    SUMA = 263,
-    RESTA = 264,
-    MULT = 265,
-    DIV = 266,
+    SUMA = 261,
+    RESTA = 262,
+    MULT = 263,
+    DIV = 264,
+    EQUAL = 265,
+    FLECHA = 266,
     ABRIR_LLAVE = 267,
     CERRAR_LLAVE = 268,
     ABRIR_PARENTESIS = 269,
@@ -96,12 +96,12 @@ extern int yydebug;
 #define ENTERO 258
 #define FLOAT 259
 #define NOMBRE_VARIABLE 260
-#define EQUAL 261
-#define FLECHA 262
-#define SUMA 263
-#define RESTA 264
-#define MULT 265
-#define DIV 266
+#define SUMA 261
+#define RESTA 262
+#define MULT 263
+#define DIV 264
+#define EQUAL 265
+#define FLECHA 266
 #define ABRIR_LLAVE 267
 #define CERRAR_LLAVE 268
 #define ABRIR_PARENTESIS 269
@@ -139,14 +139,27 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 16 "src/bison.y"
+#line 40 "src/bison.y"
 
 	int eval;
 	float fval;
 	char* sval;
 
+	struct atributos{
+		int i;
+		float f;
+		int i2;
+		float f2;
+		char* operador;
+		char* s;
+		char *temp1;
+		char *temp2;
+		char *temp3;
+		char* type;
+		struct ast *a;
+	}st;
 
-#line 150 "y.tab.h"
+#line 163 "y.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;
