@@ -3,6 +3,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <string.h>
+#include <values.h>
 
 extern int yylex();
 extern int yyparse();
@@ -26,12 +28,24 @@ struct strval {
 	char* nodetype;
 	char* str;
 };
+//Variables globales
+int line_num = 1;
+
+int size = 52;
+
+int elementosOcupados = 0;
+
+int numnodo = 0;
+
+struct ast nodos[52];
+
+//struct symb tabla[52];
 
 // funciones ast
 struct ast *newast(char* nodetype, struct ast *l, struct ast *r);
 struct ast *newnum(double d);
 
-double eval(struct ast *);
+void eval(struct ast a, int* size);
 
 
 %}
@@ -82,7 +96,6 @@ double eval(struct ast *);
 
 //NO TERMINALES
 %type<sval> line
-%type<sval> OPERADOR_ARITMETICO
 %type<st> ARIT
 %type<st> ARIT2
 %type<sval> OPERADOR_BOOLEANO
@@ -102,7 +115,7 @@ statement:
 //-1 porque newline suma una linea
 line:  
 	NEWLINE {}
-	| ARIT {printf("%d\t%d\n", $1.i, yylineno-1); }
+	| ARIT {printf("%d\t%d\n", $1.i, yylineno-1); if(!$1.a){ ;} else {eval(*$1.a, &size);};}
 	| ARIT2 {printf("%f\t%d\n", $1.f, yylineno-1); }
 	| BOOL {printf("%s\t%d\n", $1, yylineno);} 
     | BUCLE_WHILE {printf("%s\t%d\n", $1, yylineno);}
@@ -111,13 +124,6 @@ line:
 	| SENTENCIA_IF {printf("%s\t%d\n", $1, yylineno);}
 	| COMENTARIO {printf("%s\t%d\n", $1, yylineno);}
 	| {}
-;
-
-OPERADOR_ARITMETICO: 
-	SUMA 					{$$ = "+";}
-    | RESTA 				{$$ = "-";}
-    | MULT 					{$$ = "*";}
-    | DIV 					{$$ = "/";}
 ;
 
 ARIT: 
@@ -212,7 +218,32 @@ struct ast *newnum(double d)
  	return (struct ast *)a;
 }
 
+struct ast *createSTR(char* s)
+{
+ 	struct strval *a = malloc(sizeof(struct strval));
+  	if(!a) {
+ 		yyerror("out of space");
+ 		exit(0);
+ 	}
+ 	a->nodetype = "String";
+ 	a->str = s;
+ 	return (struct ast *)a;
+}
 
+void eval(struct ast a, int* size){
+	
+	int i = 0;
+	int encontrado = 0;
+	while (i < *size && encontrado == 0){
+		if((strcmp(nodos[i].nodetype, "._empty") == 0) && (strcmp(a.nodetype, "String") != 0) && (strcmp(a.nodetype, "Constante") != 0) ){
+			nodos[i] = a;
+			numnodo = numnodo +1;
+			encontrado = 1;
+		}else{
+			i++;
+		}
+	}
+}
 
 //FUNCIONES 
 int main(int argc, char *argv[]) {
