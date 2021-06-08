@@ -115,7 +115,7 @@ statement:
 //-1 porque newline suma una linea
 line:  
 	NEWLINE {}
-	| ARIT {printf("%d\t%d\n", $1.i, yylineno-1); if(!$1.a){ ;} else {eval(*$1.a, &size);};}
+	| ARIT {printf("%d\t%d\n", $1.i, yylineno-1); }
 	| ARIT2 {printf("%f\t%d\n", $1.f, yylineno-1); }
 	| BOOL {printf("%s\t%d\n", $1, yylineno);} 
     | BUCLE_WHILE {printf("%s\t%d\n", $1, yylineno);}
@@ -127,20 +127,20 @@ line:
 ;
 
 ARIT: 
-	ARIT SUMA ARIT 									{$$.i = $1.i + $3.i; $$.a = newast("+",$1.a,$3.a);}
+	ARIT SUMA ARIT 									{$$.i = $1.i + $3.i; $$.a = newast($2,$1.a,$3.a);}
 	| ARIT RESTA ARIT 								{$$.i = $1.i - $3.i; $$.a = newast($2,$1.a,$3.a);}
 	| ARIT MULT ARIT 									{$$.i = $1.i * $3.i; $$.a = newast($2,$1.a,$3.a);}
 	| ARIT DIV ARIT 									{$$.i = $1.i / $3.i; $$.a = newast($2,$1.a,$3.a);}
-	//| ABRIR_PARENTESIS ARIT CERRAR_PARENTESIS 	{$$.i = $2.i;}
+	| ABRIR_PARENTESIS ARIT CERRAR_PARENTESIS 	{$$.i = $2.i;}
 	| ENTERO 										{$$.i = $1; $$.a = newnum($1);}
 ;
 
 ARIT2: 
-	ARIT2 SUMA ARIT2 									{$$.f = $1.f + $3.f; $$.a = newast("+",$1.a,$3.a);}
+	ARIT2 SUMA ARIT2 									{$$.f = $1.f + $3.f; $$.a = newast($2,$1.a,$3.a);}
 	| ARIT2 RESTA ARIT2 								{$$.f = $1.f - $3.f; $$.a = newast($2,$1.a,$3.a);}
 	| ARIT2 MULT ARIT2 									{$$.f = $1.f * $3.f; $$.a = newast($2,$1.a,$3.a);}
 	| ARIT2 DIV ARIT2 									{$$.f = $1.f / $3.f; $$.a = newast($2,$1.a,$3.a);}
-	//| ABRIR_PARENTESIS ARIT2 CERRAR_PARENTESIS 	{$$.f = $2.f;}
+	| ABRIR_PARENTESIS ARIT2 CERRAR_PARENTESIS 	{$$.f = $2.f;}
 	| FLOAT 									{$$.f = $1; $$.a = newnum($1);}
 ;
 
