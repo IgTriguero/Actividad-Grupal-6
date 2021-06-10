@@ -75,8 +75,3 @@ then (then|THEN)
 "=>"    {return FLECHA;}
 
 %%
-
-void yyerror(const char* s) {
-	fprintf(stderr, "Lex error: %s\t%d\n", s, yylineno);
-	exit(1);
-}

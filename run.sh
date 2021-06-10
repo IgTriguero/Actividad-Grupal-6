@@ -1,9 +1,7 @@
 #!/bin/bash
-bison -dy "./src/bison.y"
-flex "./src/flex.l" 
-mv "./lex.yy.c" "./otros/" 
-mv "./y.tab.c" "./otros/" 
-mv "./y.tab.h" "./otros/" 
-gcc "./otros/lex.yy.c" "./otros/y.tab.c" -o "./ejecutable" 
-mv "./ejecutable" "./otros/" 
-./otros/ejecutable
+rm ast.txt
+rm output.txt
+bison -dy bison.y
+flex flex.l
+gcc lex.yy.c y.tab.c -o "ejecutable"
+./ejecutable "$1" "$2" 

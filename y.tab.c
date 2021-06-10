@@ -66,7 +66,7 @@
 
 
 /* First part of user prologue.  */
-#line 1 "./src/bison.y"
+#line 1 "bison.y"
 
 
 #include <stdio.h>
@@ -79,8 +79,13 @@ extern int yylex();
 extern int yyparse();
 extern int yylineno;
 extern FILE* yyin;
+extern FILE *yyout;
 
-void yyerror(const char* s);
+void yyerror (char const *s) {
+   fprintf (stderr, "%s\n", s);
+ }
+
+char* ast_text = "ast.txt";
 
 /* nodes in the abstract syntax tree */
 struct ast {
@@ -97,6 +102,17 @@ struct strval {
 	char* nodetype;
 	char* str;
 };
+
+//struct tabla de simbolos
+struct symb{    
+	char* vname;    
+	int vvali;   
+	float vvalf;
+	char* vvals;
+	char* type; 
+};
+
+
 //Variables globales
 int line_num = 1;
 
@@ -108,17 +124,24 @@ int numnodo = 0;
 
 struct ast nodos[52];
 
-//struct symb tabla[52];
+struct symb tabla[52];
+
+void write_file(char *filename, char *content);
+// tabla simbolos
+void iniArrayTabla(struct symb *tabla, int inicio, int fin);
+
+// nodos
+void iniArrayNodos(struct ast *nodos, int inicio, int fin);
 
 // funciones ast
 struct ast *newast(char* nodetype, struct ast *l, struct ast *r);
 struct ast *newnum(double d);
 
 void eval(struct ast a, int* size);
+void printAST(struct ast nodos[], int i, int encontrado, int salida);
 
 
-
-#line 122 "y.tab.c"
+#line 145 "y.tab.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -256,7 +279,7 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 54 "./src/bison.y"
+#line 77 "bison.y"
 
 	int eval;
 	float fval;
@@ -276,7 +299,7 @@ union YYSTYPE
 		struct ast *a;
 	}st;
 
-#line 280 "y.tab.c"
+#line 303 "y.tab.c"
 
 };
 typedef union YYSTYPE YYSTYPE;
@@ -672,12 +695,12 @@ static const yytype_int8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,   112,   112,   113,   117,   118,   119,   120,   121,   122,
-     123,   124,   125,   126,   130,   131,   132,   133,   134,   135,
-     139,   140,   141,   142,   143,   144,   147,   148,   149,   150,
-     151,   152,   155,   156,   157,   158,   159,   162,   163,   166,
-     167,   170,   171,   172,   174,   175,   178,   179,   180,   181,
-     184
+       0,   135,   135,   136,   140,   141,   142,   143,   144,   145,
+     146,   147,   148,   149,   153,   154,   155,   156,   157,   158,
+     162,   163,   164,   165,   166,   167,   170,   171,   172,   173,
+     174,   175,   178,   179,   180,   181,   182,   185,   186,   189,
+     190,   193,   194,   195,   197,   198,   201,   202,   203,   204,
+     207
 };
 #endif
 
@@ -1620,289 +1643,289 @@ yyreduce:
   switch (yyn)
     {
   case 4:
-#line 117 "./src/bison.y"
+#line 140 "bison.y"
                 {}
-#line 1626 "y.tab.c"
+#line 1649 "y.tab.c"
     break;
 
   case 5:
-#line 118 "./src/bison.y"
-               {printf("%d\t%d\n", (yyvsp[0].st).i, yylineno-1); }
-#line 1632 "y.tab.c"
+#line 141 "bison.y"
+               {printf("%d\t%d\n", (yyvsp[0].st).i, yylineno-1); if(!(yyvsp[0].st).a){ ;} else {eval(*(yyvsp[0].st).a, &size);} ;}
+#line 1655 "y.tab.c"
     break;
 
   case 6:
-#line 119 "./src/bison.y"
+#line 142 "bison.y"
                 {printf("%f\t%d\n", (yyvsp[0].st).f, yylineno-1); }
-#line 1638 "y.tab.c"
+#line 1661 "y.tab.c"
     break;
 
   case 7:
-#line 120 "./src/bison.y"
+#line 143 "bison.y"
                {printf("%s\t%d\n", (yyvsp[0].sval), yylineno);}
-#line 1644 "y.tab.c"
+#line 1667 "y.tab.c"
     break;
 
   case 8:
-#line 121 "./src/bison.y"
+#line 144 "bison.y"
                   {printf("%s\t%d\n", (yyvsp[0].sval), yylineno);}
-#line 1650 "y.tab.c"
+#line 1673 "y.tab.c"
     break;
 
   case 9:
-#line 122 "./src/bison.y"
+#line 145 "bison.y"
                     {printf("%s\t%d\n", (yyvsp[0].sval), yylineno);}
-#line 1656 "y.tab.c"
+#line 1679 "y.tab.c"
     break;
 
   case 10:
-#line 123 "./src/bison.y"
+#line 146 "bison.y"
                      {printf("%s\t%d\n", (yyvsp[0].sval), yylineno);}
-#line 1662 "y.tab.c"
+#line 1685 "y.tab.c"
     break;
 
   case 11:
-#line 124 "./src/bison.y"
+#line 147 "bison.y"
                        {printf("%s\t%d\n", (yyvsp[0].sval), yylineno);}
-#line 1668 "y.tab.c"
+#line 1691 "y.tab.c"
     break;
 
   case 12:
-#line 125 "./src/bison.y"
+#line 148 "bison.y"
                      {printf("%s\t%d\n", (yyvsp[0].sval), yylineno);}
-#line 1674 "y.tab.c"
+#line 1697 "y.tab.c"
     break;
 
   case 13:
-#line 126 "./src/bison.y"
+#line 149 "bison.y"
           {}
-#line 1680 "y.tab.c"
+#line 1703 "y.tab.c"
     break;
 
   case 14:
-#line 130 "./src/bison.y"
-                                                                                        {(yyval.st).i = (yyvsp[-2].st).i + (yyvsp[0].st).i; (yyval.st).a = newast((yyvsp[-1].sval),(yyvsp[-2].st).a,(yyvsp[0].st).a);}
-#line 1686 "y.tab.c"
+#line 153 "bison.y"
+                                                                                        {(yyval.st).i = (yyvsp[-2].st).i + (yyvsp[0].st).i; (yyval.st).a = newast("+",(yyvsp[-2].st).a,(yyvsp[0].st).a);}
+#line 1709 "y.tab.c"
     break;
 
   case 15:
-#line 131 "./src/bison.y"
-                                                                                        {(yyval.st).i = (yyvsp[-2].st).i - (yyvsp[0].st).i; (yyval.st).a = newast((yyvsp[-1].sval),(yyvsp[-2].st).a,(yyvsp[0].st).a);}
-#line 1692 "y.tab.c"
+#line 154 "bison.y"
+                                                                                        {(yyval.st).i = (yyvsp[-2].st).i - (yyvsp[0].st).i; (yyval.st).a = newast("-",(yyvsp[-2].st).a,(yyvsp[0].st).a);}
+#line 1715 "y.tab.c"
     break;
 
   case 16:
-#line 132 "./src/bison.y"
-                                                                                                {(yyval.st).i = (yyvsp[-2].st).i * (yyvsp[0].st).i; (yyval.st).a = newast((yyvsp[-1].sval),(yyvsp[-2].st).a,(yyvsp[0].st).a);}
-#line 1698 "y.tab.c"
+#line 155 "bison.y"
+                                                                                                {(yyval.st).i = (yyvsp[-2].st).i * (yyvsp[0].st).i; (yyval.st).a = newast("*",(yyvsp[-2].st).a,(yyvsp[0].st).a);}
+#line 1721 "y.tab.c"
     break;
 
   case 17:
-#line 133 "./src/bison.y"
-                                                                                                {(yyval.st).i = (yyvsp[-2].st).i / (yyvsp[0].st).i; (yyval.st).a = newast((yyvsp[-1].sval),(yyvsp[-2].st).a,(yyvsp[0].st).a);}
-#line 1704 "y.tab.c"
+#line 156 "bison.y"
+                                                                                                {(yyval.st).i = (yyvsp[-2].st).i / (yyvsp[0].st).i; (yyval.st).a = newast("/",(yyvsp[-2].st).a,(yyvsp[0].st).a);}
+#line 1727 "y.tab.c"
     break;
 
   case 18:
-#line 134 "./src/bison.y"
+#line 157 "bison.y"
                                                         {(yyval.st).i = (yyvsp[-1].st).i;}
-#line 1710 "y.tab.c"
+#line 1733 "y.tab.c"
     break;
 
   case 19:
-#line 135 "./src/bison.y"
+#line 158 "bison.y"
                                                                                                 {(yyval.st).i = (yyvsp[0].eval); (yyval.st).a = newnum((yyvsp[0].eval));}
-#line 1716 "y.tab.c"
+#line 1739 "y.tab.c"
     break;
 
   case 20:
-#line 139 "./src/bison.y"
-                                                                                                {(yyval.st).f = (yyvsp[-2].st).f + (yyvsp[0].st).f; (yyval.st).a = newast((yyvsp[-1].sval),(yyvsp[-2].st).a,(yyvsp[0].st).a);}
-#line 1722 "y.tab.c"
+#line 162 "bison.y"
+                                                                                                {(yyval.st).f = (yyvsp[-2].st).f + (yyvsp[0].st).f; (yyval.st).a = newast("+",(yyvsp[-2].st).a,(yyvsp[0].st).a);}
+#line 1745 "y.tab.c"
     break;
 
   case 21:
-#line 140 "./src/bison.y"
-                                                                                        {(yyval.st).f = (yyvsp[-2].st).f - (yyvsp[0].st).f; (yyval.st).a = newast((yyvsp[-1].sval),(yyvsp[-2].st).a,(yyvsp[0].st).a);}
-#line 1728 "y.tab.c"
+#line 163 "bison.y"
+                                                                                        {(yyval.st).f = (yyvsp[-2].st).f - (yyvsp[0].st).f; (yyval.st).a = newast("-",(yyvsp[-2].st).a,(yyvsp[0].st).a);}
+#line 1751 "y.tab.c"
     break;
 
   case 22:
-#line 141 "./src/bison.y"
-                                                                                                {(yyval.st).f = (yyvsp[-2].st).f * (yyvsp[0].st).f; (yyval.st).a = newast((yyvsp[-1].sval),(yyvsp[-2].st).a,(yyvsp[0].st).a);}
-#line 1734 "y.tab.c"
+#line 164 "bison.y"
+                                                                                                {(yyval.st).f = (yyvsp[-2].st).f * (yyvsp[0].st).f; (yyval.st).a = newast("*",(yyvsp[-2].st).a,(yyvsp[0].st).a);}
+#line 1757 "y.tab.c"
     break;
 
   case 23:
-#line 142 "./src/bison.y"
-                                                                                                {(yyval.st).f = (yyvsp[-2].st).f / (yyvsp[0].st).f; (yyval.st).a = newast((yyvsp[-1].sval),(yyvsp[-2].st).a,(yyvsp[0].st).a);}
-#line 1740 "y.tab.c"
+#line 165 "bison.y"
+                                                                                                {(yyval.st).f = (yyvsp[-2].st).f / (yyvsp[0].st).f; (yyval.st).a = newast("/",(yyvsp[-2].st).a,(yyvsp[0].st).a);}
+#line 1763 "y.tab.c"
     break;
 
   case 24:
-#line 143 "./src/bison.y"
+#line 166 "bison.y"
                                                         {(yyval.st).f = (yyvsp[-1].st).f;}
-#line 1746 "y.tab.c"
+#line 1769 "y.tab.c"
     break;
 
   case 25:
-#line 144 "./src/bison.y"
+#line 167 "bison.y"
                                                                                         {(yyval.st).f = (yyvsp[0].fval); (yyval.st).a = newnum((yyvsp[0].fval));}
-#line 1752 "y.tab.c"
+#line 1775 "y.tab.c"
     break;
 
   case 26:
-#line 147 "./src/bison.y"
+#line 170 "bison.y"
                                 {(yyval.sval) = "IGUAL";}
-#line 1758 "y.tab.c"
+#line 1781 "y.tab.c"
     break;
 
   case 27:
-#line 148 "./src/bison.y"
+#line 171 "bison.y"
                                         {(yyval.sval) = "DESIGUAL";}
-#line 1764 "y.tab.c"
+#line 1787 "y.tab.c"
     break;
 
   case 28:
-#line 149 "./src/bison.y"
+#line 172 "bison.y"
                                         {(yyval.sval) = "MENOR";}
-#line 1770 "y.tab.c"
+#line 1793 "y.tab.c"
     break;
 
   case 29:
-#line 150 "./src/bison.y"
+#line 173 "bison.y"
                                         {(yyval.sval) = "MAYOR";}
-#line 1776 "y.tab.c"
+#line 1799 "y.tab.c"
     break;
 
   case 30:
-#line 151 "./src/bison.y"
+#line 174 "bison.y"
                                         {(yyval.sval) = "MENOR IGUAL";}
-#line 1782 "y.tab.c"
+#line 1805 "y.tab.c"
     break;
 
   case 31:
-#line 152 "./src/bison.y"
+#line 175 "bison.y"
                                         {(yyval.sval) = "MAYOR IGUAL";}
-#line 1788 "y.tab.c"
+#line 1811 "y.tab.c"
     break;
 
   case 32:
-#line 155 "./src/bison.y"
+#line 178 "bison.y"
                                                         {(yyval.sval) = "ENTERO OP BOOL ENTERO";}
-#line 1794 "y.tab.c"
+#line 1817 "y.tab.c"
     break;
 
   case 33:
-#line 156 "./src/bison.y"
+#line 179 "bison.y"
                                                                 {(yyval.sval) = "ENTERO OP BOOL FLOAT";}
-#line 1800 "y.tab.c"
+#line 1823 "y.tab.c"
     break;
 
   case 34:
-#line 157 "./src/bison.y"
+#line 180 "bison.y"
                                                                 {(yyval.sval) = "FLOAT OP BOOL ENTERO";}
-#line 1806 "y.tab.c"
+#line 1829 "y.tab.c"
     break;
 
   case 35:
-#line 158 "./src/bison.y"
+#line 181 "bison.y"
                                                                 {(yyval.sval) = "FLOAT OP BOOL FLOAT";}
-#line 1812 "y.tab.c"
+#line 1835 "y.tab.c"
     break;
 
   case 36:
-#line 159 "./src/bison.y"
+#line 182 "bison.y"
                                                         {(yyval.sval) = "PARENTESIS BOOL PARENTESIS";}
-#line 1818 "y.tab.c"
+#line 1841 "y.tab.c"
     break;
 
   case 37:
-#line 162 "./src/bison.y"
+#line 185 "bison.y"
                                 {(yyval.sval) = "WHILE BOOL LOOP";}
-#line 1824 "y.tab.c"
+#line 1847 "y.tab.c"
     break;
 
   case 38:
-#line 163 "./src/bison.y"
+#line 186 "bison.y"
                                         {(yyval.sval) = "END LOOP SEMICOLON";}
-#line 1830 "y.tab.c"
+#line 1853 "y.tab.c"
     break;
 
   case 39:
-#line 166 "./src/bison.y"
+#line 189 "bison.y"
                                 {(yyval.sval) = "FOR BOOL LOOP";}
-#line 1836 "y.tab.c"
+#line 1859 "y.tab.c"
     break;
 
   case 40:
-#line 167 "./src/bison.y"
+#line 190 "bison.y"
                                 {(yyval.sval) = "END LOOP SEMICOLON";}
-#line 1842 "y.tab.c"
+#line 1865 "y.tab.c"
     break;
 
   case 41:
-#line 170 "./src/bison.y"
+#line 193 "bison.y"
                                 {(yyval.sval) = "CASE BOOL IS";}
-#line 1848 "y.tab.c"
+#line 1871 "y.tab.c"
     break;
 
   case 42:
-#line 171 "./src/bison.y"
+#line 194 "bison.y"
                                 {(yyval.sval) = "WHEN ENTERO FLECHA";}
-#line 1854 "y.tab.c"
+#line 1877 "y.tab.c"
     break;
 
   case 43:
-#line 172 "./src/bison.y"
+#line 195 "bison.y"
                                         {(yyval.sval) = "WHEN FLOAT FLECHA";}
-#line 1860 "y.tab.c"
+#line 1883 "y.tab.c"
     break;
 
   case 44:
-#line 174 "./src/bison.y"
+#line 197 "bison.y"
                                 {(yyval.sval) = "WHEN OTHERS FLECHA";}
-#line 1866 "y.tab.c"
+#line 1889 "y.tab.c"
     break;
 
   case 45:
-#line 175 "./src/bison.y"
+#line 198 "bison.y"
                                 {(yyval.sval) = "END CASE SEMICOLON";}
-#line 1872 "y.tab.c"
+#line 1895 "y.tab.c"
     break;
 
   case 46:
-#line 178 "./src/bison.y"
+#line 201 "bison.y"
                                 {(yyval.sval) = "IF BOOL THEN";}
-#line 1878 "y.tab.c"
+#line 1901 "y.tab.c"
     break;
 
   case 47:
-#line 179 "./src/bison.y"
+#line 202 "bison.y"
                                                 {(yyval.sval) = "ELSE";}
-#line 1884 "y.tab.c"
+#line 1907 "y.tab.c"
     break;
 
   case 48:
-#line 180 "./src/bison.y"
+#line 203 "bison.y"
                                 {(yyval.sval) = "ELSEIF BOOL THEN";}
-#line 1890 "y.tab.c"
+#line 1913 "y.tab.c"
     break;
 
   case 49:
-#line 181 "./src/bison.y"
+#line 204 "bison.y"
                                         {(yyval.sval) = "END IF SEMICOLON";}
-#line 1896 "y.tab.c"
+#line 1919 "y.tab.c"
     break;
 
   case 50:
-#line 184 "./src/bison.y"
+#line 207 "bison.y"
                                 {(yyval.sval) = "COMENTARIO";}
-#line 1902 "y.tab.c"
+#line 1925 "y.tab.c"
     break;
 
 
-#line 1906 "y.tab.c"
+#line 1929 "y.tab.c"
 
       default: break;
     }
@@ -2140,11 +2163,22 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 187 "./src/bison.y"
+#line 210 "bison.y"
 
 //FUNCIONES 
 
+void iniArrayTabla(struct symb *tabla, int inicio, int fin) {
+    for (int i = inicio; i < fin; i++) {
+        tabla[i].vname = "._empty";
+    }
+	
+}
 
+void iniArrayNodos(struct ast *nodos, int inicio, int fin) {
+    for (int i = inicio; i < fin; i++) {
+        nodos[i].nodetype = "._empty";
+    }
+}
 
 
 
@@ -2187,39 +2221,132 @@ struct ast *createSTR(char* s)
  	return (struct ast *)a;
 }
 
-// void eval(struct ast a, int* size){
+void eval(struct ast a, int* size){
 	
-// 	int i = 0;
-// 	int encontrado = 0;
-// 	while (i < *size && encontrado == 0){
-// 		if((strcmp(nodos[i].nodetype, "._empty") == 0) && (strcmp(a.nodetype, "String") != 0) && (strcmp(a.nodetype, "Constante") != 0) ){
-// 			nodos[i] = a;
-// 			numnodo = numnodo +1;
-// 			encontrado = 1;
-// 		}else{
-// 			i++;
-// 		}
-// 	}
-// }
+	int i = 0;
+	int encontrado = 0;
+	while (i < *size && encontrado == 0){
+		if((strcmp(nodos[i].nodetype, "._empty") == 0) && (strcmp(a.nodetype, "String") != 0) && (strcmp(a.nodetype, "Constante") != 0) ){
+			nodos[i] = a;
+			numnodo = numnodo +1;
+			encontrado = 1;
+		}else{
+			i++;
+		}
+	}
+}
+
+
+void printAST(struct ast nodos[], int i, int encontrado, int salida){
+	struct ast temp[52];
+	iniArrayNodos(temp,0,52);
+
+	while(encontrado == 0 && salida == 0){
+		if(strcmp(nodos[i].nodetype, "._empty") == 0){
+			encontrado = 1;
+			salida=1;
+		}else{
+			if(strcmp(nodos[i].nodetype, "IF") == 0){
+				write_file(ast_text, "\n");
+				write_file(ast_text, nodos[i].nodetype);
+				write_file(ast_text, "\n");
+				temp[0] = *nodos[i].l;
+				printAST(temp,0,0,0);
+
+			}else if(strcmp(nodos[i].nodetype, "WHILE") == 0){
+					write_file(ast_text, "\n");
+					write_file(ast_text, nodos[i].nodetype);
+					write_file(ast_text, "\n");
+					temp[0] = *nodos[i].l;
+					printAST(temp,0,0,0);
+
+			}else if((strcmp(nodos[i].nodetype, ">") == 0) || (strcmp(nodos[i].nodetype, "<") == 0) || (strcmp(nodos[i].nodetype, ">=") == 0) ||
+						 (strcmp(nodos[i].nodetype, "<=") == 0) ||  (strcmp(nodos[i].nodetype, "!=") == 0) || (strcmp(nodos[i].nodetype, "==") == 0)){
+
+				write_file(ast_text, nodos[i].nodetype);
+				write_file(ast_text, "\n");
+				temp[0] = *nodos[i].l; 
+				printAST(temp,0,0,0);
+				write_file(ast_text, "\n");
+				temp[0] = *nodos[i].r; 
+				printAST(temp,0,0,0);
+				write_file(ast_text, "\n");
+				salida = 1;
+				
+
+			}else if(strcmp(nodos[i].nodetype, "=") == 0){
+				write_file(ast_text, "\n");
+				write_file(ast_text, nodos[i].nodetype);
+				write_file(ast_text, "\n");
+				if((strcmp(nodos[i].l->nodetype, "+") == 0)||(strcmp(nodos[i].l->nodetype, "-") == 0)||(strcmp(nodos[i].l->nodetype, "/") == 0)||
+				(strcmp(nodos[i].l->nodetype, "*") == 0)){
+
+					temp[0] = *nodos[i].l;
+					printAST(temp,0,0,0);
+
+
+				}else{
+					temp[0] = *nodos[i].l; 
+					printAST(temp,0,0,0);
+
+				}
+
+
+			}else if((strcmp(nodos[i].nodetype, "+") == 0)||(strcmp(nodos[i].nodetype, "-") == 0)||(strcmp(nodos[i].nodetype, "/") == 0)||
+				(strcmp(nodos[i].nodetype, "*") == 0)){
+
+				write_file(ast_text, nodos[i].nodetype);
+				write_file(ast_text, "\n");
+				temp[0] = *nodos[i].l;
+				printAST(temp,0,0,0);
+				write_file(ast_text, "\n");
+				temp[0] = *nodos[i].r;
+				printAST(temp,0,0,0);
+				write_file(ast_text, "\n");
+
+			}else if(strcmp(nodos[i].nodetype, "String") == 0){
+
+				write_file(ast_text, nodos[i].nodetype);
+				write_file(ast_text, "\n");
+				salida = 1;
+
+			}else if(strcmp(nodos[i].nodetype, "Constante") == 0){
+				write_file(ast_text, nodos[i].nodetype);
+				write_file(ast_text, "\n");
+				salida = 1;
+				encontrado = 1;
+			}			
+
+		}
+		i++;
+	}
+}
+
+void write_file(char *filename, char *content) {
+    FILE *file;
+    file = fopen(filename, "a");
+    fprintf(file, "%s", content);
+    fclose(file);
+}
 
 //FUNCIONES 
 int main(int argc, char *argv[]) {
+
+	iniArrayTabla(tabla, 0, size);
+	iniArrayNodos(nodos, 0, size);
+
 	if(argc == 1){
 		yyparse();
 	} 
 
-	if(argc == 2){
-		if ((yyin = fopen(argv[1], "rt")) == NULL) {
-			printf("\nNo se puede abrir el archivo: %s\n", argv[1]);
-		}
+	if(argc == 3){
+		yyin = fopen(argv[1], "rt");
+		yyout = fopen(argv[2], "wt" );
 		yyparse();
+		printAST(nodos,0,0,0);
 	}
+
+	
 	
 }
 
-
-
-// void yyerror(const char* s) {
-// 	fprintf(stderr, "Parse error: %s\n", s);
-// 	exit(1);
-// }

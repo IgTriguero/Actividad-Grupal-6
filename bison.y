@@ -10,8 +10,13 @@ extern int yylex();
 extern int yyparse();
 extern int yylineno;
 extern FILE* yyin;
+extern FILE *yyout;
 
-void yyerror(const char* s);
+void yyerror (char const *s) {
+   fprintf (stderr, "%s\n", s);
+ }
+
+char* ast_text = "ast.txt";
 
 /* nodes in the abstract syntax tree */
 struct ast {
@@ -28,6 +33,17 @@ struct strval {
 	char* nodetype;
 	char* str;
 };
+
+//struct tabla de simbolos
+struct symb{    
+	char* vname;    
+	int vvali;   
+	float vvalf;
+	char* vvals;
+	char* type; 
+};
+
+
 //Variables globales
 int line_num = 1;
 
@@ -39,14 +55,21 @@ int numnodo = 0;
 
 struct ast nodos[52];
 
-//struct symb tabla[52];
+struct symb tabla[52];
+
+void write_file(char *filename, char *content);
+// tabla simbolos
+void iniArrayTabla(struct symb *tabla, int inicio, int fin);
+
+// nodos
+void iniArrayNodos(struct ast *nodos, int inicio, int fin);
 
 // funciones ast
 struct ast *newast(char* nodetype, struct ast *l, struct ast *r);
 struct ast *newnum(double d);
 
 void eval(struct ast a, int* size);
-
+void printAST(struct ast nodos[], int i, int encontrado, int salida);
 
 %}
 %locations
@@ -115,7 +138,7 @@ statement:
 //-1 porque newline suma una linea
 line:  
 	NEWLINE {}
-	| ARIT {printf("%d\t%d\n", $1.i, yylineno-1); }
+	| ARIT {printf("%d\t%d\n", $1.i, yylineno-1); if(!$1.a){ ;} else {eval(*$1.a, &size);} ;}
 	| ARIT2 {printf("%f\t%d\n", $1.f, yylineno-1); }
 	| BOOL {printf("%s\t%d\n", $1, yylineno);} 
     | BUCLE_WHILE {printf("%s\t%d\n", $1, yylineno);}
@@ -127,19 +150,19 @@ line:
 ;
 
 ARIT: 
-	ARIT SUMA ARIT 									{$$.i = $1.i + $3.i; $$.a = newast($2,$1.a,$3.a);}
-	| ARIT RESTA ARIT 								{$$.i = $1.i - $3.i; $$.a = newast($2,$1.a,$3.a);}
-	| ARIT MULT ARIT 									{$$.i = $1.i * $3.i; $$.a = newast($2,$1.a,$3.a);}
-	| ARIT DIV ARIT 									{$$.i = $1.i / $3.i; $$.a = newast($2,$1.a,$3.a);}
+	ARIT SUMA ARIT 									{$$.i = $1.i + $3.i; $$.a = newast("+",$1.a,$3.a);}
+	| ARIT RESTA ARIT 								{$$.i = $1.i - $3.i; $$.a = newast("-",$1.a,$3.a);}
+	| ARIT MULT ARIT 									{$$.i = $1.i * $3.i; $$.a = newast("*",$1.a,$3.a);}
+	| ARIT DIV ARIT 									{$$.i = $1.i / $3.i; $$.a = newast("/",$1.a,$3.a);}
 	| ABRIR_PARENTESIS ARIT CERRAR_PARENTESIS 	{$$.i = $2.i;}
 	| ENTERO 										{$$.i = $1; $$.a = newnum($1);}
 ;
 
 ARIT2: 
-	ARIT2 SUMA ARIT2 									{$$.f = $1.f + $3.f; $$.a = newast($2,$1.a,$3.a);}
-	| ARIT2 RESTA ARIT2 								{$$.f = $1.f - $3.f; $$.a = newast($2,$1.a,$3.a);}
-	| ARIT2 MULT ARIT2 									{$$.f = $1.f * $3.f; $$.a = newast($2,$1.a,$3.a);}
-	| ARIT2 DIV ARIT2 									{$$.f = $1.f / $3.f; $$.a = newast($2,$1.a,$3.a);}
+	ARIT2 SUMA ARIT2 									{$$.f = $1.f + $3.f; $$.a = newast("+",$1.a,$3.a);}
+	| ARIT2 RESTA ARIT2 								{$$.f = $1.f - $3.f; $$.a = newast("-",$1.a,$3.a);}
+	| ARIT2 MULT ARIT2 									{$$.f = $1.f * $3.f; $$.a = newast("*",$1.a,$3.a);}
+	| ARIT2 DIV ARIT2 									{$$.f = $1.f / $3.f; $$.a = newast("/",$1.a,$3.a);}
 	| ABRIR_PARENTESIS ARIT2 CERRAR_PARENTESIS 	{$$.f = $2.f;}
 	| FLOAT 									{$$.f = $1; $$.a = newnum($1);}
 ;
@@ -187,7 +210,18 @@ COMENTARIO: COMMENT		{$$ = "COMENTARIO";}
 %%
 //FUNCIONES 
 
+void iniArrayTabla(struct symb *tabla, int inicio, int fin) {
+    for (int i = inicio; i < fin; i++) {
+        tabla[i].vname = "._empty";
+    }
+	
+}
 
+void iniArrayNodos(struct ast *nodos, int inicio, int fin) {
+    for (int i = inicio; i < fin; i++) {
+        nodos[i].nodetype = "._empty";
+    }
+}
 
 
 
@@ -245,24 +279,117 @@ void eval(struct ast a, int* size){
 	}
 }
 
+
+void printAST(struct ast nodos[], int i, int encontrado, int salida){
+	struct ast temp[52];
+	iniArrayNodos(temp,0,52);
+
+	while(encontrado == 0 && salida == 0){
+		if(strcmp(nodos[i].nodetype, "._empty") == 0){
+			encontrado = 1;
+			salida=1;
+		}else{
+			if(strcmp(nodos[i].nodetype, "IF") == 0){
+				write_file(ast_text, "\n");
+				write_file(ast_text, nodos[i].nodetype);
+				write_file(ast_text, "\n");
+				temp[0] = *nodos[i].l;
+				printAST(temp,0,0,0);
+
+			}else if(strcmp(nodos[i].nodetype, "WHILE") == 0){
+					write_file(ast_text, "\n");
+					write_file(ast_text, nodos[i].nodetype);
+					write_file(ast_text, "\n");
+					temp[0] = *nodos[i].l;
+					printAST(temp,0,0,0);
+
+			}else if((strcmp(nodos[i].nodetype, ">") == 0) || (strcmp(nodos[i].nodetype, "<") == 0) || (strcmp(nodos[i].nodetype, ">=") == 0) ||
+						 (strcmp(nodos[i].nodetype, "<=") == 0) ||  (strcmp(nodos[i].nodetype, "!=") == 0) || (strcmp(nodos[i].nodetype, "==") == 0)){
+
+				write_file(ast_text, nodos[i].nodetype);
+				write_file(ast_text, "\n");
+				temp[0] = *nodos[i].l; 
+				printAST(temp,0,0,0);
+				write_file(ast_text, "\n");
+				temp[0] = *nodos[i].r; 
+				printAST(temp,0,0,0);
+				write_file(ast_text, "\n");
+				salida = 1;
+				
+
+			}else if(strcmp(nodos[i].nodetype, "=") == 0){
+				write_file(ast_text, "\n");
+				write_file(ast_text, nodos[i].nodetype);
+				write_file(ast_text, "\n");
+				if((strcmp(nodos[i].l->nodetype, "+") == 0)||(strcmp(nodos[i].l->nodetype, "-") == 0)||(strcmp(nodos[i].l->nodetype, "/") == 0)||
+				(strcmp(nodos[i].l->nodetype, "*") == 0)){
+
+					temp[0] = *nodos[i].l;
+					printAST(temp,0,0,0);
+
+
+				}else{
+					temp[0] = *nodos[i].l; 
+					printAST(temp,0,0,0);
+
+				}
+
+
+			}else if((strcmp(nodos[i].nodetype, "+") == 0)||(strcmp(nodos[i].nodetype, "-") == 0)||(strcmp(nodos[i].nodetype, "/") == 0)||
+				(strcmp(nodos[i].nodetype, "*") == 0)){
+
+				write_file(ast_text, nodos[i].nodetype);
+				write_file(ast_text, "\n");
+				temp[0] = *nodos[i].l;
+				printAST(temp,0,0,0);
+				write_file(ast_text, "\n");
+				temp[0] = *nodos[i].r;
+				printAST(temp,0,0,0);
+				write_file(ast_text, "\n");
+
+			}else if(strcmp(nodos[i].nodetype, "String") == 0){
+
+				write_file(ast_text, nodos[i].nodetype);
+				write_file(ast_text, "\n");
+				salida = 1;
+
+			}else if(strcmp(nodos[i].nodetype, "Constante") == 0){
+				write_file(ast_text, nodos[i].nodetype);
+				write_file(ast_text, "\n");
+				salida = 1;
+				encontrado = 1;
+			}			
+
+		}
+		i++;
+	}
+}
+
+void write_file(char *filename, char *content) {
+    FILE *file;
+    file = fopen(filename, "a");
+    fprintf(file, "%s", content);
+    fclose(file);
+}
+
 //FUNCIONES 
 int main(int argc, char *argv[]) {
+
+	iniArrayTabla(tabla, 0, size);
+	iniArrayNodos(nodos, 0, size);
+
 	if(argc == 1){
 		yyparse();
 	} 
 
-	if(argc == 2){
-		if ((yyin = fopen(argv[1], "rt")) == NULL) {
-			printf("\nNo se puede abrir el archivo: %s\n", argv[1]);
-		}
+	if(argc == 3){
+		yyin = fopen(argv[1], "rt");
+		yyout = fopen(argv[2], "wt" );
 		yyparse();
+		printAST(nodos,0,0,0);
 	}
+
+	
 	
 }
 
-
-
-// void yyerror(const char* s) {
-// 	fprintf(stderr, "Parse error: %s\n", s);
-// 	exit(1);
-// }

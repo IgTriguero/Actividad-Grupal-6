@@ -565,8 +565,8 @@ int yy_flex_debug = 0;
 #define YY_MORE_ADJ 0
 #define YY_RESTORE_YY_MORE_OFFSET
 char *yytext;
-#line 1 "./src/flex.l"
-#line 2 "./src/flex.l"
+#line 1 "flex.l"
+#line 2 "flex.l"
 #include <stdio.h>
 #include "y.tab.h"
 
@@ -788,7 +788,7 @@ YY_DECL
 		}
 
 	{
-#line 37 "./src/flex.l"
+#line 37 "flex.l"
 
 
 #line 795 "lex.yy.c"
@@ -860,193 +860,193 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 39 "./src/flex.l"
+#line 39 "flex.l"
 ;
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 40 "./src/flex.l"
+#line 40 "flex.l"
 {return WHILE;}
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 41 "./src/flex.l"
+#line 41 "flex.l"
 {return FOR;}
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 42 "./src/flex.l"
+#line 42 "flex.l"
 {return CASE;}
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 43 "./src/flex.l"
+#line 43 "flex.l"
 {return WHEN;}
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 44 "./src/flex.l"
+#line 44 "flex.l"
 {return IS;}
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 45 "./src/flex.l"
+#line 45 "flex.l"
 {return OTHERS;}
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 46 "./src/flex.l"
+#line 46 "flex.l"
 {return END;}
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 47 "./src/flex.l"
+#line 47 "flex.l"
 {return LOOP;}
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 48 "./src/flex.l"
+#line 48 "flex.l"
 {return THEN;}
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 49 "./src/flex.l"
+#line 49 "flex.l"
 {return IF;}
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 50 "./src/flex.l"
+#line 50 "flex.l"
 {return ELSE;}
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 51 "./src/flex.l"
+#line 51 "flex.l"
 {return ELSEIF;}
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 52 "./src/flex.l"
+#line 52 "flex.l"
 {return TRUE;} 
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 53 "./src/flex.l"
+#line 53 "flex.l"
 {return FALSE;}
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 54 "./src/flex.l"
+#line 54 "flex.l"
 {yylval.fval = atof(yytext); return FLOAT;}
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 55 "./src/flex.l"
+#line 55 "flex.l"
 {yylval.eval = atoi(yytext); return ENTERO;}
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 56 "./src/flex.l"
+#line 56 "flex.l"
 {yylval.sval = strdup(yytext); return NOMBRE_VARIABLE;}
 	YY_BREAK
 case 19:
 /* rule 19 can match eol */
 YY_RULE_SETUP
-#line 57 "./src/flex.l"
+#line 57 "flex.l"
 {return NEWLINE;}
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 58 "./src/flex.l"
+#line 58 "flex.l"
 {return ABRIR_LLAVE;}
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 59 "./src/flex.l"
+#line 59 "flex.l"
 {return CERRAR_LLAVE;}
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 60 "./src/flex.l"
+#line 60 "flex.l"
 {return SUMA;}
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 61 "./src/flex.l"
+#line 61 "flex.l"
 {return RESTA;}
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 62 "./src/flex.l"
+#line 62 "flex.l"
 {return MULT;}
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 63 "./src/flex.l"
+#line 63 "flex.l"
 {return DIV;}
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 64 "./src/flex.l"
+#line 64 "flex.l"
 {return ABRIR_PARENTESIS;}
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 65 "./src/flex.l"
+#line 65 "flex.l"
 {return CERRAR_PARENTESIS;}
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 66 "./src/flex.l"
+#line 66 "flex.l"
 {return MENOR;}
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 67 "./src/flex.l"
+#line 67 "flex.l"
 {return MAYOR;}
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 68 "./src/flex.l"
+#line 68 "flex.l"
 {return EQUAL;}
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 69 "./src/flex.l"
+#line 69 "flex.l"
 {return COMMENT;}
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 70 "./src/flex.l"
+#line 70 "flex.l"
 {return MAYOR_IGUAL;}
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 71 "./src/flex.l"
+#line 71 "flex.l"
 {return MENOR_IGUAL;}
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 72 "./src/flex.l"
+#line 72 "flex.l"
 {return DESIGUAL;}
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 73 "./src/flex.l"
+#line 73 "flex.l"
 {return IGUAL;}
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 74 "./src/flex.l"
+#line 74 "flex.l"
 {return SEMICOLON;}
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 75 "./src/flex.l"
+#line 75 "flex.l"
 {return FLECHA;}
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 77 "./src/flex.l"
+#line 77 "flex.l"
 ECHO;
 	YY_BREAK
 #line 1053 "lex.yy.c"
@@ -2066,10 +2066,6 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 77 "./src/flex.l"
+#line 77 "flex.l"
 
 
-void yyerror(const char* s) {
-	fprintf(stderr, "Lex error: %s\t%d\n", s, yylineno);
-	exit(1);
-}
