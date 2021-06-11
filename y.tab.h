@@ -74,22 +74,23 @@ extern int yydebug;
     WHEN = 280,
     IS = 281,
     OTHERS = 282,
-    COMMENT = 283,
-    NEWLINE = 284,
-    SEMICOLON = 285,
-    QUIT = 286,
-    TRUE = 287,
-    FALSE = 288,
-    MENOR = 289,
-    MAYOR = 290,
-    MENOR_IGUAL = 291,
-    MAYOR_IGUAL = 292,
-    DESIGUAL = 293,
-    IGUAL = 294,
-    PLUS = 295,
-    MINUS = 296,
-    MULTIPLY = 297,
-    DIVIDE = 298
+    PROCEDURE = 283,
+    COMMENT = 284,
+    NEWLINE = 285,
+    SEMICOLON = 286,
+    QUIT = 287,
+    TRUE = 288,
+    FALSE = 289,
+    MENOR = 290,
+    MAYOR = 291,
+    MENOR_IGUAL = 292,
+    MAYOR_IGUAL = 293,
+    DESIGUAL = 294,
+    IGUAL = 295,
+    PLUS = 296,
+    MINUS = 297,
+    MULTIPLY = 298,
+    DIVIDE = 299
   };
 #endif
 /* Tokens.  */
@@ -118,22 +119,23 @@ extern int yydebug;
 #define WHEN 280
 #define IS 281
 #define OTHERS 282
-#define COMMENT 283
-#define NEWLINE 284
-#define SEMICOLON 285
-#define QUIT 286
-#define TRUE 287
-#define FALSE 288
-#define MENOR 289
-#define MAYOR 290
-#define MENOR_IGUAL 291
-#define MAYOR_IGUAL 292
-#define DESIGUAL 293
-#define IGUAL 294
-#define PLUS 295
-#define MINUS 296
-#define MULTIPLY 297
-#define DIVIDE 298
+#define PROCEDURE 283
+#define COMMENT 284
+#define NEWLINE 285
+#define SEMICOLON 286
+#define QUIT 287
+#define TRUE 288
+#define FALSE 289
+#define MENOR 290
+#define MAYOR 291
+#define MENOR_IGUAL 292
+#define MAYOR_IGUAL 293
+#define DESIGUAL 294
+#define IGUAL 295
+#define PLUS 296
+#define MINUS 297
+#define MULTIPLY 298
+#define DIVIDE 299
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
@@ -159,7 +161,7 @@ union YYSTYPE
 		struct ast *a;
 	}st;
 
-#line 163 "y.tab.h"
+#line 165 "y.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

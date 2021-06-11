@@ -16,6 +16,8 @@ string ([a-zA-Z])+
 fnum ([0-9])+[\,|\.]([0-9])+
 enum ([0-9])+
 
+procedure (procedure|procedure)
+
 while (while|WHILE)
 for (for|FOR)
 case (case|CASE)
@@ -37,6 +39,7 @@ then (then|THEN)
 %%
 
 [ \t]	;
+{procedure} {return PROCEDURE;}
 {while} {return WHILE;}
 {for}   {return FOR;}
 {case}  {return CASE;}
@@ -71,6 +74,7 @@ then (then|THEN)
 "<="    {return MENOR_IGUAL;}
 "!="    {return DESIGUAL;}
 "=="    {return IGUAL;}
+":"     {return COLON;}
 ";"     {return SEMICOLON;}
 "=>"    {return FLECHA;}
 
