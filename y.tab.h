@@ -51,97 +51,121 @@ extern int yydebug;
   {
     ENTERO = 258,
     FLOAT = 259,
-    NOMBRE_VARIABLE = 260,
-    SUMA = 261,
-    RESTA = 262,
-    MULT = 263,
-    DIV = 264,
-    EQUAL = 265,
-    FLECHA = 266,
-    ABRIR_LLAVE = 267,
-    CERRAR_LLAVE = 268,
-    ABRIR_PARENTESIS = 269,
-    CERRAR_PARENTESIS = 270,
-    WHILE = 271,
-    FOR = 272,
-    CASE = 273,
-    LOOP = 274,
-    IF = 275,
-    THEN = 276,
-    ELSE = 277,
-    ELSEIF = 278,
-    END = 279,
-    WHEN = 280,
-    IS = 281,
-    OTHERS = 282,
-    PROCEDURE = 283,
-    COMMENT = 284,
-    NEWLINE = 285,
-    SEMICOLON = 286,
-    QUIT = 287,
-    TRUE = 288,
-    FALSE = 289,
-    MENOR = 290,
-    MAYOR = 291,
-    MENOR_IGUAL = 292,
-    MAYOR_IGUAL = 293,
-    DESIGUAL = 294,
-    IGUAL = 295,
-    PLUS = 296,
-    MINUS = 297,
-    MULTIPLY = 298,
-    DIVIDE = 299
+    STR = 260,
+    VAR_NAME = 261,
+    SUMA = 262,
+    RESTA = 263,
+    MULT = 264,
+    DIV = 265,
+    EQUAL = 266,
+    FLECHA = 267,
+    ABRIR_LLAVE = 268,
+    CERRAR_LLAVE = 269,
+    ABRIR_PARENTESIS = 270,
+    CERRAR_PARENTESIS = 271,
+    WHILE = 272,
+    FOR = 273,
+    CASE = 274,
+    LOOP = 275,
+    IF = 276,
+    THEN = 277,
+    ELSE = 278,
+    ELSEIF = 279,
+    END = 280,
+    WHEN = 281,
+    IS = 282,
+    OTHERS = 283,
+    DOTDOT = 284,
+    PROCEDURE = 285,
+    RANGE = 286,
+    COMMA = 287,
+    OF = 288,
+    TYPE = 289,
+    COMMENT = 290,
+    NEWLINE = 291,
+    SEMICOLON = 292,
+    COLON = 293,
+    QUIT = 294,
+    TRUE = 295,
+    FALSE = 296,
+    MENOR = 297,
+    MAYOR = 298,
+    MENOR_IGUAL = 299,
+    MAYOR_IGUAL = 300,
+    DESIGUAL = 301,
+    IGUAL = 302,
+    DECLINTEGER = 303,
+    DECLFLOAT = 304,
+    DECLBOOLEAN = 305,
+    DECLARRAY = 306,
+    DECLSTRING = 307,
+    PLUS = 308,
+    MINUS = 309,
+    MULTIPLY = 310,
+    DIVIDE = 311
   };
 #endif
 /* Tokens.  */
 #define ENTERO 258
 #define FLOAT 259
-#define NOMBRE_VARIABLE 260
-#define SUMA 261
-#define RESTA 262
-#define MULT 263
-#define DIV 264
-#define EQUAL 265
-#define FLECHA 266
-#define ABRIR_LLAVE 267
-#define CERRAR_LLAVE 268
-#define ABRIR_PARENTESIS 269
-#define CERRAR_PARENTESIS 270
-#define WHILE 271
-#define FOR 272
-#define CASE 273
-#define LOOP 274
-#define IF 275
-#define THEN 276
-#define ELSE 277
-#define ELSEIF 278
-#define END 279
-#define WHEN 280
-#define IS 281
-#define OTHERS 282
-#define PROCEDURE 283
-#define COMMENT 284
-#define NEWLINE 285
-#define SEMICOLON 286
-#define QUIT 287
-#define TRUE 288
-#define FALSE 289
-#define MENOR 290
-#define MAYOR 291
-#define MENOR_IGUAL 292
-#define MAYOR_IGUAL 293
-#define DESIGUAL 294
-#define IGUAL 295
-#define PLUS 296
-#define MINUS 297
-#define MULTIPLY 298
-#define DIVIDE 299
+#define STR 260
+#define VAR_NAME 261
+#define SUMA 262
+#define RESTA 263
+#define MULT 264
+#define DIV 265
+#define EQUAL 266
+#define FLECHA 267
+#define ABRIR_LLAVE 268
+#define CERRAR_LLAVE 269
+#define ABRIR_PARENTESIS 270
+#define CERRAR_PARENTESIS 271
+#define WHILE 272
+#define FOR 273
+#define CASE 274
+#define LOOP 275
+#define IF 276
+#define THEN 277
+#define ELSE 278
+#define ELSEIF 279
+#define END 280
+#define WHEN 281
+#define IS 282
+#define OTHERS 283
+#define DOTDOT 284
+#define PROCEDURE 285
+#define RANGE 286
+#define COMMA 287
+#define OF 288
+#define TYPE 289
+#define COMMENT 290
+#define NEWLINE 291
+#define SEMICOLON 292
+#define COLON 293
+#define QUIT 294
+#define TRUE 295
+#define FALSE 296
+#define MENOR 297
+#define MAYOR 298
+#define MENOR_IGUAL 299
+#define MAYOR_IGUAL 300
+#define DESIGUAL 301
+#define IGUAL 302
+#define DECLINTEGER 303
+#define DECLFLOAT 304
+#define DECLBOOLEAN 305
+#define DECLARRAY 306
+#define DECLSTRING 307
+#define PLUS 308
+#define MINUS 309
+#define MULTIPLY 310
+#define DIVIDE 311
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 77 "bison.y"
+#line 103 "bison.y"
 
 	int eval;
 	float fval;
@@ -161,7 +185,7 @@ union YYSTYPE
 		struct ast *a;
 	}st;
 
-#line 165 "y.tab.h"
+#line 189 "y.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;
