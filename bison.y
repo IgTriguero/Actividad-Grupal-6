@@ -177,7 +177,7 @@ CONTENT:
 	| DECL {printf("Contenido: %s\t Linea: %d\n", $1.s, yylineno); if(!$1.a){ ;} else {evalAST(*$1.a, &size);};}
 ;
 
-DECL: NOMBRE_VARIABLE COLON DECLINTEGER COLON EQUAL NOMBRE_VARIABLE SEMICOLON {$$.s = "Declaracion de variable Integer asignacion variable"} //variable : Integer := VARIABLE + ARIT ;
+DECL: NOMBRE_VARIABLE COLON DECLINTEGER COLON EQUAL NOMBRE_VARIABLE SEMICOLON {$$.s = "Declaracion de variable Integer asignacion variable"} 
 	| NOMBRE_VARIABLE COLON DECLINTEGER COLON EQUAL NOMBRE_VARIABLE OP_ARIT NOMBRE_VARIABLE SEMICOLON {$$.s = "Declaracion de variable Integer igual a variable operador variable"}
 	| NOMBRE_VARIABLE COLON DECLINTEGER COLON EQUAL NOMBRE_VARIABLE OP_ARIT ARIT SEMICOLON {$$.s = "Declaracion de variable Integer igual a variable operador operacion aritmetica"}
 	| NOMBRE_VARIABLE COLON DECLINTEGER COLON EQUAL ARIT OP_ARIT NOMBRE_VARIABLE SEMICOLON {$$.s = "Declaracion de variable Integer igual a operacion aritmetica operador con variable"}
@@ -188,7 +188,7 @@ DECL: NOMBRE_VARIABLE COLON DECLINTEGER COLON EQUAL NOMBRE_VARIABLE SEMICOLON {$
 
 	| NOMBRE_VARIABLE COLON DECLINTEGER SEMICOLON {$$.s = "Declaracion de variable Integer"}
 
-	| NOMBRE_VARIABLE COLON DECLFLOAT COLON EQUAL NOMBRE_VARIABLE SEMICOLON {$$.s = "Declaracion de variable Float asignacion variable"} //variable : Float := cosas ;
+	| NOMBRE_VARIABLE COLON DECLFLOAT COLON EQUAL NOMBRE_VARIABLE SEMICOLON {$$.s = "Declaracion de variable Float asignacion variable"}
 	| NOMBRE_VARIABLE COLON DECLFLOAT COLON EQUAL NOMBRE_VARIABLE OP_ARIT NOMBRE_VARIABLE SEMICOLON {$$.s = "Declaracion de variable Float igual a variable operador variable"}
 	| NOMBRE_VARIABLE COLON DECLFLOAT COLON EQUAL NOMBRE_VARIABLE OP_ARIT ARIT2 SEMICOLON {$$.s = "Declaracion de variable Float igual a variable operador operacion aritmetica"}
 	| NOMBRE_VARIABLE COLON DECLFLOAT COLON EQUAL ARIT2 OP_ARIT NOMBRE_VARIABLE SEMICOLON {$$.s = "Declaracion de variable Float igual a operacion aritmetica operador con variable"} //ignore ARIT OP VAR
@@ -208,7 +208,7 @@ DECL: NOMBRE_VARIABLE COLON DECLINTEGER COLON EQUAL NOMBRE_VARIABLE SEMICOLON {$
 	| NOMBRE_VARIABLE COLON DECLBOOLEAN COLON EQUAL BOOLEAN SEMICOLON {$$.s = "Declaracion de variable Boolean igual a resultado booleano"}
 	| NOMBRE_VARIABLE COLON DECLBOOLEAN SEMICOLON {$$.s = "Declaracion de variable Boolean igual a resultado booleano"}
 
-	//| NOMBRE_VARIABLE COLON DECLSTRING COLON EQUAL NOMBRE_VARIABLE SEMICOLON {$$.s = "Declaracion con string1";}
+	| NOMBRE_VARIABLE COLON DECLSTRING COLON EQUAL NOMBRE_VARIABLE SEMICOLON {$$.s = "Declaracion con string1";}
 	| NOMBRE_VARIABLE COLON DECLSTRING COLON EQUAL STRING SEMICOLON 
 	{$$.s = "Declaracion con string";
 	insertarElemento(tabla, &size, 0, $6.s, 0.0, $1.s, &elementosOcupados, "string" );
@@ -216,7 +216,7 @@ DECL: NOMBRE_VARIABLE COLON DECLINTEGER COLON EQUAL NOMBRE_VARIABLE SEMICOLON {$
 	}
 	| NOMBRE_VARIABLE COLON DECLSTRING SEMICOLON {$$.s = "Declaracion de variable String";}
 
-	| NOMBRE_VARIABLE COLON EQUAL NOMBRE_VARIABLE SEMICOLON {$$.s = "Variable igual a Variable"} //variable : Integer := VARIABLE + ARIT ;
+	| NOMBRE_VARIABLE COLON EQUAL NOMBRE_VARIABLE SEMICOLON {$$.s = "Variable igual a Variable"} 
 	| NOMBRE_VARIABLE COLON EQUAL NOMBRE_VARIABLE OP_ARIT NOMBRE_VARIABLE SEMICOLON {$$.s = "Variable igual a Variable operacion con Variable"}
 	| NOMBRE_VARIABLE COLON EQUAL NOMBRE_VARIABLE OP_ARIT ARIT SEMICOLON {$$.s = "Variable igual a Variable operacion con operacion aritmetica";}
 	| NOMBRE_VARIABLE COLON EQUAL NOMBRE_VARIABLE OP_ARIT ARIT2 SEMICOLON {$$.s = "Variable igual a Variable operacion con operacion aritmetica float"}
@@ -237,9 +237,6 @@ DECL: NOMBRE_VARIABLE COLON DECLINTEGER COLON EQUAL NOMBRE_VARIABLE SEMICOLON {$
 	| TYPE NOMBRE_VARIABLE IS DECLARRAY ABRIR_PARENTESIS ENTERO DOTDOT ENTERO CERRAR_PARENTESIS OF NOMBRE_VARIABLE SEMICOLON {$$.s = "Tipo Variable declaraccion array entero de Variable"}
 	| NOMBRE_VARIABLE COLON NOMBRE_VARIABLE COLON EQUAL ABRIR_PARENTESIS ENTERO AUXINT CERRAR_PARENTESIS SEMICOLON {}
 
-	// variable : Integer ;
-	// variable := 3 + 3 ;
-	// variable : Integer := 3 + 3 ;
 ;
 AUXINT: COMMA ENTERO {}
 	| {}
