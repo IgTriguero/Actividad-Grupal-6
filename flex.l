@@ -23,7 +23,6 @@ for (for|FOR)
 case (case|CASE)
 when (when|WHEN)
 is (is|IS)
-others (others|OTHERS)
 end (end|END)
 loop (loop|LOOP)
 of (of|OF)
@@ -54,11 +53,12 @@ then (then|THEN)
 {range} {return RANGE;}
 {when}  {return WHEN;}
 {is}  {return IS;}
-{others}  {return OTHERS;}
 {end}   {return END;}
 {loop}  {return LOOP;}
 {then}  {return THEN;}
 {if}    {return IF;}
+{and}    {return AND;}
+{or}    {return OR;}
 {else}  {return ELSE;}
 {elseif}    {return ELSEIF;}
 {true}  {return TRUE;} 
@@ -86,7 +86,6 @@ then (then|THEN)
 "=="    {return IGUAL;}
 ":"     {return COLON;}
 ";"     {return SEMICOLON;}
-"=>"    {return FLECHA;}
 ".."    {return DOTDOT;}
 ","     {return COMMA;}
 "--".*	{return COMMENT;}

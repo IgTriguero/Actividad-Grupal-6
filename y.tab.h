@@ -53,56 +53,55 @@ extern int yydebug;
     FLOAT = 259,
     STR = 260,
     VAR_NAME = 261,
-    SUMA = 262,
-    RESTA = 263,
-    MULT = 264,
-    DIV = 265,
-    EQUAL = 266,
-    FLECHA = 267,
-    ABRIR_LLAVE = 268,
-    CERRAR_LLAVE = 269,
-    ABRIR_PARENTESIS = 270,
-    CERRAR_PARENTESIS = 271,
-    WHILE = 272,
-    FOR = 273,
-    CASE = 274,
-    LOOP = 275,
-    IF = 276,
-    THEN = 277,
-    ELSE = 278,
-    ELSEIF = 279,
-    END = 280,
-    WHEN = 281,
-    IS = 282,
-    OTHERS = 283,
-    DOTDOT = 284,
-    PROCEDURE = 285,
-    RANGE = 286,
-    COMMA = 287,
-    OF = 288,
-    TYPE = 289,
-    COMMENT = 290,
-    NEWLINE = 291,
-    SEMICOLON = 292,
-    COLON = 293,
-    QUIT = 294,
-    TRUE = 295,
-    FALSE = 296,
-    MENOR = 297,
-    MAYOR = 298,
-    MENOR_IGUAL = 299,
-    MAYOR_IGUAL = 300,
-    DESIGUAL = 301,
-    IGUAL = 302,
-    DECLINTEGER = 303,
-    DECLFLOAT = 304,
-    DECLBOOLEAN = 305,
-    DECLARRAY = 306,
-    DECLSTRING = 307,
-    PLUS = 308,
-    MINUS = 309,
-    MULTIPLY = 310,
-    DIVIDE = 311
+    TRUE = 262,
+    FALSE = 263,
+    SUMA = 264,
+    RESTA = 265,
+    MULT = 266,
+    DIV = 267,
+    MENOR = 268,
+    MAYOR = 269,
+    MENOR_IGUAL = 270,
+    MAYOR_IGUAL = 271,
+    DESIGUAL = 272,
+    IGUAL = 273,
+    AND = 274,
+    OR = 275,
+    PROCEDURE = 276,
+    COLON = 277,
+    EQUAL = 278,
+    SEMICOLON = 279,
+    COMMA = 280,
+    DOTDOT = 281,
+    ABRIR_LLAVE = 282,
+    CERRAR_LLAVE = 283,
+    ABRIR_PARENTESIS = 284,
+    CERRAR_PARENTESIS = 285,
+    WHILE = 286,
+    FOR = 287,
+    CASE = 288,
+    LOOP = 289,
+    IF = 290,
+    THEN = 291,
+    ELSE = 292,
+    ELSEIF = 293,
+    END = 294,
+    WHEN = 295,
+    IS = 296,
+    RANGE = 297,
+    OF = 298,
+    TYPE = 299,
+    COMMENT = 300,
+    QUIT = 301,
+    DECLINTEGER = 302,
+    DECLFLOAT = 303,
+    DECLBOOLEAN = 304,
+    DECLARRAY = 305,
+    DECLSTRING = 306,
+    PLUS = 307,
+    MINUS = 308,
+    MULTIPLY = 309,
+    DIVIDE = 310
   };
 #endif
 /* Tokens.  */
@@ -110,62 +109,61 @@ extern int yydebug;
 #define FLOAT 259
 #define STR 260
 #define VAR_NAME 261
-#define SUMA 262
-#define RESTA 263
-#define MULT 264
-#define DIV 265
-#define EQUAL 266
-#define FLECHA 267
-#define ABRIR_LLAVE 268
-#define CERRAR_LLAVE 269
-#define ABRIR_PARENTESIS 270
-#define CERRAR_PARENTESIS 271
-#define WHILE 272
-#define FOR 273
-#define CASE 274
-#define LOOP 275
-#define IF 276
-#define THEN 277
-#define ELSE 278
-#define ELSEIF 279
-#define END 280
-#define WHEN 281
-#define IS 282
-#define OTHERS 283
-#define DOTDOT 284
-#define PROCEDURE 285
-#define RANGE 286
-#define COMMA 287
-#define OF 288
-#define TYPE 289
-#define COMMENT 290
-#define NEWLINE 291
-#define SEMICOLON 292
-#define COLON 293
-#define QUIT 294
-#define TRUE 295
-#define FALSE 296
-#define MENOR 297
-#define MAYOR 298
-#define MENOR_IGUAL 299
-#define MAYOR_IGUAL 300
-#define DESIGUAL 301
-#define IGUAL 302
-#define DECLINTEGER 303
-#define DECLFLOAT 304
-#define DECLBOOLEAN 305
-#define DECLARRAY 306
-#define DECLSTRING 307
-#define PLUS 308
-#define MINUS 309
-#define MULTIPLY 310
-#define DIVIDE 311
+#define TRUE 262
+#define FALSE 263
+#define SUMA 264
+#define RESTA 265
+#define MULT 266
+#define DIV 267
+#define MENOR 268
+#define MAYOR 269
+#define MENOR_IGUAL 270
+#define MAYOR_IGUAL 271
+#define DESIGUAL 272
+#define IGUAL 273
+#define AND 274
+#define OR 275
+#define PROCEDURE 276
+#define COLON 277
+#define EQUAL 278
+#define SEMICOLON 279
+#define COMMA 280
+#define DOTDOT 281
+#define ABRIR_LLAVE 282
+#define CERRAR_LLAVE 283
+#define ABRIR_PARENTESIS 284
+#define CERRAR_PARENTESIS 285
+#define WHILE 286
+#define FOR 287
+#define CASE 288
+#define LOOP 289
+#define IF 290
+#define THEN 291
+#define ELSE 292
+#define ELSEIF 293
+#define END 294
+#define WHEN 295
+#define IS 296
+#define RANGE 297
+#define OF 298
+#define TYPE 299
+#define COMMENT 300
+#define QUIT 301
+#define DECLINTEGER 302
+#define DECLFLOAT 303
+#define DECLBOOLEAN 304
+#define DECLARRAY 305
+#define DECLSTRING 306
+#define PLUS 307
+#define MINUS 308
+#define MULTIPLY 309
+#define DIVIDE 310
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 103 "bison.y"
+#line 131 "bison.y"
 
 	int eval;
 	float fval;
@@ -183,9 +181,13 @@ union YYSTYPE
 		char *temp3;
 		char* type;
 		struct ast *a;
+
+		char* error;
+		int boo;
+
 	}st;
 
-#line 189 "y.tab.h"
+#line 191 "y.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

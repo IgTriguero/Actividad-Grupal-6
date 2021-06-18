@@ -68,7 +68,6 @@ struct symb{
 	float vvalf;
 	char* vvals;
 	char* type; 
-// nuevo commit
 	bool vbool;
 	bool assigned;
 };
@@ -87,46 +86,44 @@ struct ast nodos[52];
 
 struct symb tabla[52];
 
-void write_file(char *filename, char *content);
+void write_file(char *filename, char *content);//
 
-// New Commit
-void insertarElemento(struct symb *tabla, int *size, int valor, char* svalor, float fvalor, char *variable, bool bvalor, int *elementosOcupados, char* type, bool assigned );
-int buscarValor(struct symb *tabla, char *nombre, char *tipo, int *size);
 
 // tabla simbolos
-void iniArrayTabla(struct symb *tabla, int inicio, int fin);
+void iniArrayTabla(struct symb *tabla, int inicio, int fin); //
 
 // nodos
-void iniArrayNodos(struct ast *nodos, int inicio, int fin);
+void iniArrayNodos(struct ast *nodos, int inicio, int fin); //
 
 // funciones ast
-struct ast *createAST(char* nodetype, struct ast *l, struct ast *r);
-struct ast *createBOO(char* nodetype, struct ast *l, struct ast *r);
-struct ast *createFlow(struct ast *cond);
-struct ast *createFlow2(struct ast *cond);
-struct ast *createNum(double d);
-struct ast *createSTR(char* s);
-struct ast *createBOOVAR(char* s);
-struct ast *createASTAsignacion(struct ast *op);
+struct ast *createAST(char* nodetype, struct ast *l, struct ast *r);//
+struct ast *createBOO(char* nodetype, struct ast *l, struct ast *r);//
+struct ast *createFlow(struct ast *cond);//
+struct ast *createFlow2(struct ast *cond);//
+struct ast *createNum(double d);//
+struct ast *createSTR(char* s);//
+struct ast *createBOOLVAR(char* s);//
+struct ast *createASTAsignacion(struct ast *op);//
+
+//funciones tabla
+void insertarElemento(struct symb *tabla, int *size, int valor, char* svalor, float fvalor, char *variable, bool bvalor, int *elementosOcupados, char* type, bool assigned );//
+int buscarValor(struct symb *tabla, char *nombre, char *tipo, int *size);//
+int retrieveIntFromTable(struct symb *tabla, int size, char* name);//
+float retrieveFloatFromTable(struct symb *tabla, int size, char* name);//
+char* retrieveStringFromTable(struct symb *tabla, int size, char* name);//
+bool retrieveBoolFromTable(struct symb *tabla, int size, char* name);//
+int operateInt(char* operator, int left, int right);
+float operateFloat(char* operator, float left, float right);
 
 
-// New Commit
+bool checkVarAndType(struct symb *tabla, int size, char* name, char* type);//
+bool searchVar(struct symb *tabla, int size, char* name);//
+char* getVarType(struct symb *tabla, int size, char* name);//
+int compare(char* operator, float left, float right);//
 
 
-int retrieveIntFromTable(struct symb *tabla, int size, char* name);
-float retrieveFloatFromTable(struct symb *tabla, int size, char* name);
-char* retrieveStringFromTable(struct symb *tabla, int size, char* name);
-bool retrieveBoolFromTable(struct symb *tabla, int size, char* name);
-char* getVarType(struct symb *tabla, int size, char* name);
-
-
-bool checkVarAndType(struct symb *tabla, int size, char* name, char* type);
-bool searchVar(struct symb *tabla, int size, char* name);
-int compare(char* operator, float left, float right);
-
-
-void evalAST(struct ast a, int* size);
-void printAST(struct ast nodos[], int i, int encontrado, int salida);
+void evalAST(struct ast a, int* size);//
+void printAST(struct ast nodos[], int i, int encontrado, int salida);//
 
 %}
 %locations
@@ -160,119 +157,409 @@ void printAST(struct ast nodos[], int i, int encontrado, int salida);
 %token<fval> FLOAT
 %token<sval> STR
 %token<sval> VAR_NAME
-%token SUMA RESTA MULT DIV
-
-%token EQUAL FLECHA
-%token ABRIR_LLAVE CERRAR_LLAVE ABRIR_PARENTESIS CERRAR_PARENTESIS
-%token WHILE FOR CASE LOOP 
-%token IF THEN ELSE ELSEIF END WHEN IS OTHERS DOTDOT
-%token PROCEDURE RANGE COMMA OF TYPE
-
-%token COMMENT NEWLINE SEMICOLON COLON QUIT
 %token TRUE FALSE 
+%token SUMA RESTA MULT DIV
+%token MENOR MAYOR MENOR_IGUAL MAYOR_IGUAL DESIGUAL IGUAL AND OR
 
-%token MENOR MAYOR MENOR_IGUAL MAYOR_IGUAL DESIGUAL IGUAL
-%token DECLINTEGER DECLFLOAT DECLBOOLEAN DECLARRAY DECLSTRING
+%token PROCEDURE
+%token COLON EQUAL SEMICOLON COMMA DOTDOT //simbolos
+%token ABRIR_LLAVE CERRAR_LLAVE ABRIR_PARENTESIS CERRAR_PARENTESIS //llaves y parentesis
+%token WHILE FOR CASE LOOP //bucle
+%token IF THEN ELSE ELSEIF END WHEN IS //ifs
+%token RANGE OF TYPE //arrays
+
+%token COMMENT QUIT
+
+%token DECLINTEGER DECLFLOAT DECLBOOLEAN DECLARRAY DECLSTRING //declaraciones
 
 %left PLUS MINUS
 %left MULTIPLY DIVIDE
 
 
 //NO TERMINALES
-%type<st> CONTENT
-%type<st> ARIT
-%type<st> ARIT2
-%type<st> OP_BOOLEANO
+%type<st> PROCLINE //
+%type<st> AUXCONTENT // Recursivo para CONTENT 
+%type<st> CONTENT // Todo lo que puede haber dentro de una funcion
+%type<st> ALLOPERS // 
+%type<st> TYPEDECLARATION //
+%type<st> DECL //
+%type<st> AUXCOMPLETO
+%type<st> AUXINT // COMMA NUMERO RECURSIVO PARA ARRAY
 %type<st> OP_ARIT
-%type<st> BOOL
+%type<st> OPERANDO
+%type<st> ARIT
+%type<st> OP_BOOLEANO // operador booleano
+%type<st> ALLBOOL
+%type<st> BOOL // operaciones booleanas
+%type<st> BOOLEAN_MIX // mix de operaciones booleanas con AND y OR
 %type<st> BUCLE
-%type<st> BUCLE_CASE
 %type<st> SENTENCIA_IF
-%type<sval> COMENTARIO
-%type<st> PROCLINE
-%type<st> DECL
-%type<st> NOMBRE_VARIABLE
-%type<st> STRING
+%type<st> NOMBRE_VARIABLE // nombre de la variable como no terminal
+%type<st> STRING //
+%type<sval> COMENTARIO //
 
 %start PROCLINE
 
 %%
 
 PROCLINE: 
-	PROCEDURE NOMBRE_VARIABLE IS AUXCONTENT END NOMBRE_VARIABLE SEMICOLON {printf(".");}
+		PROCEDURE NOMBRE_VARIABLE IS AUXCONTENT END NOMBRE_VARIABLE SEMICOLON {
+			if(strcmp($2.s, $6.s) == 0){
+				printf("procedure comienza y termina con el mismo nombre\n");
+			} else {
+				printf("procedure NO comienza y termina con el mismo nombre\n");
+			}
+		}
 ;
 
-AUXCONTENT: AUXCONTENT CONTENT | ;
-//-1 porque newline suma una linea
+AUXCONTENT: 
+	AUXCONTENT CONTENT {}
+	| {}
+;
+
+
 CONTENT:  
     BUCLE {printf("Contenido: %s\t Linea: %d\n", $1.s, yylineno); if(!$1.a){ ;} else {evalAST(*$1.a, &size);};}
-	| BUCLE_CASE {printf("Contenido: %s\t Linea: %d\n", $1.s, yylineno); if(!$1.a){ ;} else {evalAST(*$1.a, &size);};}
 	| SENTENCIA_IF {printf("Contenido: %s\t Linea: %d\n", $1.s, yylineno); if(!$1.a){ ;} else {evalAST(*$1.a, &size);};}
 	| COMENTARIO {printf("Contenido: %s\t Linea: %d\n", $1, yylineno); }
 	| DECL {printf("Contenido: %s\t Linea: %d\n", $1.s, yylineno); if(!$1.a){ ;} else {evalAST(*$1.a, &size);};}
 ;
 
-DECL: NOMBRE_VARIABLE COLON DECLINTEGER COLON EQUAL NOMBRE_VARIABLE SEMICOLON {$$.s = "Declaracion de variable Integer asignacion variable"} 
-	| NOMBRE_VARIABLE COLON DECLINTEGER COLON EQUAL NOMBRE_VARIABLE OP_ARIT NOMBRE_VARIABLE SEMICOLON {$$.s = "Declaracion de variable Integer igual a variable operador variable"}
-	| NOMBRE_VARIABLE COLON DECLINTEGER COLON EQUAL NOMBRE_VARIABLE OP_ARIT ARIT SEMICOLON {$$.s = "Declaracion de variable Integer igual a variable operador operacion aritmetica"}
-	| NOMBRE_VARIABLE COLON DECLINTEGER COLON EQUAL ARIT OP_ARIT NOMBRE_VARIABLE SEMICOLON {$$.s = "Declaracion de variable Integer igual a operacion aritmetica operador con variable"}
-	| NOMBRE_VARIABLE COLON DECLINTEGER COLON EQUAL ARIT SEMICOLON 
-	{$$.s = "Declaracion de variable Integer igual a operacion aritmetica"; 
-	insertarElemento(tabla, &size, $6.i, "", 0.0, $1.s, &elementosOcupados, "integer" );
-	 $$.a = createASTAsignacion($6.a);}
-
-	| NOMBRE_VARIABLE COLON DECLINTEGER SEMICOLON {$$.s = "Declaracion de variable Integer"}
-
-	| NOMBRE_VARIABLE COLON DECLFLOAT COLON EQUAL NOMBRE_VARIABLE SEMICOLON {$$.s = "Declaracion de variable Float asignacion variable"}
-	| NOMBRE_VARIABLE COLON DECLFLOAT COLON EQUAL NOMBRE_VARIABLE OP_ARIT NOMBRE_VARIABLE SEMICOLON {$$.s = "Declaracion de variable Float igual a variable operador variable"}
-	| NOMBRE_VARIABLE COLON DECLFLOAT COLON EQUAL NOMBRE_VARIABLE OP_ARIT ARIT2 SEMICOLON {$$.s = "Declaracion de variable Float igual a variable operador operacion aritmetica"}
-	| NOMBRE_VARIABLE COLON DECLFLOAT COLON EQUAL ARIT2 OP_ARIT NOMBRE_VARIABLE SEMICOLON {$$.s = "Declaracion de variable Float igual a operacion aritmetica operador con variable"} //ignore ARIT OP VAR
-	| NOMBRE_VARIABLE COLON DECLFLOAT COLON EQUAL ARIT2 SEMICOLON 
-	{$$.s = "Declaracion de variable Float igual a operacion aritmetica";
-	insertarElemento(tabla, &size, 0, "", $6.f, $1.s, &elementosOcupados, "float" );
-	$$.a = createASTAsignacion($6.a);}
-	| NOMBRE_VARIABLE COLON DECLFLOAT SEMICOLON {$$.s = "Declaracion de variable Float"}
-
-	| NOMBRE_VARIABLE COLON DECLBOOLEAN COLON EQUAL NOMBRE_VARIABLE SEMICOLON {$$.s = "Declaracion de variable Boolean igual a variable"}
-	| NOMBRE_VARIABLE COLON DECLBOOLEAN COLON EQUAL NOMBRE_VARIABLE OP_BOOLEANO NOMBRE_VARIABLE SEMICOLON {$$.s = "Declaracion de variable Boolean igual"}
-	| NOMBRE_VARIABLE COLON DECLBOOLEAN COLON EQUAL NOMBRE_VARIABLE OP_BOOLEANO ENTERO SEMICOLON {$$.s = "Declaracion de variable Boolean igual a variable operador booleano con entero"}
-	| NOMBRE_VARIABLE COLON DECLBOOLEAN COLON EQUAL NOMBRE_VARIABLE OP_BOOLEANO FLOAT SEMICOLON {$$.s = "Declaracion de variable Boolean igual a variable operador booleano con float"}
-	| NOMBRE_VARIABLE COLON DECLBOOLEAN COLON EQUAL ENTERO OP_BOOLEANO NOMBRE_VARIABLE SEMICOLON {$$.s = "Declaracion de variable Boolean igual a entero operando con variable"}
-	| NOMBRE_VARIABLE COLON DECLBOOLEAN COLON EQUAL FLOAT OP_BOOLEANO NOMBRE_VARIABLE SEMICOLON {$$.s = "Declaracion de variable Boolean igual a float operando con variable"}
-	| NOMBRE_VARIABLE COLON DECLBOOLEAN COLON EQUAL BOOL SEMICOLON {$$.s = "Declaracion de variable Boolean igual a operacion booleana"}
-	| NOMBRE_VARIABLE COLON DECLBOOLEAN COLON EQUAL BOOLEAN SEMICOLON {$$.s = "Declaracion de variable Boolean igual a resultado booleano"}
-	| NOMBRE_VARIABLE COLON DECLBOOLEAN SEMICOLON {$$.s = "Declaracion de variable Boolean igual a resultado booleano"}
-
-	| NOMBRE_VARIABLE COLON DECLSTRING COLON EQUAL NOMBRE_VARIABLE SEMICOLON {$$.s = "Declaracion con string1";}
-	| NOMBRE_VARIABLE COLON DECLSTRING COLON EQUAL STRING SEMICOLON 
-	{$$.s = "Declaracion con string";
-	insertarElemento(tabla, &size, 0, $6.s, 0.0, $1.s, &elementosOcupados, "string" );
-	$$.a = createASTAsignacion($6.a);
+ALLOPERS: 
+	NOMBRE_VARIABLE {
+		if(!searchVar(tabla, size, $1.s)) { 
+			if(strcmp(getVarType(tabla, size, $1.s), "integer")==0) {
+				$$.i = retrieveIntFromTable(tabla, size, $1.s);
+				$$.type = "integer";
+				$$.a = createASTAsignacion($1.a);
+				$$.error = "empty";
+			} else if(strcmp(getVarType(tabla, size, $1.s), "float")==0) {
+				$$.f = retrieveFloatFromTable(tabla, size, $1.s);
+				$$.type = "float";
+				$$.a = createASTAsignacion($1.a);
+				$$.error = "empty";
+			} else {
+				$$.error = "Variable de tipo incorrecto";
+			}
+			
+		} else {yyerror("Variable not declared");}
+	
 	}
-	| NOMBRE_VARIABLE COLON DECLSTRING SEMICOLON {$$.s = "Declaracion de variable String";}
+	| NOMBRE_VARIABLE OP_ARIT NOMBRE_VARIABLE {
+		if(!searchVar(tabla, size, $1.s) && !searchVar(tabla, size, $3.s)) { 
+			if(strcmp(getVarType(tabla, size, $1.s), "integer")==0 && strcmp(getVarType(tabla, size, $3.s), "integer")==0) {
 
-	| NOMBRE_VARIABLE COLON EQUAL NOMBRE_VARIABLE SEMICOLON {$$.s = "Variable igual a Variable"} 
-	| NOMBRE_VARIABLE COLON EQUAL NOMBRE_VARIABLE OP_ARIT NOMBRE_VARIABLE SEMICOLON {$$.s = "Variable igual a Variable operacion con Variable"}
-	| NOMBRE_VARIABLE COLON EQUAL NOMBRE_VARIABLE OP_ARIT ARIT SEMICOLON {$$.s = "Variable igual a Variable operacion con operacion aritmetica";}
-	| NOMBRE_VARIABLE COLON EQUAL NOMBRE_VARIABLE OP_ARIT ARIT2 SEMICOLON {$$.s = "Variable igual a Variable operacion con operacion aritmetica float"}
-	| NOMBRE_VARIABLE COLON EQUAL ARIT OP_ARIT NOMBRE_VARIABLE SEMICOLON {$$.s = "Variable igual a operacion aritmetica operacion con Variable"}
-	| NOMBRE_VARIABLE COLON EQUAL ARIT2 OP_ARIT NOMBRE_VARIABLE SEMICOLON {$$.s = "Variable igual a operacion aritmetica float operacion con Variable"}
-	| NOMBRE_VARIABLE COLON EQUAL ARIT SEMICOLON {$$.s = "Variable igual a operacion aritmetica"}
-	| NOMBRE_VARIABLE COLON EQUAL ARIT2 SEMICOLON {$$.s = "Variable igual a operacion aritmetica float"}
-	| NOMBRE_VARIABLE COLON EQUAL NOMBRE_VARIABLE OP_BOOLEANO NOMBRE_VARIABLE SEMICOLON {$$.s = "Variable igual a Variable operador booleano Variable"}
-	| NOMBRE_VARIABLE COLON EQUAL NOMBRE_VARIABLE OP_BOOLEANO ENTERO SEMICOLON {$$.s = "Variable igual a Variable operador booleano entero"}
-	| NOMBRE_VARIABLE COLON EQUAL NOMBRE_VARIABLE OP_BOOLEANO FLOAT SEMICOLON {$$.s = "Variable igual a Variable operador booleano float"}
-	| NOMBRE_VARIABLE COLON EQUAL ENTERO OP_BOOLEANO NOMBRE_VARIABLE SEMICOLON {$$.s = "Variable igual a entero operador booleano Variable"}
-	| NOMBRE_VARIABLE COLON EQUAL FLOAT OP_BOOLEANO NOMBRE_VARIABLE SEMICOLON {$$.s = "Variable igual a float operador booleano Variable"}
-	| NOMBRE_VARIABLE COLON EQUAL BOOL SEMICOLON {$$.s = "Variable igual a operacion booleana"}
-	| NOMBRE_VARIABLE COLON EQUAL BOOLEAN SEMICOLON {$$.s = "Variable igual a condicion booleana"}
-	| NOMBRE_VARIABLE COLON EQUAL STRING SEMICOLON {$$.s = "Variable igual a string"}
+				$$.i = operateInt($2.operador, retrieveIntFromTable(tabla, size, $1.s), retrieveIntFromTable(tabla, size, $3.s));
+				$$.type = "integer";
+				$$.a = createASTAsignacion(createAST($2.operador, $1.a, $3.a));
+				$$.error = "empty";
 
-	| TYPE NOMBRE_VARIABLE IS RANGE ENTERO DOTDOT ENTERO SEMICOLON {$$.s = "Tipo Variable en rango entero"}
-	| TYPE NOMBRE_VARIABLE IS DECLARRAY ABRIR_PARENTESIS ENTERO DOTDOT ENTERO CERRAR_PARENTESIS OF NOMBRE_VARIABLE SEMICOLON {$$.s = "Tipo Variable declaraccion array entero de Variable"}
-	| NOMBRE_VARIABLE COLON NOMBRE_VARIABLE COLON EQUAL ABRIR_PARENTESIS ENTERO AUXINT CERRAR_PARENTESIS SEMICOLON {}
+			} else if(strcmp(getVarType(tabla, size, $1.s), "float")==0 && strcmp(getVarType(tabla, size, $3.s), "integer")==0) {
+
+				$$.f = operateFloat($2.operador, retrieveFloatFromTable(tabla, size, $1.s), (float)retrieveIntFromTable(tabla, size, $3.s));
+				$$.type = "float";
+				$$.a = createASTAsignacion(createAST($2.operador, $1.a, $3.a));
+				$$.error = "empty";
+
+			} else if(strcmp(getVarType(tabla, size, $1.s), "integer")==0 && strcmp(getVarType(tabla, size, $3.s), "float")==0) {
+				
+				$$.f = operateFloat($2.operador, (float)retrieveIntFromTable(tabla, size, $1.s), retrieveFloatFromTable(tabla, size, $3.s));
+				$$.type = "float";
+				$$.a = createASTAsignacion(createAST($2.operador, $1.a, $3.a));
+				$$.error = "empty";
+
+			} else if(strcmp(getVarType(tabla, size, $3.s), "float")==0 && strcmp(getVarType(tabla, size, $3.s), "float")==0) {
+				
+				$$.f = operateFloat($2.operador, retrieveFloatFromTable(tabla, size, $1.s), retrieveFloatFromTable(tabla, size, $3.s));
+				$$.type = "float";
+				$$.a = createASTAsignacion(createAST($2.operador, $1.a, $3.a));
+				$$.error = "empty";
+
+			} else {
+				$$.error = "Variable de tipo incorrecto";
+			}
+			
+		} else {yyerror("Variable not declared");}
+	}
+	| NOMBRE_VARIABLE OP_ARIT ARIT {
+		if(!searchVar(tabla, size, $1.s)) { 
+			if(strcmp(getVarType(tabla, size, $1.s), "integer")==0 && strcmp($3.type, "integer")==0) {
+
+				$$.i = operateInt($2.operador, retrieveIntFromTable(tabla, size, $1.s), $3.i);
+				$$.type = "integer";
+				$$.a = createASTAsignacion(createAST($2.operador, $1.a, $3.a));
+				$$.error = "empty";
+
+			} else if(strcmp(getVarType(tabla, size, $1.s), "float")==0 && strcmp($3.type, "integer")==0) {
+
+				$$.f = operateFloat($2.operador, retrieveFloatFromTable(tabla, size, $1.s), (float)$3.i);
+				$$.type = "float";
+				$$.a = createASTAsignacion(createAST($2.operador, $1.a, $3.a));
+				$$.error = "empty";
+
+			} else if(strcmp(getVarType(tabla, size, $1.s), "integer")==0 && strcmp($3.type, "float")==0) {
+				
+				$$.f = operateFloat($2.operador, (float)retrieveIntFromTable(tabla, size, $1.s), $3.f);
+				$$.type = "float";
+				$$.a = createASTAsignacion(createAST($2.operador, $1.a, $3.a));
+				$$.error = "empty";
+
+			} else if(strcmp(getVarType(tabla, size, $3.s), "float")==0 && strcmp($3.type, "float")==0) {
+				
+				$$.f = operateFloat($2.operador, retrieveFloatFromTable(tabla, size, $1.s), $3.f);
+				$$.type = "float";
+				$$.a = createASTAsignacion(createAST($2.operador, $1.a, $3.a));
+				$$.error = "empty";
+
+			} else {
+				$$.error = "Variable de tipo incorrecto";
+			}
+			
+		} else {yyerror("Variable not declared");}
+	}
+	| ARIT OP_ARIT NOMBRE_VARIABLE {
+		if(!searchVar(tabla, size, $3.s)) { 
+
+			if(strcmp($1.type, "integer")==0 && strcmp(getVarType(tabla, size, $3.s), "integer")==0) {
+
+				$$.i = operateInt($2.operador, $1.i, retrieveIntFromTable(tabla, size, $3.s));
+				$$.type = "integer";
+				$$.a = createASTAsignacion(createAST($2.operador, $1.a, $3.a));
+				$$.error = "empty";
+
+			} else if(strcmp($1.type, "float")==0 && strcmp(getVarType(tabla, size, $3.s), "integer")==0) {
+
+				$$.f = operateFloat($2.operador, $1.f, (float)retrieveIntFromTable(tabla, size, $3.s));
+				$$.type = "float";
+				$$.a = createASTAsignacion(createAST($2.operador, $1.a, $3.a));
+				$$.error = "empty";
+
+			} else if(strcmp($1.type, "integer")==0 && strcmp(getVarType(tabla, size, $3.s), "float")==0) {
+				
+				$$.f = operateFloat($2.operador, (float)$1.i, retrieveFloatFromTable(tabla, size, $3.s));
+				$$.type = "float";
+				$$.a = createASTAsignacion(createAST($2.operador, $1.a, $3.a));
+				$$.error = "empty";
+
+			} else if(strcmp($1.type, "float")==0 && strcmp(getVarType(tabla, size, $3.s), "float")==0) {
+				
+				$$.f = operateFloat($2.operador, $1.f, retrieveFloatFromTable(tabla, size, $3.s));
+				$$.type = "float";
+				$$.a = createASTAsignacion(createAST($2.operador, $1.a, $3.a));
+				$$.error = "empty";
+
+			} else {
+				$$.error = "Variable de tipo incorrecto";
+			}
+			
+		} else {yyerror("Variable not declared");}
+	}
+	| ARIT {
+		if(strcmp($1.type, "integer")==0) {
+			$$.i = $1.i;
+			$$.type = "integer";
+			$$.a = createASTAsignacion($1.a);
+			$$.error = "empty";
+		} else if(strcmp($1.type, "float")==0) {
+			$$.f = $1.f;
+			$$.type = "float";
+			$$.a = createASTAsignacion($1.a);
+			$$.error = "empty";
+		} else {
+			$$.error = "Variable de tipo incorrecto";
+		}
+			
+	}
+;
+
+TYPEDECLARATION: 
+	DECLINTEGER {
+		$$.type = "integer";
+	}
+	| DECLFLOAT {
+		$$.type = "float";
+	}
+;
+
+DECL: 
+	NOMBRE_VARIABLE COLON TYPEDECLARATION COLON EQUAL ALLOPERS SEMICOLON {
+		$$.s = "Declaracion de variable Integer o Float";
+		if(strcmp($6.error, "empty")==0){
+			$$.error = $6.error;
+			if(strcmp($3.type, "integer")==0 && strcmp($6.type, "integer")==0){
+				insertarElemento(tabla, &size, $6.i, "", 0.0, $1.s, false, &elementosOcupados, "integer", true );
+				$$.a = $6.a;
+			} else if(strcmp($3.type, "float")==0 && strcmp($6.type, "float")==0){
+				insertarElemento(tabla, &size, 0, "", $6.f, $1.s, false, &elementosOcupados, "float", true );
+				$$.a = $6.a;
+			} else if(strcmp($3.type, "float")==0 && strcmp($6.type, "integer")==0){
+				insertarElemento(tabla, &size, 0, "", (float)$6.i, $1.s, false, &elementosOcupados, "float", true );
+				$$.a = $6.a;
+			} else {
+				$$.error = "Error diferente tipo de variable (int, float)";
+			}
+
+		} else {
+			$$.error = $6.error;
+		}
+		
+	}
+
+	| NOMBRE_VARIABLE COLON TYPEDECLARATION SEMICOLON {
+		$$.s = "Declaracion de variable Integer o Float vacia";
+		if(strcmp($3.type, "integer")==0){
+			if (searchVar(tabla, size, $1.s)) {
+				$$.error = "empty";
+				insertarElemento(tabla, &size, 0, "", 0.0, $1.s, false, &elementosOcupados, "integer", false );
+			} else {
+				$$.error = "Variable already declared";
+			}
+		} else if(strcmp($3.type, "float")==0){ 
+			if (searchVar(tabla, size, $1.s)) {
+				$$.error = "empty";
+				insertarElemento(tabla, &size, 0, "", 0.0, $1.s, false, &elementosOcupados, "float", false );
+			} else {
+				$$.error = "Variable already declared";
+			}	
+		}
+	}
+
+
+	| NOMBRE_VARIABLE COLON DECLBOOLEAN COLON EQUAL NOMBRE_VARIABLE SEMICOLON {
+			if(searchVar(tabla, size, $1.s) && checkVarAndType(tabla, size, $6.s, "boolean")) {
+				$$.error = "empty";
+				insertarElemento(tabla, &size, 0, "", 0.0, $1.s, retrieveBoolFromTable(tabla, size, $6.s), &elementosOcupados, "boolean", true );
+				$$.a = createASTAsignacion($6.a);
+			} else {$$.error = "Variable declared or wrong type";}
+			$$.s = "Declaracion de variable Boolean a operacion booleana";
+		}
+	| NOMBRE_VARIABLE COLON DECLBOOLEAN COLON EQUAL ALLBOOL SEMICOLON {
+			if(strcmp($6.error,"empty") == 0 ){
+				if(searchVar(tabla, size, $1.s)) {
+					$$.error = "empty";
+					insertarElemento(tabla, &size, 0, "", 0.0, $1.s, $6.boo ? true : false, &elementosOcupados, "boolean", true );
+					$$.a = createASTAsignacion($6.a);
+				} else {$$.error = "Variable declared or wrong type";}
+			} else {
+				$$.error = $6.error;
+			}
+			
+			$$.s = "Declaracion de variable Boolean a operacion booleana";
+		}
+
+	| NOMBRE_VARIABLE COLON EQUAL  AUXCOMPLETO  SEMICOLON	{
+		$$.s = "asignación de variable a cualquier cosa";
+		if(strcmp($4.error,"empty") == 0 ) {
+			$$.error = $4.error;
+			if(strcmp(getVarType(tabla, size, $1.s), "integer")==0 && strcmp($4.type, "integer")==0) {
+				
+				insertarElemento(tabla, &size, $4.i, "", 0.0, $1.s, false, &elementosOcupados, "integer", true );
+				$$.a = createASTAsignacion($4.a);
+
+			} else if(strcmp(getVarType(tabla, size, $1.s), "float")==0 && strcmp($4.type, "integer")==0) {
+
+				insertarElemento(tabla, &size, 0, "", (float)$4.i, $1.s, false, &elementosOcupados, "float", true );
+				$$.a = createASTAsignacion($4.a);
+
+			} else if(strcmp(getVarType(tabla, size, $1.s), "float")==0 && strcmp($4.type, "float")==0) {
+
+				insertarElemento(tabla, &size, 0, "", $4.f, $1.s, false, &elementosOcupados, "float", true );
+				$$.a = createASTAsignacion($4.a);
+
+			} else if(strcmp(getVarType(tabla, size, $1.s), "boolean")==0 && strcmp($4.type, "boolean")==0) {
+
+				insertarElemento(tabla, &size, 0, "", 0.0, $1.s, $4.boo ? true : false, &elementosOcupados, "boolean", true );
+				$$.a = createASTAsignacion($4.a);
+
+			} else if(strcmp(getVarType(tabla, size, $1.s), "string")==0 && strcmp($4.type, "string")==0) {
+
+				insertarElemento(tabla, &size, 0, $4.s, 0.0, $1.s, false, &elementosOcupados, "string", true );
+				$$.a = createASTAsignacion($4.a);
+
+			} else if(strcmp($4.type, "var")==0) {
+
+				if(strcmp(getVarType(tabla, size, $1.s), "integer")==0 && strcmp($4.type, "integer")==0) {
+
+					insertarElemento(tabla, &size, $4.i, "", 0.0, $1.s, false, &elementosOcupados, "integer", true );
+					$$.a = createASTAsignacion($4.a);
+
+				} else if(strcmp(getVarType(tabla, size, $1.s), "float")==0 && strcmp($4.type, "integer")==0) {
+
+					insertarElemento(tabla, &size, 0, "", (float)$4.i, $1.s, false, &elementosOcupados, "float", true );
+					$$.a = createASTAsignacion($4.a);
+
+				} else if(strcmp(getVarType(tabla, size, $1.s), "float")==0 && strcmp($4.type, "float")==0) {
+
+					insertarElemento(tabla, &size, 0, "", $4.f, $1.s, false, &elementosOcupados, "float", true );
+					$$.a = createASTAsignacion($4.a);
+
+				} else if(strcmp(getVarType(tabla, size, $1.s), "boolean")==0 && strcmp($4.type, "boolean")==0) {
+
+					insertarElemento(tabla, &size, 0, "", 0.0, $1.s, $4.boo ? true : false, &elementosOcupados, "boolean", true );
+					$$.a = createASTAsignacion($4.a);
+
+				} else if(strcmp(getVarType(tabla, size, $1.s), "string")==0 && strcmp($4.type, "string")==0) {
+
+					insertarElemento(tabla, &size, 0, $4.s, 0.0, $1.s, false, &elementosOcupados, "string", true );
+					$$.a = createASTAsignacion($4.a);
+
+				} else {
+					$$.error = "Invalid assignation type";
+				}
+			} else {
+				$$.error = "Invalid assignation type";
+			}
+		} else {
+			$$.error = $4.error;
+		}
+	}
+
+
+	| NOMBRE_VARIABLE COLON DECLBOOLEAN SEMICOLON {
+			$$.s = "Declaracion de variable Boolean vacia";
+			if (searchVar(tabla, size, $1.s)) {
+				$$.error = "empty";
+				insertarElemento(tabla, &size, 0, "", 0.0, $1.s, false, &elementosOcupados, "boolean", false );
+			} else {
+				$$.error = "Variable declared";
+			}
+		}
+	| NOMBRE_VARIABLE COLON DECLSTRING COLON EQUAL NOMBRE_VARIABLE SEMICOLON {
+			$$.s = "Declaracion de variable String igual a variable String"; 
+			if(searchVar(tabla, size, $1.s) && checkVarAndType(tabla, size, $6.s,"string")) {
+				$$.error = "empty";
+				insertarElemento(tabla, &size, 0, retrieveStringFromTable(tabla, size, $6.s), 0.0, $1.s, false, &elementosOcupados, "string", true );
+				$$.a = createASTAsignacion($6.a);
+			} else {
+				$$.error = "Variable declared or wrong type";
+			}
+		}
+	| NOMBRE_VARIABLE COLON DECLSTRING COLON EQUAL STRING SEMICOLON {
+			$$.s = "Declaracion con string";
+			if(searchVar(tabla, size, $1.s)) {
+				$$.error = "empty"; 
+				insertarElemento(tabla, &size, 0, $6.s, 0.0, $1.s, false, &elementosOcupados, "string", true );$$.a = createASTAsignacion($6.a);
+			} else {
+				$$.error = "Variable declared or wrong type";
+			}
+		}
+	| NOMBRE_VARIABLE COLON DECLSTRING SEMICOLON {
+			$$.s = "Declaracion de variable String vacia";
+			if (searchVar(tabla, size, $1.s)) {
+			$$.error = "empty";insertarElemento(tabla, &size, 0, "", 0.0, $1.s, false, &elementosOcupados, "string", false );} else {$$.error = "Variable declared";}
+		}
+
+	| TYPE NOMBRE_VARIABLE IS RANGE ENTERO DOTDOT ENTERO SEMICOLON {$$.s = "Tipo Variable en rango entero";}
+	| TYPE NOMBRE_VARIABLE IS DECLARRAY ABRIR_PARENTESIS ENTERO DOTDOT ENTERO CERRAR_PARENTESIS OF NOMBRE_VARIABLE SEMICOLON {$$.s = "Tipo Variable declaraccion array entero de Variable";}
+	| NOMBRE_VARIABLE COLON NOMBRE_VARIABLE COLON EQUAL ABRIR_PARENTESIS ENTERO AUXINT CERRAR_PARENTESIS SEMICOLON {$$.s = "Declaracion de array";}
 
 ;
+
+AUXCOMPLETO: 
+	ALLBOOL {$$ = $1;}
+	| ALLOPERS {$$ = $1; }
+;
+
 AUXINT: COMMA ENTERO {}
 	| {}
 ;
@@ -284,60 +571,203 @@ OP_ARIT:
 	| DIV {$$.operador = "/";}
 ;
 
-ARIT: 
-	ARIT SUMA ARIT 									{$$.i = $1.i + $3.i; $$.a = createAST("+",$1.a,$3.a);}
-	| ARIT RESTA ARIT 								{$$.i = $1.i - $3.i; $$.a = createAST("-",$1.a,$3.a);}
-	| ARIT MULT ARIT 									{$$.i = $1.i * $3.i; $$.a = createAST("*",$1.a,$3.a);}
-	| ARIT DIV ARIT 									{$$.i = $1.i / $3.i; $$.a = createAST("/",$1.a,$3.a);}
-	| ABRIR_PARENTESIS ARIT CERRAR_PARENTESIS 	{$$.i = $2.i;}
-	| ENTERO 										{$$.i = $1; $$.a = createNum($1);}
+OPERANDO:
+	ENTERO {$$.i = $1; $$.type = "integer"; $$.error="empty"; $$.a = createNum($1);}
+	|	FLOAT {$$.f = $1; $$.type = "float"; $$.error="empty"; $$.a = createNum($1);}
 ;
 
-ARIT2: 
-	ARIT2 SUMA ARIT2 									{$$.f = $1.f + $3.f; $$.a = createAST("+",$1.a,$3.a);}
-	| ARIT2 RESTA ARIT2 								{$$.f = $1.f - $3.f; $$.a = createAST("-",$1.a,$3.a);}
-	| ARIT2 MULT ARIT2 									{$$.f = $1.f * $3.f; $$.a = createAST("*",$1.a,$3.a);}
-	| ARIT2 DIV ARIT2 									{$$.f = $1.f / $3.f; $$.a = createAST("/",$1.a,$3.a);}
-	| ABRIR_PARENTESIS ARIT2 CERRAR_PARENTESIS 	{$$.f = $2.f;}
-	| FLOAT 									{$$.f = $1; $$.a = createNum($1);}
+ARIT:
+	OPERANDO {
+		$$.type = $1.type;
+		$$.a = $1.a;
+		if (strcmp("integer", $1.type) == 0) {$$.i = $1.i;} else {$$.f = $1.f;}
+	}
+	| ARIT OP_ARIT ARIT {
+		if(strcmp($1.type, "float") == 0 && strcmp($3.type, "float") == 0) {
+			$$.f = operateFloat($2.operador, $1.f, $3.f);
+			$$.type = "float";
+		} else if (strcmp($3.type, "float") == 0) {
+			$$.f = operateFloat($2.operador, (float)$1.i, $3.f);
+			$$.type = "float";
+		} else if (strcmp($1.type, "float") == 0) {
+			$$.f = operateFloat($2.operador, $1.f, (float)$3.i);
+			$$.type = "float";
+		} else {
+			$$.i = operateInt($2.operador, $1.i, $3.i);
+			$$.type = "integer";
+		}
+		$$.a = createAST($2.operador, $1.a, $3.a);
+	}
+	| ABRIR_PARENTESIS ARIT CERRAR_PARENTESIS {if(strcmp($2.type, "float") == 0) {$$.f = $2.f;} else {$$.i = $2.i;}}
 ;
 
-OP_BOOLEANO: IGUAL  	{$$.s = "IGUAL";$$.operador = "+";}
+OP_BOOLEANO: IGUAL  	{$$.s = "IGUAL";$$.operador = "==";}
     | DESIGUAL   			{$$.s = "DESIGUAL";$$.operador = "!=";}
     | MENOR  				{$$.s = "MENOR";$$.operador = "<";}
-    | MAYOR  				{$$.s = "MAYOR";$$.operador = ">";} //cambiarlo por st.algo 
+    | MAYOR  				{$$.s = "MAYOR";$$.operador = ">";}
     | MENOR_IGUAL  			{$$.s = "MENOR IGUAL";$$.operador = "<=";}
     | MAYOR_IGUAL 			{$$.s = "MAYOR IGUAL";$$.operador = ">=";}
 ;
 
-BOOL: ENTERO OP_BOOLEANO ENTERO 			{$$.s = "ENTERO OP BOOL ENTERO";}
-	| ENTERO OP_BOOLEANO FLOAT 			{$$.s = "ENTERO OP BOOL FLOAT";}
-	| FLOAT OP_BOOLEANO ENTERO 			{$$.s = "FLOAT OP BOOL ENTERO";}
-	| FLOAT OP_BOOLEANO FLOAT 			{$$.s = "FLOAT OP BOOL FLOAT";} //entero fuera
-	| NOMBRE_VARIABLE OP_BOOLEANO ENTERO 			{$$.s = "ENTERO OP BOOL ENTERO";}
-	| ENTERO OP_BOOLEANO NOMBRE_VARIABLE 			{$$.s = "ENTERO OP BOOL ENTERO";}
-	| NOMBRE_VARIABLE OP_BOOLEANO FLOAT 			{$$.s = "FLOAT OP BOOL FLOAT";}
-	| FLOAT OP_BOOLEANO NOMBRE_VARIABLE 			{$$.s = "FLOAT OP BOOL FLOAT";}
-	| ABRIR_PARENTESIS BOOL CERRAR_PARENTESIS 	{$$.s = "PARENTESIS BOOL PARENTESIS";}
+ALLBOOL: 
+	BOOLEAN_MIX {$$ = $1; $$.type = "boolean";}
+	| BOOL {$$ = $1; $$.type = "boolean";}
 ;
-BOOLEAN: TRUE | FALSE;
 
-BUCLE: WHILE BOOL LOOP  	{$$.s = "WHILE BOOL LOOP";}
-	| FOR BOOL LOOP  	{$$.s = "FOR BOOL LOOP";}
+BOOL:
+	ARIT OP_BOOLEANO ARIT 			{
+		$$.s = "INT OP BOOL INT";
+		$$.error = "empty";
+		if(strcmp($1.type, "integer")==0 && strcmp($3.type, "integer")==0){	
+			$$.boo = compare($2.operador, (float)$1.i, (float)$3.i);
+			$$.a = createAST($2.operador, $1.a, $3.a); 
+		} else if(strcmp($3.type, "integer")==0){	
+			$$.boo = compare($2.operador, $1.f, (float)$3.i);
+			$$.a = createAST($2.operador, $1.a, $3.a); 
+		} else if(strcmp($1.type, "integer")==0){	
+			$$.boo = compare($2.operador, (float)$1.i, $3.f);
+			$$.a = createAST($2.operador, $1.a, $3.a); 
+		} else {	
+			$$.boo = compare($2.operador, $1.f, $3.f);
+			$$.a = createAST($2.operador, $1.a, $3.a); 
+		}  
+	}
+
+	| NOMBRE_VARIABLE OP_BOOLEANO ARIT 			{
+
+		$$.s = "VAR OP BOOL INT";
+		if(!searchVar(tabla, size, $1.s)) { 
+			$$.error = "empty";
+			if(strcmp(getVarType(tabla, size, $1.s), "integer")==0 && strcmp($3.type, "integer")==0) {
+
+				$$.boo = compare($2.operador, (float)retrieveIntFromTable(tabla, size, $1.s), (float)$3.i);
+				$$.a = createASTAsignacion(createAST($2.operador, $1.a, $3.a));
+
+			} else if(strcmp(getVarType(tabla, size, $1.s), "float")==0 && strcmp($3.type, "integer")==0) {
+
+				$$.boo = compare($2.operador, retrieveFloatFromTable(tabla, size, $1.s), (float)$3.i);
+				$$.a = createASTAsignacion(createAST($2.operador, $1.a, $3.a));
+
+			} else if(strcmp(getVarType(tabla, size, $1.s), "integer")==0 && strcmp($3.type, "float")==0) {
+				
+				$$.boo = compare($2.operador, (float)retrieveIntFromTable(tabla, size, $1.s), $3.f);
+				$$.a = createASTAsignacion(createAST($2.operador, $1.a, $3.a));
+
+			} else if(strcmp(getVarType(tabla, size, $1.s), "float")==0 && strcmp($3.type, "float")==0) {
+				
+				$$.boo = compare($2.operador, retrieveFloatFromTable(tabla, size, $1.s), $3.f);
+				$$.a = createASTAsignacion(createAST($2.operador, $1.a, $3.a));
+
+			} else {
+
+				$$.error = "Variable de tipo incorrecto";
+			}
+			
+		} else {yyerror("Variable not declared");}
+
+		}
+
+	| ARIT OP_BOOLEANO NOMBRE_VARIABLE 			{
+			$$.s = "INT OP BOOL VAR";
+			if(!searchVar(tabla, size, $3.s)) { 
+				$$.error = "empty";
+				if(strcmp($1.type, "integer")==0 && strcmp(getVarType(tabla, size, $3.s), "integer")==0) {
+
+					$$.boo = compare($2.operador, (float)$1.i, (float)retrieveIntFromTable(tabla, size, $3.s));
+					$$.a = createASTAsignacion(createAST($2.operador, $1.a, $3.a));
+
+				} else if(strcmp($1.type, "float")==0 && strcmp(getVarType(tabla, size, $3.s), "integer")==0) {
+
+					$$.boo = compare($2.operador, $1.f, (float)retrieveIntFromTable(tabla, size, $3.s));
+					$$.a = createASTAsignacion(createAST($2.operador, $1.a, $3.a));
+
+				} else if(strcmp($1.type, "integer")==0 && strcmp(getVarType(tabla, size, $3.s), "float")==0) {
+					
+					$$.boo = compare($2.operador, (float)$1.i, retrieveFloatFromTable(tabla, size, $3.s));
+					$$.a = createASTAsignacion(createAST($2.operador, $1.a, $3.a));
+
+				} else if(strcmp($1.type, "float")==0 && strcmp(getVarType(tabla, size, $3.s), "float")==0) {
+
+					$$.boo = compare($2.operador, $1.f, retrieveFloatFromTable(tabla, size, $3.s));
+					$$.a = createASTAsignacion(createAST($2.operador, $1.a, $3.a));
+
+				} else {
+					$$.error = "Variable de tipo incorrecto";
+				}
+			
+			} else {
+				yyerror("Variable not declared");
+			}
+		}
+
+	| NOMBRE_VARIABLE OP_BOOLEANO NOMBRE_VARIABLE 			{
+			$$.s = "VAR OP BOOL VAR";
+			if(!searchVar(tabla, size, $1.s) && !searchVar(tabla, size, $3.s)) {
+				$$.error = "empty";
+				if((strcmp("integer", getVarType(tabla, size, $1.s)) == 0) && (strcmp("integer", getVarType(tabla, size, $3.s)) == 0)){
+					$$.boo = compare($2.operador,	(float)retrieveIntFromTable(tabla, size, $1.s), (float)retrieveIntFromTable(tabla, size, $3.s));
+					$$.a=createAST($2.operador, $1.a, $3.a);
+				} else if((strcmp("float", getVarType(tabla, size, $1.s))  == 0) && (strcmp("float", getVarType(tabla, size, $3.s))  == 0)){
+					$$.boo = compare($2.operador, retrieveFloatFromTable(tabla, size, $1.s), retrieveFloatFromTable(tabla, size, $3.s));
+					$$.a=createAST($2.operador, $1.a, $3.a);
+				} else if ((strcmp("integer", getVarType(tabla, size, $1.s))  == 0) && (strcmp("float", getVarType(tabla, size, $3.s))  == 0)) {
+					$$.boo = compare($2.operador, (float)retrieveIntFromTable(tabla, size, $1.s), retrieveFloatFromTable(tabla, size, $3.s));
+					$$.a=createAST($2.operador, $1.a, $3.a);
+				} else if ((strcmp("float", getVarType(tabla, size, $1.s))  == 0) && (strcmp("integer", getVarType(tabla, size, $3.s))  == 0)) {
+					$$.boo = compare($2.operador, retrieveFloatFromTable(tabla, size, $1.s), (float)retrieveIntFromTable(tabla, size, $3.s));
+					$$.a=createAST($2.operador, $1.a, $3.a);
+				} else {
+					$$.error = "Esta variable tiene un tipo incorrecto";
+				}  
+				
+			} else {$$.error = "Variable declared or wrong type";}
+		}
+	| ABRIR_PARENTESIS BOOL CERRAR_PARENTESIS 	{$$.s = "PARENTESIS BOOL PARENTESIS"; $$.boo = $2.boo;}
+	| NOMBRE_VARIABLE {
+		$$.s = "PARENTESIS BOOL PARENTESIS";
+		if(!searchVar(tabla, size, $1.s)){
+			if(strcmp("boolean", getVarType(tabla, size, $1.s)) == 0){
+				$$.boo = retrieveBoolFromTable(tabla, size, $1.s);
+			} else {
+				$$.error = "La variable no es un boolean";
+			}
+		} else {
+			$$.error = "variable no declarada";
+		}
+	}
+	| TRUE {$$.boo=1; $$.a = createBOOLVAR("True");}
+	| FALSE {$$.boo=0; $$.a = createBOOLVAR("False");}
+;
+
+BOOLEAN_MIX: 
+	BOOL AND BOOL {
+		$$.s="Expresiones booleanas con AND\n";
+		$$.error = "empty";
+		if($1.boo == $3.boo){
+			$$.boo = 1;
+		} else {
+			$$.boo = 0;
+		}
+	}
+	| BOOL OR BOOL {
+		$$.s="Expresiones booleanas con OR\n";
+		$$.error = "empty";
+		if($1.boo == 1 || $3.boo == 1){
+			$$.boo = 1;
+		} else {
+			$$.boo = 0;
+		}
+	}
+;
+
+BUCLE: WHILE BOOLEAN_MIX LOOP  	{$$.s = "WHILE BOOL LOOP";}
+	| FOR BOOLEAN_MIX LOOP  	{$$.s = "FOR BOOL LOOP";}
 	| END LOOP SEMICOLON  	{$$.s = "END LOOP SEMICOLON";}
 ;
 
-BUCLE_CASE: CASE BOOL IS	{$$.s = "CASE BOOL IS";}
-	| WHEN ENTERO FLECHA	{$$.s = "WHEN ENTERO FLECHA";}
-	| WHEN FLOAT FLECHA		{$$.s = "WHEN FLOAT FLECHA";}
-	//| WHEN STRING FLECHA	{$$.s = "WHEN STRING FLECHA";}
-	| WHEN OTHERS FLECHA	{$$.s = "WHEN OTHERS FLECHA";}
-	| END CASE SEMICOLON	{$$.s = "END CASE SEMICOLON";}
-;
-
-SENTENCIA_IF: IF BOOL THEN	{$$.s = "IF BOOL THEN";}
+SENTENCIA_IF: IF BOOLEAN_MIX THEN	{$$.s = "IF BOOL THEN";}
 	| ELSE  				{$$.s = "ELSE";}
-    | ELSEIF BOOL THEN  	{$$.s = "ELSEIF BOOL THEN";}
+    | ELSEIF BOOLEAN_MIX THEN  	{$$.s = "ELSEIF BOOL THEN";}
 	| END IF SEMICOLON 		{$$.s = "END IF SEMICOLON";}
 ;
 NOMBRE_VARIABLE:
@@ -370,471 +800,579 @@ void iniArrayNodos(struct ast *nodos, int inicio, int fin) {
 
 
 //FUNCIONES DEL AST
+struct ast *createFlow(struct ast *cond) {
 
-struct ast *createFlow(struct ast *cond){
+    struct flow *a = malloc(sizeof(struct flow));
 
-struct flow *a = malloc(sizeof(struct flow));
+    if (!a)
+    {
+        yyerror("out of space");
+        exit(0);
+    }
 
-if(!a) {
-yyerror("out of space");
-exit(0);
+    a->nodetype = "IF";
+    a->cond = cond;
+
+    return (struct ast *)a;
 }
 
-a->nodetype = "IF";
-a->cond = cond;
+struct ast *createFlow2(struct ast *cond) {
 
-return (struct ast *)a;
+    struct flow *a = malloc(sizeof(struct flow));
+
+    if (!a)
+    {
+        yyerror("out of space");
+        exit(0);
+    }
+
+    a->nodetype = "WHILE";
+    a->cond = cond;
+
+    return (struct ast *)a;
 }
 
-struct ast *createFlow2(struct ast *cond){
-
-struct flow *a = malloc(sizeof(struct flow));
-
-if(!a) {
-yyerror("out of space");
-exit(0);
-}
-
-a->nodetype = "WHILE";
-a->cond = cond;
-
-return (struct ast *)a;
-}
-
-struct ast *createASTAsignacion(struct ast *op){
-
-	struct asign *a = malloc(sizeof(struct asign));
-	if(!a) {
-		yyerror("out of space");
-		exit(0);
-	}
-	a->nodetype = "=";
-	a->as = op;
-
-	return (struct ast *)a;
-}
-
-struct ast *createAST(char* nodetype, struct ast *l, struct ast *r)
+struct ast *createASTAsignacion(struct ast *op)
 {
- struct ast *a = malloc(sizeof(struct ast));
 
- if(!a) {
- yyerror("out of space");
- exit(0);
- }
- a->nodetype = nodetype;
- a->l = l;
- a->r = r;
- return a;
+    struct asign *a = malloc(sizeof(struct asign));
+    if (!a)
+    {
+        yyerror("out of space");
+        exit(0);
+    }
+    a->nodetype = "=";
+    a->as = op;
+
+    return (struct ast *)a;
 }
 
-struct ast *createBOO(char* nodetype, struct ast *l, struct ast *r) {
+struct ast *createAST(char *nodetype, struct ast *l, struct ast *r)
+{
+    struct ast *a = malloc(sizeof(struct ast));
 
- struct boo *a = malloc(sizeof(struct boo));
+    if (!a)
+    {
+        yyerror("out of space");
+        exit(0);
+    }
+    a->nodetype = nodetype;
+    a->l = l;
+    a->r = r;
+    return a;
+}
 
- if(!a) {
- yyerror("out of space");
- exit(0);
- }
- a->nodetype = nodetype;
- a->l = l;
- a->r = r;
- return (struct ast *)a;
+struct ast *createBOO(char *nodetype, struct ast *l, struct ast *r)
+{
+
+    struct boo *a = malloc(sizeof(struct boo));
+
+    if (!a)
+    {
+        yyerror("out of space");
+        exit(0);
+    }
+    a->nodetype = nodetype;
+    a->l = l;
+    a->r = r;
+    return (struct ast *)a;
 }
 
 struct ast *createNum(double d)
 {
- 	struct numval *a = malloc(sizeof(struct numval));
-  	if(!a) {
- 		yyerror("out of space");
- 		exit(0);
- 	}
- 	a->nodetype = "Constante";
- 	a->number = d;
- 	return (struct ast *)a;
+    struct numval *a = malloc(sizeof(struct numval));
+    if (!a)
+    {
+        yyerror("out of space");
+        exit(0);
+    }
+    a->nodetype = "Constante";
+    a->number = d;
+    return (struct ast *)a;
 }
 
-struct ast *createSTR(char* s)
+struct ast *createSTR(char *s)
 {
- 	struct strval *a = malloc(sizeof(struct strval));
-  	if(!a) {
- 		yyerror("out of space");
- 		exit(0);
- 	}
- 	a->nodetype = "String";
- 	a->str = s;
- 	return (struct ast *)a;
+    struct strval *a = malloc(sizeof(struct strval));
+    if (!a)
+    {
+        yyerror("out of space");
+        exit(0);
+    }
+    a->nodetype = "String";
+    a->str = s;
+    return (struct ast *)a;
 }
 
-struct ast *createBOOVAR(char* s)
+struct ast *createBOOLVAR(char *s)
 {
- 	struct strval *a = malloc(sizeof(struct strval));
-  	if(!a) {
- 		yyerror("out of space");
- 		exit(0);
- 	}
- 	a->nodetype = "Boolean_var";
- 	a->str = s;
- 	return (struct ast *)a;
+    struct strval *a = malloc(sizeof(struct strval));
+    if (!a)
+    {
+        yyerror("out of space");
+        exit(0);
+    }
+    a->nodetype = "Boolean_var";
+    a->str = s;
+    return (struct ast *)a;
 }
 
+void evalAST(struct ast a, int *size)
+{
 
-void evalAST(struct ast a, int* size){
-	
-	int i = 0;
-	int encontrado = 0;
-	while (i < *size && encontrado == 0){
-		if((strcmp(nodos[i].nodetype, "._empty") == 0) && (strcmp(a.nodetype, "String") != 0) && (strcmp(a.nodetype, "Constante") != 0) ){
-			nodos[i] = a;
-			numnodo = numnodo +1;
-			encontrado = 1;
-		}else{
-			i++;
-		}
-	}
+    int i = 0;
+    int encontrado = 0;
+    while (i < *size && encontrado == 0)
+    {
+        if ((strcmp(nodos[i].nodetype, "._empty") == 0) && (strcmp(a.nodetype, "String") != 0) && (strcmp(a.nodetype, "Constante") != 0))
+        {
+            nodos[i] = a;
+            numnodo = numnodo + 1;
+            encontrado = 1;
+        }
+        else
+        {
+            i++;
+        }
+    }
 }
 
+void printAST(struct ast nodos[], int i, int encontrado, int salida)
+{
+    struct ast temp[52];
+    iniArrayNodos(temp, 0, 52);
 
-void printAST(struct ast nodos[], int i, int encontrado, int salida){
-	struct ast temp[52];
-	iniArrayNodos(temp,0,52);
+    while (encontrado == 0 && salida == 0)
+    {
+        if (strcmp(nodos[i].nodetype, "._empty") == 0)
+        {
+            encontrado = 1;
+            salida = 1;
+        }
+        else
+        {
+            if (strcmp(nodos[i].nodetype, "IF") == 0)
+            {
+                write_file(ast_text, "\n");
+                write_file(ast_text, nodos[i].nodetype);
+                write_file(ast_text, "\n");
+                temp[0] = *nodos[i].l;
+                printAST(temp, 0, 0, 0);
+            }
+            else if (strcmp(nodos[i].nodetype, "WHILE") == 0)
+            {
+                write_file(ast_text, "\n");
+                write_file(ast_text, nodos[i].nodetype);
+                write_file(ast_text, "\n");
+                temp[0] = *nodos[i].l;
+                printAST(temp, 0, 0, 0);
+            }
+            else if ((strcmp(nodos[i].nodetype, ">") == 0) || (strcmp(nodos[i].nodetype, "<") == 0) || (strcmp(nodos[i].nodetype, ">=") == 0) ||
+                     (strcmp(nodos[i].nodetype, "<=") == 0) || (strcmp(nodos[i].nodetype, "!=") == 0) || (strcmp(nodos[i].nodetype, "==") == 0))
+            {
 
-	while(encontrado == 0 && salida == 0){
-		if(strcmp(nodos[i].nodetype, "._empty") == 0){
-			encontrado = 1;
-			salida=1;
-		}else{
-			if(strcmp(nodos[i].nodetype, "IF") == 0){
-				write_file(ast_text, "\n");
-				write_file(ast_text, nodos[i].nodetype);
-				write_file(ast_text, "\n");
-				temp[0] = *nodos[i].l;
-				printAST(temp,0,0,0);
+                write_file(ast_text, nodos[i].nodetype);
+                write_file(ast_text, "\n");
+                temp[0] = *nodos[i].l;
+                printAST(temp, 0, 0, 0);
+                write_file(ast_text, "\n");
+                temp[0] = *nodos[i].r;
+                printAST(temp, 0, 0, 0);
+                write_file(ast_text, "\n");
+                salida = 1;
+            }
+            else if (strcmp(nodos[i].nodetype, "=") == 0)
+            {
+                write_file(ast_text, "\n");
+                write_file(ast_text, nodos[i].nodetype);
+                write_file(ast_text, "\n");
+                if ((strcmp(nodos[i].l->nodetype, "+") == 0) || (strcmp(nodos[i].l->nodetype, "-") == 0) || (strcmp(nodos[i].l->nodetype, "/") == 0) ||
+                    (strcmp(nodos[i].l->nodetype, "*") == 0))
+                {
 
-			}else if(strcmp(nodos[i].nodetype, "WHILE") == 0){
-					write_file(ast_text, "\n");
-					write_file(ast_text, nodos[i].nodetype);
-					write_file(ast_text, "\n");
-					temp[0] = *nodos[i].l;
-					printAST(temp,0,0,0);
+                    temp[0] = *nodos[i].l;
+                    printAST(temp, 0, 0, 0);
+                }
+                else
+                {
+                    temp[0] = *nodos[i].l;
+                    printAST(temp, 0, 0, 0);
+                }
+            }
+            else if ((strcmp(nodos[i].nodetype, "+") == 0) || (strcmp(nodos[i].nodetype, "-") == 0) || (strcmp(nodos[i].nodetype, "/") == 0) ||
+                     (strcmp(nodos[i].nodetype, "*") == 0))
+            {
 
-			}else if((strcmp(nodos[i].nodetype, ">") == 0) || (strcmp(nodos[i].nodetype, "<") == 0) || (strcmp(nodos[i].nodetype, ">=") == 0) ||
-						 (strcmp(nodos[i].nodetype, "<=") == 0) ||  (strcmp(nodos[i].nodetype, "!=") == 0) || (strcmp(nodos[i].nodetype, "==") == 0)){
+                write_file(ast_text, nodos[i].nodetype);
+                write_file(ast_text, "\n");
+                temp[0] = *nodos[i].l;
+                printAST(temp, 0, 0, 0);
+                write_file(ast_text, "\n");
+                temp[0] = *nodos[i].r;
+                printAST(temp, 0, 0, 0);
+                write_file(ast_text, "\n");
+            }
+            else if (strcmp(nodos[i].nodetype, "String") == 0)
+            {
 
-				write_file(ast_text, nodos[i].nodetype);
-				write_file(ast_text, "\n");
-				temp[0] = *nodos[i].l; 
-				printAST(temp,0,0,0);
-				write_file(ast_text, "\n");
-				temp[0] = *nodos[i].r; 
-				printAST(temp,0,0,0);
-				write_file(ast_text, "\n");
-				salida = 1;
-				
-
-			}else if(strcmp(nodos[i].nodetype, "=") == 0){
-				write_file(ast_text, "\n");
-				write_file(ast_text, nodos[i].nodetype);
-				write_file(ast_text, "\n");
-				if((strcmp(nodos[i].l->nodetype, "+") == 0)||(strcmp(nodos[i].l->nodetype, "-") == 0)||(strcmp(nodos[i].l->nodetype, "/") == 0)||
-				(strcmp(nodos[i].l->nodetype, "*") == 0)){
-
-					temp[0] = *nodos[i].l;
-					printAST(temp,0,0,0);
-
-
-				}else{
-					temp[0] = *nodos[i].l; 
-					printAST(temp,0,0,0);
-
-				}
-
-
-			}else if((strcmp(nodos[i].nodetype, "+") == 0)||(strcmp(nodos[i].nodetype, "-") == 0)||(strcmp(nodos[i].nodetype, "/") == 0)||
-				(strcmp(nodos[i].nodetype, "*") == 0)){
-
-				write_file(ast_text, nodos[i].nodetype);
-				write_file(ast_text, "\n");
-				temp[0] = *nodos[i].l;
-				printAST(temp,0,0,0);
-				write_file(ast_text, "\n");
-				temp[0] = *nodos[i].r;
-				printAST(temp,0,0,0);
-				write_file(ast_text, "\n");
-
-			}else if(strcmp(nodos[i].nodetype, "String") == 0){
-
-				write_file(ast_text, nodos[i].nodetype);
-				write_file(ast_text, "\n");
-				salida = 1;
-
-			}else if(strcmp(nodos[i].nodetype, "Constante") == 0){
-				write_file(ast_text, nodos[i].nodetype);
-				write_file(ast_text, "\n");
-				salida = 1;
-				encontrado = 1;
-			}			
-
-		}
-		i++;
-	}
+                write_file(ast_text, nodos[i].nodetype);
+                write_file(ast_text, "\n");
+                salida = 1;
+            }
+            else if (strcmp(nodos[i].nodetype, "Constante") == 0)
+            {
+                write_file(ast_text, nodos[i].nodetype);
+                write_file(ast_text, "\n");
+                salida = 1;
+                encontrado = 1;
+            }
+        }
+        i++;
+    }
 }
 
 //FUNCIONES TABLA AUXILIAR DE SIMBOLOS
-int buscarValor(struct symb *tabla, char *nombre, char *tipo, int *size) {
+int buscarValor(struct symb *tabla, char *nombre, char *tipo, int *size)
+{
     int i = 0;
     int status = -1;
-    while (i < *size && status == -1) {
-        if (strcmp(tabla[i].vname, nombre) == 0 && (strcmp(tabla[i].type, tipo) == 0 )) {
+    while (i < *size && status == -1)
+    {
+        if (strcmp(tabla[i].vname, nombre) == 0 && (strcmp(tabla[i].type, tipo) == 0))
+        {
             status = i;
-        }else if(strcmp(tabla[i].vname, nombre) == 0){ 
-        	status = i;
-        }else {
+        }
+        else if (strcmp(tabla[i].vname, nombre) == 0)
+        {
+            status = i;
+        }
+        else
+        {
             i++;
         }
     }
     return status;
 }
 
+void insertarElemento(struct symb *tabla, int *size, int valor, char *svalor, float fvalor, char *variable, bool bvalor, int *elementosOcupados, char *type, bool assigned)
+{
+    int elementIndex = 0;
 
-
-
-
-void insertarElemento(struct symb *tabla, int *size, int valor, char* svalor, float fvalor, char *variable, bool bvalor, int *elementosOcupados, char* type, bool assigned ) {
-	int elementIndex = 0;
-	
     elementIndex = buscarValor(tabla, variable, type, size);
 
-    if(elementIndex != -1){
-    	if (strcmp(type, "integer") == 0){
-	        		tabla[elementIndex].vname = variable;
-	        		tabla[elementIndex].vvali = valor;
-	        		tabla[elementIndex].type = type;
-	            } else if (strcmp(type, "float") == 0) {
-	                tabla[elementIndex].vname = variable;
-	                tabla[elementIndex].vvalf = fvalor;
-	                tabla[elementIndex].type = type;
-	            } else if (strcmp(type, "string") == 0) {
-	                tabla[elementIndex].vname = variable;
-	                tabla[elementIndex].vvals = svalor;
-	                tabla[elementIndex].type = type;
-	            } else if (strcmp(type, "boolean") == 0) {
-									tabla[elementIndex].vname = variable;
-	                tabla[elementIndex].vbool = bvalor;
-	                tabla[elementIndex].type = type;
-							}
-			tabla[elementIndex].assigned = assigned; 	
-    }else{
-	    int i = 0;
-	    int encontrado = 0;
-
-	    while (i < *size && encontrado == 0) {
-
-	        if (strcmp(tabla[i].vname, "._empty") == 0) {
-	        	if (strcmp(type, "integer") == 0){
-	        		tabla[i].vname = variable;
-	        		tabla[i].vvali = valor;
-	        		tabla[i].type = type;
-	        		*elementosOcupados = *elementosOcupados + 1;
-	        		encontrado = 1;
-	            } else if (strcmp(type, "float") == 0) {
-	                tabla[i].vname = variable;
-	                tabla[i].vvalf = fvalor;
-	                tabla[i].type = type;
-	                *elementosOcupados = *elementosOcupados + 1;
-	                encontrado = 1;
-	            } else if (strcmp(type, "string") == 0) {
-	                tabla[i].vname = variable;
-	                tabla[i].vvals = svalor;
-	                tabla[i].type = type;
-	                *elementosOcupados = *elementosOcupados + 1;
-	                encontrado = 1;
-	            } else if (strcmp(type, "boolean") == 0) {
-	                tabla[i].vname = variable;
-	                tabla[i].vbool = bvalor;
-	                tabla[i].type = type;
-	                *elementosOcupados = *elementosOcupados + 1;
-	                encontrado = 1;
-	            }        	
-	            tabla[i].assigned = assigned; 
-	            *elementosOcupados = *elementosOcupados + 1;
-	            encontrado = 1;
-	        } else {
-	            i++;
-	        }
-	    }
+    if (elementIndex != -1)
+    {
+        if (strcmp(type, "integer") == 0)
+        {
+            tabla[elementIndex].vname = variable;
+            tabla[elementIndex].vvali = valor;
+            tabla[elementIndex].type = type;
+        }
+        else if (strcmp(type, "float") == 0)
+        {
+            tabla[elementIndex].vname = variable;
+            tabla[elementIndex].vvalf = fvalor;
+            tabla[elementIndex].type = type;
+        }
+        else if (strcmp(type, "string") == 0)
+        {
+            tabla[elementIndex].vname = variable;
+            tabla[elementIndex].vvals = svalor;
+            tabla[elementIndex].type = type;
+        }
+        else if (strcmp(type, "boolean") == 0)
+        {
+            tabla[elementIndex].vname = variable;
+            tabla[elementIndex].vbool = bvalor;
+            tabla[elementIndex].type = type;
+        }
+        tabla[elementIndex].assigned = assigned;
     }
-		
-     
+    else
+    {
+        int i = 0;
+        int encontrado = 0;
+
+        while (i < *size && encontrado == 0)
+        {
+
+            if (strcmp(tabla[i].vname, "._empty") == 0)
+            {
+                if (strcmp(type, "integer") == 0)
+                {
+                    tabla[i].vname = variable;
+                    tabla[i].vvali = valor;
+                    tabla[i].type = type;
+                    *elementosOcupados = *elementosOcupados + 1;
+                    encontrado = 1;
+                }
+                else if (strcmp(type, "float") == 0)
+                {
+                    tabla[i].vname = variable;
+                    tabla[i].vvalf = fvalor;
+                    tabla[i].type = type;
+                    *elementosOcupados = *elementosOcupados + 1;
+                    encontrado = 1;
+                }
+                else if (strcmp(type, "string") == 0)
+                {
+                    tabla[i].vname = variable;
+                    tabla[i].vvals = svalor;
+                    tabla[i].type = type;
+                    *elementosOcupados = *elementosOcupados + 1;
+                    encontrado = 1;
+                }
+                else if (strcmp(type, "boolean") == 0)
+                {
+                    tabla[i].vname = variable;
+                    tabla[i].vbool = bvalor;
+                    tabla[i].type = type;
+                    *elementosOcupados = *elementosOcupados + 1;
+                    encontrado = 1;
+                }
+                tabla[i].assigned = assigned;
+                *elementosOcupados = *elementosOcupados + 1;
+                encontrado = 1;
+            }
+            else
+            {
+                i++;
+            }
+        }
+    }
 }
 
-int compare(char* operator, float left, float right) {
-	if(strcmp(operator,">") == 0){
-		return left > right ? 1 : 0;
-	} else if(strcmp(operator,"<") == 0){
-		return left < right ? 1 : 0;
-	} else if(strcmp(operator,">=") == 0){
-		return left >= right ? 1 : 0;
-	} else if(strcmp(operator,"<=") == 0){
-		return left <= right ? 1 : 0;
-	} else if(strcmp(operator,"==") == 0){
-		return left == right ? 1 : 0;
-	} else if(strcmp(operator,"!=") == 0){
-		return left != right ? 1 : 0;
-	}  
-	
+int compare(char *operator, float left, float right)
+{
+    if (strcmp(operator, ">") == 0)
+    {
+        return left > right ? 1 : 0;
+    }
+    else if (strcmp(operator, "<") == 0)
+    {
+        return left < right ? 1 : 0;
+    }
+    else if (strcmp(operator, ">=") == 0)
+    {
+        return left >= right ? 1 : 0;
+    }
+    else if (strcmp(operator, "<=") == 0)
+    {
+        return left <= right ? 1 : 0;
+    }
+    else if (strcmp(operator, "==") == 0)
+    {
+        return left == right ? 1 : 0;
+    }
+    else if (strcmp(operator, "!=") == 0)
+    {
+        return left != right ? 1 : 0;
+    }
 }
 
-char* getVarType(struct symb *tabla, int size, char* name) {
-	printf("%s\n",name);
-	for(int i = 0; i < size; i++) {
-		if(strcmp(tabla[i].vname, "._empty") == 0){
-			continue;
-		} else if (strcmp(tabla[i].vname, name) == 0) {
-			printf("%s\n", tabla[i].type);
-			return tabla[i].type;
-		}
+char *getVarType(struct symb *tabla, int size, char *name)
+{
+    for (int i = 0; i < size; i++)
+    {
+        if (strcmp(tabla[i].vname, "._empty") == 0)
+        {
+            continue;
+        }
+        else if (strcmp(tabla[i].vname, name) == 0)
+        {
+            return tabla[i].type;
+        }
+    }
+}
+
+bool searchVar(struct symb *tabla, int size, char *name)
+{
+    int elementIndex = -1;
+    for (int i = 0; i < size; i++)
+    {
+        if (strcmp(tabla[i].vname, "._empty") == 0)
+        {
+            continue;
+        }
+        else if (strcmp(tabla[i].vname, name) == 0)
+        {
+            elementIndex = i;
+            break;
+        }
+    }
+
+    if (elementIndex != -1)
+    {
+        return false;
+    }
+
+    return true;
+}
+
+bool checkVarAndType(struct symb *tabla, int size, char *name, char *type)
+{
+    int elementIndex = -1;
+    for (int i = 0; i < size; i++)
+    {
+        if (strcmp(tabla[i].vname, "._empty") == 0)
+        {
+            continue;
+        }
+        else if (strcmp(tabla[i].vname, name) == 0)
+        {
+            elementIndex = i;
+            break;
+        }
+    }
+
+    if (elementIndex == -1)
+    {
+        return false;
+    }
+
+    if (strcmp(tabla[elementIndex].type, type) != 0)
+    {
+        return false;
+    }
+
+    return true;
+}
+
+int retrieveIntFromTable(struct symb *tabla, int size, char *name)
+{
+    int elementIndex = -1;
+    for (int i = 0; i < size; i++)
+    {
+        if (strcmp(tabla[i].vname, name) == 0)
+        {
+            elementIndex = i;
+            break;
+        }
+    }
+
+    return tabla[elementIndex].vvali;
+}
+
+float retrieveFloatFromTable(struct symb *tabla, int size, char *name)
+{
+    int elementIndex = -1;
+    for (int i = 0; i < size; i++)
+    {
+        if (strcmp(tabla[i].vname, name) == 0)
+        {
+            elementIndex = i;
+            break;
+        }
+    }
+
+    return tabla[elementIndex].vvalf;
+}
+
+char *retrieveStringFromTable(struct symb *tabla, int size, char *name)
+{
+    int elementIndex = -1;
+    for (int i = 0; i < size; i++)
+    {
+        if (strcmp(tabla[i].vname, name) == 0)
+        {
+            elementIndex = i;
+            break;
+        }
+    }
+
+    return tabla[elementIndex].vvals;
+}
+
+bool retrieveBoolFromTable(struct symb *tabla, int size, char *name)
+{
+    int elementIndex = -1;
+    for (int i = 0; i < size; i++)
+    {
+        if (strcmp(tabla[i].vname, name) == 0)
+        {
+            elementIndex = i;
+            break;
+        }
+    }
+
+    return tabla[elementIndex].vbool;
+}
+
+int operateInt(char* operator, int left, int right){
+	if(strcmp(operator, "+")==0){
+		return left + right;
+	} else if(strcmp(operator, "-")==0){
+		return left - right;
+	} else if(strcmp(operator, "*")==0){
+		return left * right;
+	} else if(strcmp(operator, "/")==0){
+		return left / right;
+	} else {
+		return -500;
 	}
 }
 
-
-bool searchVar(struct symb *tabla, int size, char* name) {
-	int elementIndex = -1;
-	for(int i = 0; i < size; i++) {
-		if(strcmp(tabla[i].vname, "._empty") == 0){
-			continue;
-		} else if (strcmp(tabla[i].vname, name) == 0) {
-			elementIndex = i;
-			break;
-		}
+float operateFloat(char* operator, float left, float right){
+	if(strcmp(operator, "+")==0){
+		return left + right;
+	} else if(strcmp(operator, "-")==0){
+		return left - right;
+	} else if(strcmp(operator, "*")==0){
+		return left * right;
+	} else if(strcmp(operator, "/")==0){
+		return left / right;
+	} else {
+		return -500;
 	}
-
-	if (elementIndex != -1) {
-		return false;
-	}
-
-	return true;
 }
-
-bool checkVarAndType(struct symb *tabla, int size, char* name, char* type) {
-	int elementIndex = -1;
-	for(int i = 0; i < size; i++) {
-		if(strcmp(tabla[i].vname, "._empty") == 0){
-			continue;
-		} else if (strcmp(tabla[i].vname, name) == 0) {
-			elementIndex = i;
-			break;
-		}
-	}
-
-	if (elementIndex == -1) {
-		return false;
-	}
-
-	if (strcmp(tabla[elementIndex].type, type) != 0) {
-		return false;
-	}
-
-	return true;
-}
-
-
-int retrieveIntFromTable(struct symb *tabla, int size, char* name) {
-	int elementIndex = -1;
-	for(int i = 0; i < size; i++) {
-		if(strcmp(tabla[i].vname, name) == 0) {
-			elementIndex = i;
-			break;
-		}
-	}
-
-	return tabla[elementIndex].vvali;
-}
-
-float retrieveFloatFromTable(struct symb *tabla, int size, char* name) {
-	int elementIndex = -1;
-	for(int i = 0; i < size; i++) {
-		if(strcmp(tabla[i].vname, name) == 0) {
-			elementIndex = i;
-			break;
-		}
-	}
-
-	return tabla[elementIndex].vvalf;
-}
-
-char* retrieveStringFromTable(struct symb *tabla, int size, char* name) {
-	int elementIndex = -1;
-	for(int i = 0; i < size; i++) {
-		if(strcmp(tabla[i].vname, name) == 0) {
-			elementIndex = i;
-			break;
-		}
-	}
-
-	return tabla[elementIndex].vvals;
-}
-
-bool retrieveBoolFromTable(struct symb *tabla, int size, char* name) {
-	int elementIndex = -1;
-	for(int i = 0; i < size; i++) {
-		if(strcmp(tabla[i].vname, name) == 0) {
-			elementIndex = i;
-			break;
-		}
-	}
-
-	return tabla[elementIndex].vbool;
-}
-
 
 //FUNCIONES AUXILIARES
 
-void write_file(char *filename, char *content) {
+void write_file(char *filename, char *content)
+{
     FILE *file;
     file = fopen(filename, "a");
     fprintf(file, "%s", content);
     fclose(file);
 }
 
-//FUNCIONES 
-int main(int argc, char *argv[]) {
+//FUNCIONES
+int main(int argc, char *argv[])
+{
 
-	iniArrayTabla(tabla, 0, size);
-	iniArrayNodos(nodos, 0, size);
+    iniArrayTabla(tabla, 0, size);
+    iniArrayNodos(nodos, 0, size);
 
-	if(argc == 1){
-		yyparse();
-	} 
+    if (argc == 1)
+    {
+        yyparse();
+    }
 
-	if(argc == 3){
-		yyin = fopen(argv[1], "rt");
-		yyout = fopen(argv[2], "wt" );
-		yyparse();
+    if (argc == 3)
+    {
+        yyin = fopen(argv[1], "rt");
+        yyout = fopen(argv[2], "wt");
+        printf("\n");
+        yyparse();
 
+        printf("\nTabla de simbolos:");
+        for (int b = 0; b < 52; b++)
+        {
+            if (strcmp(tabla[b].vname, "._empty") == 0)
+            {
+                break;
+            }
+            printf("\n");
+            printf("Nombre %s ", tabla[b].vname);
+            printf("INT %i ", tabla[b].vvali);
+            printf("FLOAT %f ", tabla[b].vvalf);
+            printf("STRING %s ", tabla[b].vvals);
+            printf("TIPO %s ", tabla[b].type);
+            printf("BOOLEAN\t%s\t", tabla[b].vbool ? "true" : "false");
+            printf("ASSIGNED\t%s\t", tabla[b].assigned ? "true" : "false");
+            printf("\n");
+        }
 
-		printf("\nTabla de simbolos:");
-		for(int b = 0; b < 52; b++){
-			if(strcmp(tabla[b].vname, "._empty") == 0){
-				break;
-			}
-			printf("\n");		
-			printf("Nombre %s ",tabla[b].vname);
-			printf("INT %i ",tabla[b].vvali);
-			printf("FLOAT %f ",tabla[b].vvalf);
-			printf("STRING %s ",tabla[b].vvals);
-			printf("TIPO %s ",tabla[b].type);
-			// New Commit
-			printf("BOOLEAN\t%s\t",tabla[b].vbool ? "true" : "false");
-			printf("ASSIGNED\t%s\t",tabla[b].assigned ? "true" : "false");
-			printf("\n");
-
-		}	
-
-		printAST(nodos,0,0,0);
-	}
-
-	
-	
+        printAST(nodos, 0, 0, 0);
+    }
 }
-
