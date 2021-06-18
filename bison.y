@@ -12,8 +12,19 @@ extern int yylineno;
 extern FILE* yyin;
 extern FILE *yyout;
 
+
+
+/*
 void yyerror (char const *s) {
    fprintf (stderr, "%s\n", s);
+ }
+*/
+
+void yyerror (char const *s) {
+	printf("\x1b[1;31m");
+	printf("%s\t Line %d\n", s, yylineno);
+	printf("\x1b[0m");
+	// fprintf (stderr, "%s\n", s);
  }
 
 char* ast_text = "ast.txt";
@@ -57,6 +68,9 @@ struct symb{
 	float vvalf;
 	char* vvals;
 	char* type; 
+// nuevo commit
+	bool vbool;
+	bool assigned;
 };
 
 
@@ -75,7 +89,8 @@ struct symb tabla[52];
 
 void write_file(char *filename, char *content);
 
-void insertarElemento(struct symb *tabla, int *size, int valor, char* svalor, float fvalor, char *variable, int *elementosOcupados, char* type );
+// New Commit
+void insertarElemento(struct symb *tabla, int *size, int valor, char* svalor, float fvalor, char *variable, bool bvalor, int *elementosOcupados, char* type, bool assigned );
 int buscarValor(struct symb *tabla, char *nombre, char *tipo, int *size);
 
 // tabla simbolos
@@ -93,6 +108,22 @@ struct ast *createNum(double d);
 struct ast *createSTR(char* s);
 struct ast *createBOOVAR(char* s);
 struct ast *createASTAsignacion(struct ast *op);
+
+
+// New Commit
+
+
+int retrieveIntFromTable(struct symb *tabla, int size, char* name);
+float retrieveFloatFromTable(struct symb *tabla, int size, char* name);
+char* retrieveStringFromTable(struct symb *tabla, int size, char* name);
+bool retrieveBoolFromTable(struct symb *tabla, int size, char* name);
+char* getVarType(struct symb *tabla, int size, char* name);
+
+
+bool checkVarAndType(struct symb *tabla, int size, char* name, char* type);
+bool searchVar(struct symb *tabla, int size, char* name);
+int compare(char* operator, float left, float right);
+
 
 void evalAST(struct ast a, int* size);
 void printAST(struct ast nodos[], int i, int encontrado, int salida);
@@ -117,6 +148,10 @@ void printAST(struct ast nodos[], int i, int encontrado, int salida);
 		char *temp3;
 		char* type;
 		struct ast *a;
+
+		char* error;
+		int boo;
+
 	}st;
 }
 //TERMINALES
@@ -562,27 +597,34 @@ int buscarValor(struct symb *tabla, char *nombre, char *tipo, int *size) {
 }
 
 
-void insertarElemento(struct symb *tabla, int *size, int valor, char* svalor, float fvalor, char *variable, int *elementosOcupados, char* type ) {
-	int status = 0;
+
+
+
+void insertarElemento(struct symb *tabla, int *size, int valor, char* svalor, float fvalor, char *variable, bool bvalor, int *elementosOcupados, char* type, bool assigned ) {
+	int elementIndex = 0;
 	
-    status = buscarValor(tabla, variable, type, size);
+    elementIndex = buscarValor(tabla, variable, type, size);
 
-    if(status != -1){
+    if(elementIndex != -1){
     	if (strcmp(type, "integer") == 0){
-	        		tabla[status].vname = variable;
-	        		tabla[status].vvali = valor;
-	        		tabla[status].type = type;
+	        		tabla[elementIndex].vname = variable;
+	        		tabla[elementIndex].vvali = valor;
+	        		tabla[elementIndex].type = type;
 	            } else if (strcmp(type, "float") == 0) {
-	                tabla[status].vname = variable;
-	                tabla[status].vvalf = fvalor;
-	                tabla[status].type = type;
+	                tabla[elementIndex].vname = variable;
+	                tabla[elementIndex].vvalf = fvalor;
+	                tabla[elementIndex].type = type;
 	            } else if (strcmp(type, "string") == 0) {
-	                tabla[status].vname = variable;
-	                tabla[status].vvals = svalor;
-	                tabla[status].type = type;
-	            }        	
+	                tabla[elementIndex].vname = variable;
+	                tabla[elementIndex].vvals = svalor;
+	                tabla[elementIndex].type = type;
+	            } else if (strcmp(type, "boolean") == 0) {
+									tabla[elementIndex].vname = variable;
+	                tabla[elementIndex].vbool = bvalor;
+	                tabla[elementIndex].type = type;
+							}
+			tabla[elementIndex].assigned = assigned; 	
     }else{
-
 	    int i = 0;
 	    int encontrado = 0;
 
@@ -607,8 +649,14 @@ void insertarElemento(struct symb *tabla, int *size, int valor, char* svalor, fl
 	                tabla[i].type = type;
 	                *elementosOcupados = *elementosOcupados + 1;
 	                encontrado = 1;
+	            } else if (strcmp(type, "boolean") == 0) {
+	                tabla[i].vname = variable;
+	                tabla[i].vbool = bvalor;
+	                tabla[i].type = type;
+	                *elementosOcupados = *elementosOcupados + 1;
+	                encontrado = 1;
 	            }        	
-	            
+	            tabla[i].assigned = assigned; 
 	            *elementosOcupados = *elementosOcupados + 1;
 	            encontrado = 1;
 	        } else {
@@ -616,9 +664,128 @@ void insertarElemento(struct symb *tabla, int *size, int valor, char* svalor, fl
 	        }
 	    }
     }
+		
      
 }
 
+int compare(char* operator, float left, float right) {
+	if(strcmp(operator,">") == 0){
+		return left > right ? 1 : 0;
+	} else if(strcmp(operator,"<") == 0){
+		return left < right ? 1 : 0;
+	} else if(strcmp(operator,">=") == 0){
+		return left >= right ? 1 : 0;
+	} else if(strcmp(operator,"<=") == 0){
+		return left <= right ? 1 : 0;
+	} else if(strcmp(operator,"==") == 0){
+		return left == right ? 1 : 0;
+	} else if(strcmp(operator,"!=") == 0){
+		return left != right ? 1 : 0;
+	}  
+	
+}
+
+char* getVarType(struct symb *tabla, int size, char* name) {
+	printf("%s\n",name);
+	for(int i = 0; i < size; i++) {
+		if(strcmp(tabla[i].vname, "._empty") == 0){
+			continue;
+		} else if (strcmp(tabla[i].vname, name) == 0) {
+			printf("%s\n", tabla[i].type);
+			return tabla[i].type;
+		}
+	}
+}
+
+
+bool searchVar(struct symb *tabla, int size, char* name) {
+	int elementIndex = -1;
+	for(int i = 0; i < size; i++) {
+		if(strcmp(tabla[i].vname, "._empty") == 0){
+			continue;
+		} else if (strcmp(tabla[i].vname, name) == 0) {
+			elementIndex = i;
+			break;
+		}
+	}
+
+	if (elementIndex != -1) {
+		return false;
+	}
+
+	return true;
+}
+
+bool checkVarAndType(struct symb *tabla, int size, char* name, char* type) {
+	int elementIndex = -1;
+	for(int i = 0; i < size; i++) {
+		if(strcmp(tabla[i].vname, "._empty") == 0){
+			continue;
+		} else if (strcmp(tabla[i].vname, name) == 0) {
+			elementIndex = i;
+			break;
+		}
+	}
+
+	if (elementIndex == -1) {
+		return false;
+	}
+
+	if (strcmp(tabla[elementIndex].type, type) != 0) {
+		return false;
+	}
+
+	return true;
+}
+
+
+int retrieveIntFromTable(struct symb *tabla, int size, char* name) {
+	int elementIndex = -1;
+	for(int i = 0; i < size; i++) {
+		if(strcmp(tabla[i].vname, name) == 0) {
+			elementIndex = i;
+			break;
+		}
+	}
+
+	return tabla[elementIndex].vvali;
+}
+
+float retrieveFloatFromTable(struct symb *tabla, int size, char* name) {
+	int elementIndex = -1;
+	for(int i = 0; i < size; i++) {
+		if(strcmp(tabla[i].vname, name) == 0) {
+			elementIndex = i;
+			break;
+		}
+	}
+
+	return tabla[elementIndex].vvalf;
+}
+
+char* retrieveStringFromTable(struct symb *tabla, int size, char* name) {
+	int elementIndex = -1;
+	for(int i = 0; i < size; i++) {
+		if(strcmp(tabla[i].vname, name) == 0) {
+			elementIndex = i;
+			break;
+		}
+	}
+
+	return tabla[elementIndex].vvals;
+}
+
+bool retrieveBoolFromTable(struct symb *tabla, int size, char* name) {
+	int elementIndex = -1;
+	for(int i = 0; i < size; i++) {
+		if(strcmp(tabla[i].vname, name) == 0) {
+			elementIndex = i;
+			break;
+		}
+	}
+
+	return tabla[elementIndex].vbool;
+}
 
 
 //FUNCIONES AUXILIARES
@@ -657,6 +824,9 @@ int main(int argc, char *argv[]) {
 			printf("FLOAT %f ",tabla[b].vvalf);
 			printf("STRING %s ",tabla[b].vvals);
 			printf("TIPO %s ",tabla[b].type);
+			// New Commit
+			printf("BOOLEAN\t%s\t",tabla[b].vbool ? "true" : "false");
+			printf("ASSIGNED\t%s\t",tabla[b].assigned ? "true" : "false");
 			printf("\n");
 
 		}	
