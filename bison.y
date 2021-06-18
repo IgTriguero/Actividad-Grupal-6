@@ -668,68 +668,6 @@ void insertarElemento(struct symb *tabla, int *size, int valor, char* svalor, fl
      
 }
 
-
-
-
-
-// void insertarElemento(struct symb *tabla, int *size, int valor, char* svalor, float fvalor, char *variable, int *elementosOcupados, char* type ) {
-// 	int status = 0;
-	
-//     status = buscarValor(tabla, variable, type, size);
-
-//     if(status != -1){
-//     	if (strcmp(type, "integer") == 0){
-// 	        		tabla[status].vname = variable;
-// 	        		tabla[status].vvali = valor;
-// 	        		tabla[status].type = type;
-// 	            } else if (strcmp(type, "float") == 0) {
-// 	                tabla[status].vname = variable;
-// 	                tabla[status].vvalf = fvalor;
-// 	                tabla[status].type = type;
-// 	            } else if (strcmp(type, "string") == 0) {
-// 	                tabla[status].vname = variable;
-// 	                tabla[status].vvals = svalor;
-// 	                tabla[status].type = type;
-// 	            }        	
-//     }else{
-
-// 	    int i = 0;
-// 	    int encontrado = 0;
-
-// 	    while (i < *size && encontrado == 0) {
-
-// 	        if (strcmp(tabla[i].vname, "._empty") == 0) {
-// 	        	if (strcmp(type, "integer") == 0){
-// 	        		tabla[i].vname = variable;
-// 	        		tabla[i].vvali = valor;
-// 	        		tabla[i].type = type;
-// 	        		*elementosOcupados = *elementosOcupados + 1;
-// 	        		encontrado = 1;
-// 	            } else if (strcmp(type, "float") == 0) {
-// 	                tabla[i].vname = variable;
-// 	                tabla[i].vvalf = fvalor;
-// 	                tabla[i].type = type;
-// 	                *elementosOcupados = *elementosOcupados + 1;
-// 	                encontrado = 1;
-// 	            } else if (strcmp(type, "string") == 0) {
-// 	                tabla[i].vname = variable;
-// 	                tabla[i].vvals = svalor;
-// 	                tabla[i].type = type;
-// 	                *elementosOcupados = *elementosOcupados + 1;
-// 	                encontrado = 1;
-// 	            }        	
-	            
-// 	            *elementosOcupados = *elementosOcupados + 1;
-// 	            encontrado = 1;
-// 	        } else {
-// 	            i++;
-// 	        }
-// 	    }
-//     }
-     
-// }
-
-
 int compare(char* operator, float left, float right) {
 	if(strcmp(operator,">") == 0){
 		return left > right ? 1 : 0;
