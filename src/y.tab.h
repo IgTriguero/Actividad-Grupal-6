@@ -172,22 +172,16 @@ union YYSTYPE
 	struct atributos{
 		int i;
 		float f;
-		int i2;
-		float f2;
 		char* operador;
 		char* s;
-		char *temp1;
-		char *temp2;
-		char *temp3;
 		char* type;
 		struct ast *a;
-
 		char* error;
 		int boo;
 
 	}st;
 
-#line 191 "y.tab.h"
+#line 185 "y.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

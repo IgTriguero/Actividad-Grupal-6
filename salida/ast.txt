@@ -10,6 +10,13 @@ Constante
 
 
 =
++
+Constante
+
+Constante
+
+
+=
 Constante
 
 =
@@ -24,15 +31,6 @@ String
 =
 
 =
-<
-String
-
-Constante
-
-
-=
-
-=
 *
 String
 
@@ -42,4 +40,8 @@ Constante
 =
 
 =
+/
+String
+
 Constante
+

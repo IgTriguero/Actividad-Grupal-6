@@ -267,7 +267,7 @@ DECL:
 	NOMBRE_VARIABLE COLON TYPEDECLARATION COLON EQUAL ALLOPERS SEMICOLON {
 		$$.s = "Declaracion de variable Integer o Float";
 		if(strcmp($6.error, "empty")==0){
-			if (!searchVar(tabla, size, $1.s)) {
+			if (searchVar(tabla, size, $1.s)) {
 				$$.error = $6.error;
 				if(strcmp($3.type, "integer")==0 && strcmp($6.type, "integer")==0){
 					insertarElemento(tabla, &size, $6.i, "", 0.0, $1.s, false, &elementosOcupados, "integer", true );
