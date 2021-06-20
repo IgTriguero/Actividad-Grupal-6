@@ -1,0 +1,4 @@
+.data
+variable_int1: .word 12
+.text
+lw $s0,variable_int1
