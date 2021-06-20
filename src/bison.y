@@ -1,30 +1,21 @@
 %{
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
 #include <string.h>
-#include <values.h>
+#include "mips.c"
 
 extern int yylex();
 extern int yyparse();
 extern int yylineno;
-extern FILE* yyin;
+extern FILE *yyin;
 extern FILE *yyout;
 
-
-
-/*
-void yyerror (char const *s) {
-   fprintf (stderr, "%s\n", s);
- }
-*/
 
 void yyerror (char const *s) {
 	printf("\x1b[1;31m");
 	printf("%s\t Line %d\n", s, yylineno);
 	printf("\x1b[0m");
-	// fprintf (stderr, "%s\n", s);
  }
 
 char* ast_text = "ast.txt";
@@ -85,9 +76,6 @@ int numnodo = 0;
 struct ast nodos[52];
 
 struct symb tabla[52];
-
-void write_file(char *filename, char *content);//
-
 
 // tabla simbolos
 void iniArrayTabla(struct symb *tabla, int inicio, int fin); //
@@ -388,12 +376,15 @@ DECL:
 			$$.error = $6.error;
 			if(strcmp($3.type, "integer")==0 && strcmp($6.type, "integer")==0){
 				insertarElemento(tabla, &size, $6.i, "", 0.0, $1.s, false, &elementosOcupados, "integer", true );
+				mipsVar_insert_mips_variable_declaration($3.type, $1.s, $6.i, NULL, -500, false);
 				$$.a = $6.a;
 			} else if(strcmp($3.type, "float")==0 && strcmp($6.type, "float")==0){
 				insertarElemento(tabla, &size, 0, "", $6.f, $1.s, false, &elementosOcupados, "float", true );
+				mipsVar_insert_mips_variable_declaration($3.type, $1.s, -500, NULL, $6.f, false);
 				$$.a = $6.a;
 			} else if(strcmp($3.type, "float")==0 && strcmp($6.type, "integer")==0){
 				insertarElemento(tabla, &size, 0, "", (float)$6.i, $1.s, false, &elementosOcupados, "float", true );
+				mipsVar_insert_mips_variable_declaration($3.type, $1.s, -500, NULL, $6.f, false);
 				$$.a = $6.a;
 			} else {
 				$$.error = "Error diferente tipo de variable (int, float)";
@@ -438,6 +429,7 @@ DECL:
 				if(searchVar(tabla, size, $1.s)) {
 					$$.error = "empty";
 					insertarElemento(tabla, &size, 0, "", 0.0, $1.s, $6.boo ? true : false, &elementosOcupados, "boolean", true );
+					mipsVar_insert_mips_variable_declaration("boolean", $1.s, -500, NULL, -500, $6.boo == 1);
 					$$.a = createASTAsignacion($6.a);
 				} else {$$.error = "Variable declared or wrong type";}
 			} else {
@@ -454,26 +446,31 @@ DECL:
 			if(strcmp(getVarType(tabla, size, $1.s), "integer")==0 && strcmp($4.type, "integer")==0) {
 				
 				insertarElemento(tabla, &size, $4.i, "", 0.0, $1.s, false, &elementosOcupados, "integer", true );
+				mipsIns_asign_val_to_var($1.s, "integer", $4.i, 0.0, NULL, false);
 				$$.a = createASTAsignacion($4.a);
 
 			} else if(strcmp(getVarType(tabla, size, $1.s), "float")==0 && strcmp($4.type, "integer")==0) {
 
 				insertarElemento(tabla, &size, 0, "", (float)$4.i, $1.s, false, &elementosOcupados, "float", true );
+				mipsIns_asign_val_to_var($1.s, "float", 0, (float)$4.i, NULL, false);
 				$$.a = createASTAsignacion($4.a);
 
 			} else if(strcmp(getVarType(tabla, size, $1.s), "float")==0 && strcmp($4.type, "float")==0) {
 
 				insertarElemento(tabla, &size, 0, "", $4.f, $1.s, false, &elementosOcupados, "float", true );
+				mipsIns_asign_val_to_var($1.s, "float", 0, $4.f, NULL, false);
 				$$.a = createASTAsignacion($4.a);
 
 			} else if(strcmp(getVarType(tabla, size, $1.s), "boolean")==0 && strcmp($4.type, "boolean")==0) {
 
 				insertarElemento(tabla, &size, 0, "", 0.0, $1.s, $4.boo ? true : false, &elementosOcupados, "boolean", true );
+				mipsIns_asign_val_to_var($1.s, "boolean", 0, 0.0, NULL, $4.boo == 1);
 				$$.a = createASTAsignacion($4.a);
 
 			} else if(strcmp(getVarType(tabla, size, $1.s), "string")==0 && strcmp($4.type, "string")==0) {
 
 				insertarElemento(tabla, &size, 0, $4.s, 0.0, $1.s, false, &elementosOcupados, "string", true );
+				mipsIns_asign_val_to_var($1.s, "boolean", 0, 0.0, $4.s, false);
 				$$.a = createASTAsignacion($4.a);
 
 			} else if(strcmp($4.type, "var")==0) {
@@ -481,26 +478,31 @@ DECL:
 				if(strcmp(getVarType(tabla, size, $1.s), "integer")==0 && strcmp($4.type, "integer")==0) {
 
 					insertarElemento(tabla, &size, $4.i, "", 0.0, $1.s, false, &elementosOcupados, "integer", true );
+					mipsIns_asign_val_to_var($1.s, "integer", $4.i, 0.0, NULL, false);
 					$$.a = createASTAsignacion($4.a);
 
 				} else if(strcmp(getVarType(tabla, size, $1.s), "float")==0 && strcmp($4.type, "integer")==0) {
 
 					insertarElemento(tabla, &size, 0, "", (float)$4.i, $1.s, false, &elementosOcupados, "float", true );
+					mipsIns_asign_val_to_var($1.s, "float", 0, (float)$4.i, NULL, false);
 					$$.a = createASTAsignacion($4.a);
 
 				} else if(strcmp(getVarType(tabla, size, $1.s), "float")==0 && strcmp($4.type, "float")==0) {
 
 					insertarElemento(tabla, &size, 0, "", $4.f, $1.s, false, &elementosOcupados, "float", true );
+					mipsIns_asign_val_to_var($1.s, "float", 0, $4.f, NULL, false);
 					$$.a = createASTAsignacion($4.a);
 
 				} else if(strcmp(getVarType(tabla, size, $1.s), "boolean")==0 && strcmp($4.type, "boolean")==0) {
 
 					insertarElemento(tabla, &size, 0, "", 0.0, $1.s, $4.boo ? true : false, &elementosOcupados, "boolean", true );
+					mipsIns_asign_val_to_var($1.s, "boolean", 0, 0.0, NULL, $4.boo == 1);
 					$$.a = createASTAsignacion($4.a);
 
 				} else if(strcmp(getVarType(tabla, size, $1.s), "string")==0 && strcmp($4.type, "string")==0) {
 
 					insertarElemento(tabla, &size, 0, $4.s, 0.0, $1.s, false, &elementosOcupados, "string", true );
+					mipsIns_asign_val_to_var($1.s, "boolean", 0, 0.0, $4.s, false);
 					$$.a = createASTAsignacion($4.a);
 
 				} else {
@@ -538,7 +540,9 @@ DECL:
 			$$.s = "Declaracion con string";
 			if(searchVar(tabla, size, $1.s)) {
 				$$.error = "empty"; 
-				insertarElemento(tabla, &size, 0, $6.s, 0.0, $1.s, false, &elementosOcupados, "string", true );$$.a = createASTAsignacion($6.a);
+				insertarElemento(tabla, &size, 0, $6.s, 0.0, $1.s, false, &elementosOcupados, "string", true );
+				mipsVar_insert_mips_variable_declaration("string", $1.s, -500, $6.s, -500, false);
+				$$.a = createASTAsignacion($6.a);
 			} else {
 				$$.error = "Variable declared or wrong type";
 			}
@@ -765,10 +769,19 @@ BUCLE: WHILE BOOLEAN_MIX LOOP  	{$$.s = "WHILE BOOL LOOP";}
 	| END LOOP SEMICOLON  	{$$.s = "END LOOP SEMICOLON";}
 ;
 
-SENTENCIA_IF: IF BOOLEAN_MIX THEN	{$$.s = "IF BOOL THEN";}
-	| ELSE  				{$$.s = "ELSE";}
+SENTENCIA_IF: IF BOOLEAN_MIX THEN	{
+		$$.s = "IF BOOL THEN";
+		mipsIns_if($2.boo);
+	}
+	| ELSE  {
+		$$.s = "ELSE";
+		mipsIns_else();
+		}
     | ELSEIF BOOLEAN_MIX THEN  	{$$.s = "ELSEIF BOOL THEN";}
-	| END IF SEMICOLON 		{$$.s = "END IF SEMICOLON";}
+	| END IF SEMICOLON 		{
+		$$.s = "END IF SEMICOLON";
+		mipsIns_endIf();
+		}
 ;
 NOMBRE_VARIABLE:
 	VAR_NAME {$$.s = $1; $$.a = createSTR($1);}
@@ -1326,53 +1339,46 @@ float operateFloat(char* operator, float left, float right){
 	}
 }
 
-//FUNCIONES AUXILIARES
-
-void write_file(char *filename, char *content)
-{
-    FILE *file;
-    file = fopen(filename, "a");
-    fprintf(file, "%s", content);
-    fclose(file);
-}
 
 //FUNCIONES
 int main(int argc, char *argv[])
 {
+	mipsVar_create_data();
+	mipsIns_create_text(); 
+	mipsVar_initialize_struct();
+	mipsVar_initialize_valorStruct();
 
     iniArrayTabla(tabla, 0, size);
     iniArrayNodos(nodos, 0, size);
 
-    if (argc == 1)
-    {
-        yyparse();
-    }
+	yyin = fopen(argv[1], "rt");
+	printf("\n");
+	yyparse();
 
-    if (argc == 3)
-    {
-        yyin = fopen(argv[1], "rt");
-        yyout = fopen(argv[2], "wt");
-        printf("\n");
-        yyparse();
+	printf("\nTabla de simbolos:");
+	for (int b = 0; b < 52; b++)
+	{
+		if (strcmp(tabla[b].vname, "._empty") == 0)
+		{
+			break;
+		}
+		printf("\n");
+		printf("Nombre %s ", tabla[b].vname);
+		printf("INT %i ", tabla[b].vvali);
+		printf("FLOAT %f ", tabla[b].vvalf);
+		printf("STRING %s ", tabla[b].vvals);
+		printf("TIPO %s ", tabla[b].type);
+		printf("BOOLEAN\t%s\t", tabla[b].vbool ? "true" : "false");
+		printf("ASSIGNED\t%s\t", tabla[b].assigned ? "true" : "false");
+		printf("\n");
+	}
 
-        printf("\nTabla de simbolos:");
-        for (int b = 0; b < 52; b++)
-        {
-            if (strcmp(tabla[b].vname, "._empty") == 0)
-            {
-                break;
-            }
-            printf("\n");
-            printf("Nombre %s ", tabla[b].vname);
-            printf("INT %i ", tabla[b].vvali);
-            printf("FLOAT %f ", tabla[b].vvalf);
-            printf("STRING %s ", tabla[b].vvals);
-            printf("TIPO %s ", tabla[b].type);
-            printf("BOOLEAN\t%s\t", tabla[b].vbool ? "true" : "false");
-            printf("ASSIGNED\t%s\t", tabla[b].assigned ? "true" : "false");
-            printf("\n");
-        }
+	printAST(nodos, 0, 0, 0);
+	mipsVar_write_declarations();
+	
+	concatenateTxt(filename_data, filename_text, "mips.txt");
 
-        printAST(nodos, 0, 0, 0);
-    }
+	remove(filename_data);
+	remove(filename_text);
+    
 }
