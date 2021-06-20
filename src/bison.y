@@ -107,10 +107,10 @@ AUXCONTENT:
 
 
 CONTENT:  
-    BUCLE {printf("Contenido: %s\t Linea: %d", $1.s, yylineno); if(!$1.a){ ;} else {evalAST(*$1.a, &size);};}
-	| SENTENCIA_IF {printf("Contenido: %s\t Linea: %d", $1.s, yylineno); if(!$1.a){ ;} else {evalAST(*$1.a, &size);};}
-	| COMENTARIO {printf("Contenido: %s\t Linea: %d", $1, yylineno); }
-	| DECL {printf("Contenido: %s\t Linea: %d", $1.s, yylineno); if(!$1.a){ ;} else {evalAST(*$1.a, &size);};}
+    BUCLE {printf("Contenido: %s\t Linea: %d\n", $1.s, yylineno); if(!$1.a){ ;} else {evalAST(*$1.a, &size);};}
+	| SENTENCIA_IF {printf("Contenido: %s\t Linea: %d\n", $1.s, yylineno); if(!$1.a){ ;} else {evalAST(*$1.a, &size);};}
+	| COMENTARIO {printf("Contenido: %s\t Linea: %d\n", $1, yylineno); }
+	| DECL {printf("Contenido: %s\t Linea: %d\n", $1.s, yylineno); if(!$1.a){ ;} else {evalAST(*$1.a, &size);};}
 ;
 
 ALLOPERS: 
