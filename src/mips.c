@@ -139,8 +139,6 @@ void mipsIns_asign_val_to_var(char *varname, char *type, int val1, float val2, c
             mipsIns_write_li_instruction(getTextFile(), mipsIns_createLi_variable(mipsValores[index_2].memoryPos),
                                          integer_to_string(mipsValores[index_2].ival));
         } else if (strcmp(type, "float") == 0) {
-            // char* formattedHex;
-            // sprintf(formattedHex "%08X" , *(unsigned int*)&val2 );
             index_2 = mipsVar_insert_update_numVar(0, type, 0.0, val2, "", false);
             mipsIns_write_li_instruction(getTextFile(), mipsIns_createLi_variable(mipsValores[index_2].memoryPos),
                                          float_to_string(mipsValores[index_2].fval));

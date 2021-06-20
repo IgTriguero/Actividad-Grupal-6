@@ -12,6 +12,8 @@ lw $s3,variable_bool
 lw $s4,variable_bool2
 li $t0, 0
 bnez $t0, then0
+li $t1, 2.000000
+move $s2, $t1
 
  j endif0
  then0:

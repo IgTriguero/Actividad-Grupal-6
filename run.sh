@@ -6,6 +6,6 @@ mv lex.yy.c ./src
 mv y.tab.c ./src
 mv y.tab.h ./src
 gcc ./src/lex.yy.c ./src/y.tab.c -o ./exec/ejecutable
-./exec/ejecutable ./input/main.adb > ./salida/output.txt
+./exec/ejecutable $1 > ./salida/output.txt
 mv ast.txt ./salida
 mv mips.txt ./salida

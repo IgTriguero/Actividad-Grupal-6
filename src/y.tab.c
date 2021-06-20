@@ -73,6 +73,7 @@
 #include <stdbool.h>
 #include <string.h>
 #include "mips.c"
+#include "funcionesBison.c"
 
 extern int yylex();
 extern int yyparse();
@@ -81,109 +82,8 @@ extern FILE *yyin;
 extern FILE *yyout;
 
 
-void yyerror (char const *s) {
-	printf("\x1b[1;31m");
-	printf("%s\t Line %d\n", s, yylineno);
-	printf("\x1b[0m");
- }
 
-char* ast_text = "ast.txt";
-
-/* nodes in the abstract syntax tree */
-struct ast {
-	char*  nodetype;
-	struct ast *l;
-	struct ast *r;
-};
-struct boo {
- char* nodetype;
- struct ast *l;
- struct ast *r;
-};
-
-struct flow {
-	char* nodetype; /* type I or W */
-	struct ast *cond; /* condition */
-};
-
-struct asign {
- 	char* nodetype;
- 	struct ast *as;
-};
-
-struct numval {
-	char* nodetype;
-	double number;
-};
-
-struct strval {
-	char* nodetype;
-	char* str;
-};
-
-//struct tabla de simbolos
-struct symb{    
-	char* vname;    
-	int vvali;   
-	float vvalf;
-	char* vvals;
-	char* type; 
-	bool vbool;
-	bool assigned;
-};
-
-
-//Variables globales
-int line_num = 1;
-
-int size = 52;
-
-int elementosOcupados = 0;
-
-int numnodo = 0;
-
-struct ast nodos[52];
-
-struct symb tabla[52];
-
-// tabla simbolos
-void iniArrayTabla(struct symb *tabla, int inicio, int fin); //
-
-// nodos
-void iniArrayNodos(struct ast *nodos, int inicio, int fin); //
-
-// funciones ast
-struct ast *createAST(char* nodetype, struct ast *l, struct ast *r);//
-struct ast *createBOO(char* nodetype, struct ast *l, struct ast *r);//
-struct ast *createFlow(struct ast *cond);//
-struct ast *createFlow2(struct ast *cond);//
-struct ast *createNum(double d);//
-struct ast *createSTR(char* s);//
-struct ast *createBOOLVAR(char* s);//
-struct ast *createASTAsignacion(struct ast *op);//
-
-//funciones tabla
-void insertarElemento(struct symb *tabla, int *size, int valor, char* svalor, float fvalor, char *variable, bool bvalor, int *elementosOcupados, char* type, bool assigned );//
-int buscarValor(struct symb *tabla, char *nombre, char *tipo, int *size);//
-int retrieveIntFromTable(struct symb *tabla, int size, char* name);//
-float retrieveFloatFromTable(struct symb *tabla, int size, char* name);//
-char* retrieveStringFromTable(struct symb *tabla, int size, char* name);//
-bool retrieveBoolFromTable(struct symb *tabla, int size, char* name);//
-int operateInt(char* operator, int left, int right);
-float operateFloat(char* operator, float left, float right);
-
-
-bool checkVarAndType(struct symb *tabla, int size, char* name, char* type);//
-bool searchVar(struct symb *tabla, int size, char* name);//
-char* getVarType(struct symb *tabla, int size, char* name);//
-int compare(char* operator, float left, float right);//
-
-
-void evalAST(struct ast a, int* size);//
-void printAST(struct ast nodos[], int i, int encontrado, int salida);//
-
-
-#line 187 "y.tab.c"
+#line 87 "y.tab.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -345,7 +245,7 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 119 "./src/bison.y"
+#line 19 "./src/bison.y"
 
 	int eval;
 	float fval;
@@ -369,7 +269,7 @@ union YYSTYPE
 
 	}st;
 
-#line 373 "y.tab.c"
+#line 273 "y.tab.c"
 
 };
 typedef union YYSTYPE YYSTYPE;
@@ -767,13 +667,13 @@ static const yytype_int8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int16 yyrline[] =
 {
-       0,   194,   194,   204,   205,   210,   211,   212,   213,   217,
-     236,   272,   308,   345,   364,   367,   373,   399,   419,   427,
-     442,   520,   529,   539,   550,   556,   557,   558,   563,   564,
-     567,   568,   572,   573,   574,   575,   579,   580,   584,   589,
-     605,   608,   609,   610,   611,   612,   613,   617,   618,   622,
-     640,   674,   707,   729,   730,   742,   743,   747,   756,   767,
-     768,   769,   772,   776,   780,   781,   787,   790,   793
+       0,    94,    94,   104,   105,   110,   111,   112,   113,   117,
+     136,   172,   208,   245,   264,   267,   273,   299,   319,   327,
+     342,   420,   429,   439,   450,   456,   457,   458,   463,   464,
+     467,   468,   472,   473,   474,   475,   479,   480,   484,   489,
+     505,   508,   509,   510,   511,   512,   513,   517,   518,   522,
+     540,   574,   607,   629,   630,   642,   643,   647,   656,   667,
+     668,   669,   672,   676,   680,   681,   687,   690,   693
 };
 #endif
 
@@ -1763,64 +1663,64 @@ yyreduce:
   switch (yyn)
     {
   case 2:
-#line 194 "./src/bison.y"
+#line 94 "./src/bison.y"
                                                                                       {
 			if(strcmp((yyvsp[-5].st).s, (yyvsp[-1].st).s) == 0){
-				printf("procedure comienza y termina con el mismo nombre\n");
+				printf("Contenido: Procedure Empieza y termina igual\t Linea: %d\n", yylineno);
 			} else {
-				printf("procedure NO comienza y termina con el mismo nombre\n");
+				yyerrorLine("Procedure empieza y termina diferente", yylineno);
 			}
 		}
-#line 1775 "y.tab.c"
+#line 1675 "y.tab.c"
     break;
 
   case 3:
-#line 204 "./src/bison.y"
+#line 104 "./src/bison.y"
                            {}
-#line 1781 "y.tab.c"
+#line 1681 "y.tab.c"
     break;
 
   case 4:
-#line 205 "./src/bison.y"
+#line 105 "./src/bison.y"
           {}
-#line 1787 "y.tab.c"
+#line 1687 "y.tab.c"
     break;
 
   case 5:
-#line 210 "./src/bison.y"
-          {printf("Contenido: %s\t Linea: %d\n", (yyvsp[0].st).s, yylineno); if(!(yyvsp[0].st).a){ ;} else {evalAST(*(yyvsp[0].st).a, &size);};}
-#line 1793 "y.tab.c"
+#line 110 "./src/bison.y"
+          {printf("Contenido: %s\t Linea: %d", (yyvsp[0].st).s, yylineno); if(!(yyvsp[0].st).a){ ;} else {evalAST(*(yyvsp[0].st).a, &size);};}
+#line 1693 "y.tab.c"
     break;
 
   case 6:
-#line 211 "./src/bison.y"
-                       {printf("Contenido: %s\t Linea: %d\n", (yyvsp[0].st).s, yylineno); if(!(yyvsp[0].st).a){ ;} else {evalAST(*(yyvsp[0].st).a, &size);};}
-#line 1799 "y.tab.c"
+#line 111 "./src/bison.y"
+                       {printf("Contenido: %s\t Linea: %d", (yyvsp[0].st).s, yylineno); if(!(yyvsp[0].st).a){ ;} else {evalAST(*(yyvsp[0].st).a, &size);};}
+#line 1699 "y.tab.c"
     break;
 
   case 7:
-#line 212 "./src/bison.y"
-                     {printf("Contenido: %s\t Linea: %d\n", (yyvsp[0].sval), yylineno); }
-#line 1805 "y.tab.c"
+#line 112 "./src/bison.y"
+                     {printf("Contenido: %s\t Linea: %d", (yyvsp[0].sval), yylineno); }
+#line 1705 "y.tab.c"
     break;
 
   case 8:
-#line 213 "./src/bison.y"
-               {printf("Contenido: %s\t Linea: %d\n", (yyvsp[0].st).s, yylineno); if(!(yyvsp[0].st).a){ ;} else {evalAST(*(yyvsp[0].st).a, &size);};}
-#line 1811 "y.tab.c"
+#line 113 "./src/bison.y"
+               {printf("Contenido: %s\t Linea: %d", (yyvsp[0].st).s, yylineno); if(!(yyvsp[0].st).a){ ;} else {evalAST(*(yyvsp[0].st).a, &size);};}
+#line 1711 "y.tab.c"
     break;
 
   case 9:
-#line 217 "./src/bison.y"
+#line 117 "./src/bison.y"
                         {
 		if(!searchVar(tabla, size, (yyvsp[0].st).s)) { 
 			if(strcmp(getVarType(tabla, size, (yyvsp[0].st).s), "integer")==0) {
-				(yyval.st).i = retrieveIntFromTable(tabla, size, (yyvsp[0].st).s);
+				(yyval.st).i = getIntFromTable(tabla, size, (yyvsp[0].st).s);
 				(yyval.st).type = "integer";
 				(yyval.st).a = createASTAsignacion((yyvsp[0].st).a);
 				(yyval.st).error = "empty";
 			} else if(strcmp(getVarType(tabla, size, (yyvsp[0].st).s), "float")==0) {
-				(yyval.st).f = retrieveFloatFromTable(tabla, size, (yyvsp[0].st).s);
+				(yyval.st).f = getFloatFromTable(tabla, size, (yyvsp[0].st).s);
 				(yyval.st).type = "float";
 				(yyval.st).a = createASTAsignacion((yyvsp[0].st).a);
 				(yyval.st).error = "empty";
@@ -1828,40 +1728,40 @@ yyreduce:
 				(yyval.st).error = "Variable de tipo incorrecto";
 			}
 			
-		} else {yyerror("Variable not declared");}
+		} else {yyerrorLine("Variable not declared", yylineno);}
 	
 	}
-#line 1835 "y.tab.c"
+#line 1735 "y.tab.c"
     break;
 
   case 10:
-#line 236 "./src/bison.y"
+#line 136 "./src/bison.y"
                                                   {
 		if(!searchVar(tabla, size, (yyvsp[-2].st).s) && !searchVar(tabla, size, (yyvsp[0].st).s)) { 
 			if(strcmp(getVarType(tabla, size, (yyvsp[-2].st).s), "integer")==0 && strcmp(getVarType(tabla, size, (yyvsp[0].st).s), "integer")==0) {
 
-				(yyval.st).i = operateInt((yyvsp[-1].st).operador, retrieveIntFromTable(tabla, size, (yyvsp[-2].st).s), retrieveIntFromTable(tabla, size, (yyvsp[0].st).s));
+				(yyval.st).i = operacionEnteros((yyvsp[-1].st).operador, getIntFromTable(tabla, size, (yyvsp[-2].st).s), getIntFromTable(tabla, size, (yyvsp[0].st).s));
 				(yyval.st).type = "integer";
 				(yyval.st).a = createASTAsignacion(createAST((yyvsp[-1].st).operador, (yyvsp[-2].st).a, (yyvsp[0].st).a));
 				(yyval.st).error = "empty";
 
 			} else if(strcmp(getVarType(tabla, size, (yyvsp[-2].st).s), "float")==0 && strcmp(getVarType(tabla, size, (yyvsp[0].st).s), "integer")==0) {
 
-				(yyval.st).f = operateFloat((yyvsp[-1].st).operador, retrieveFloatFromTable(tabla, size, (yyvsp[-2].st).s), (float)retrieveIntFromTable(tabla, size, (yyvsp[0].st).s));
+				(yyval.st).f = operacionFloats((yyvsp[-1].st).operador, getFloatFromTable(tabla, size, (yyvsp[-2].st).s), (float)getIntFromTable(tabla, size, (yyvsp[0].st).s));
 				(yyval.st).type = "float";
 				(yyval.st).a = createASTAsignacion(createAST((yyvsp[-1].st).operador, (yyvsp[-2].st).a, (yyvsp[0].st).a));
 				(yyval.st).error = "empty";
 
 			} else if(strcmp(getVarType(tabla, size, (yyvsp[-2].st).s), "integer")==0 && strcmp(getVarType(tabla, size, (yyvsp[0].st).s), "float")==0) {
 				
-				(yyval.st).f = operateFloat((yyvsp[-1].st).operador, (float)retrieveIntFromTable(tabla, size, (yyvsp[-2].st).s), retrieveFloatFromTable(tabla, size, (yyvsp[0].st).s));
+				(yyval.st).f = operacionFloats((yyvsp[-1].st).operador, (float)getIntFromTable(tabla, size, (yyvsp[-2].st).s), getFloatFromTable(tabla, size, (yyvsp[0].st).s));
 				(yyval.st).type = "float";
 				(yyval.st).a = createASTAsignacion(createAST((yyvsp[-1].st).operador, (yyvsp[-2].st).a, (yyvsp[0].st).a));
 				(yyval.st).error = "empty";
 
 			} else if(strcmp(getVarType(tabla, size, (yyvsp[0].st).s), "float")==0 && strcmp(getVarType(tabla, size, (yyvsp[0].st).s), "float")==0) {
 				
-				(yyval.st).f = operateFloat((yyvsp[-1].st).operador, retrieveFloatFromTable(tabla, size, (yyvsp[-2].st).s), retrieveFloatFromTable(tabla, size, (yyvsp[0].st).s));
+				(yyval.st).f = operacionFloats((yyvsp[-1].st).operador, getFloatFromTable(tabla, size, (yyvsp[-2].st).s), getFloatFromTable(tabla, size, (yyvsp[0].st).s));
 				(yyval.st).type = "float";
 				(yyval.st).a = createASTAsignacion(createAST((yyvsp[-1].st).operador, (yyvsp[-2].st).a, (yyvsp[0].st).a));
 				(yyval.st).error = "empty";
@@ -1870,39 +1770,39 @@ yyreduce:
 				(yyval.st).error = "Variable de tipo incorrecto";
 			}
 			
-		} else {yyerror("Variable not declared");}
+		} else {yyerrorLine("Variable not declared", yylineno);}
 	}
-#line 1876 "y.tab.c"
+#line 1776 "y.tab.c"
     break;
 
   case 11:
-#line 272 "./src/bison.y"
+#line 172 "./src/bison.y"
                                        {
 		if(!searchVar(tabla, size, (yyvsp[-2].st).s)) { 
 			if(strcmp(getVarType(tabla, size, (yyvsp[-2].st).s), "integer")==0 && strcmp((yyvsp[0].st).type, "integer")==0) {
 
-				(yyval.st).i = operateInt((yyvsp[-1].st).operador, retrieveIntFromTable(tabla, size, (yyvsp[-2].st).s), (yyvsp[0].st).i);
+				(yyval.st).i = operacionEnteros((yyvsp[-1].st).operador, getIntFromTable(tabla, size, (yyvsp[-2].st).s), (yyvsp[0].st).i);
 				(yyval.st).type = "integer";
 				(yyval.st).a = createASTAsignacion(createAST((yyvsp[-1].st).operador, (yyvsp[-2].st).a, (yyvsp[0].st).a));
 				(yyval.st).error = "empty";
 
 			} else if(strcmp(getVarType(tabla, size, (yyvsp[-2].st).s), "float")==0 && strcmp((yyvsp[0].st).type, "integer")==0) {
 
-				(yyval.st).f = operateFloat((yyvsp[-1].st).operador, retrieveFloatFromTable(tabla, size, (yyvsp[-2].st).s), (float)(yyvsp[0].st).i);
+				(yyval.st).f = operacionFloats((yyvsp[-1].st).operador, getFloatFromTable(tabla, size, (yyvsp[-2].st).s), (float)(yyvsp[0].st).i);
 				(yyval.st).type = "float";
 				(yyval.st).a = createASTAsignacion(createAST((yyvsp[-1].st).operador, (yyvsp[-2].st).a, (yyvsp[0].st).a));
 				(yyval.st).error = "empty";
 
 			} else if(strcmp(getVarType(tabla, size, (yyvsp[-2].st).s), "integer")==0 && strcmp((yyvsp[0].st).type, "float")==0) {
 				
-				(yyval.st).f = operateFloat((yyvsp[-1].st).operador, (float)retrieveIntFromTable(tabla, size, (yyvsp[-2].st).s), (yyvsp[0].st).f);
+				(yyval.st).f = operacionFloats((yyvsp[-1].st).operador, (float)getIntFromTable(tabla, size, (yyvsp[-2].st).s), (yyvsp[0].st).f);
 				(yyval.st).type = "float";
 				(yyval.st).a = createASTAsignacion(createAST((yyvsp[-1].st).operador, (yyvsp[-2].st).a, (yyvsp[0].st).a));
 				(yyval.st).error = "empty";
 
 			} else if(strcmp(getVarType(tabla, size, (yyvsp[0].st).s), "float")==0 && strcmp((yyvsp[0].st).type, "float")==0) {
 				
-				(yyval.st).f = operateFloat((yyvsp[-1].st).operador, retrieveFloatFromTable(tabla, size, (yyvsp[-2].st).s), (yyvsp[0].st).f);
+				(yyval.st).f = operacionFloats((yyvsp[-1].st).operador, getFloatFromTable(tabla, size, (yyvsp[-2].st).s), (yyvsp[0].st).f);
 				(yyval.st).type = "float";
 				(yyval.st).a = createASTAsignacion(createAST((yyvsp[-1].st).operador, (yyvsp[-2].st).a, (yyvsp[0].st).a));
 				(yyval.st).error = "empty";
@@ -1911,40 +1811,40 @@ yyreduce:
 				(yyval.st).error = "Variable de tipo incorrecto";
 			}
 			
-		} else {yyerror("Variable not declared");}
+		} else {yyerrorLine("Variable not declared", yylineno);}
 	}
-#line 1917 "y.tab.c"
+#line 1817 "y.tab.c"
     break;
 
   case 12:
-#line 308 "./src/bison.y"
+#line 208 "./src/bison.y"
                                        {
 		if(!searchVar(tabla, size, (yyvsp[0].st).s)) { 
 
 			if(strcmp((yyvsp[-2].st).type, "integer")==0 && strcmp(getVarType(tabla, size, (yyvsp[0].st).s), "integer")==0) {
 
-				(yyval.st).i = operateInt((yyvsp[-1].st).operador, (yyvsp[-2].st).i, retrieveIntFromTable(tabla, size, (yyvsp[0].st).s));
+				(yyval.st).i = operacionEnteros((yyvsp[-1].st).operador, (yyvsp[-2].st).i, getIntFromTable(tabla, size, (yyvsp[0].st).s));
 				(yyval.st).type = "integer";
 				(yyval.st).a = createASTAsignacion(createAST((yyvsp[-1].st).operador, (yyvsp[-2].st).a, (yyvsp[0].st).a));
 				(yyval.st).error = "empty";
 
 			} else if(strcmp((yyvsp[-2].st).type, "float")==0 && strcmp(getVarType(tabla, size, (yyvsp[0].st).s), "integer")==0) {
 
-				(yyval.st).f = operateFloat((yyvsp[-1].st).operador, (yyvsp[-2].st).f, (float)retrieveIntFromTable(tabla, size, (yyvsp[0].st).s));
+				(yyval.st).f = operacionFloats((yyvsp[-1].st).operador, (yyvsp[-2].st).f, (float)getIntFromTable(tabla, size, (yyvsp[0].st).s));
 				(yyval.st).type = "float";
 				(yyval.st).a = createASTAsignacion(createAST((yyvsp[-1].st).operador, (yyvsp[-2].st).a, (yyvsp[0].st).a));
 				(yyval.st).error = "empty";
 
 			} else if(strcmp((yyvsp[-2].st).type, "integer")==0 && strcmp(getVarType(tabla, size, (yyvsp[0].st).s), "float")==0) {
 				
-				(yyval.st).f = operateFloat((yyvsp[-1].st).operador, (float)(yyvsp[-2].st).i, retrieveFloatFromTable(tabla, size, (yyvsp[0].st).s));
+				(yyval.st).f = operacionFloats((yyvsp[-1].st).operador, (float)(yyvsp[-2].st).i, getFloatFromTable(tabla, size, (yyvsp[0].st).s));
 				(yyval.st).type = "float";
 				(yyval.st).a = createASTAsignacion(createAST((yyvsp[-1].st).operador, (yyvsp[-2].st).a, (yyvsp[0].st).a));
 				(yyval.st).error = "empty";
 
 			} else if(strcmp((yyvsp[-2].st).type, "float")==0 && strcmp(getVarType(tabla, size, (yyvsp[0].st).s), "float")==0) {
 				
-				(yyval.st).f = operateFloat((yyvsp[-1].st).operador, (yyvsp[-2].st).f, retrieveFloatFromTable(tabla, size, (yyvsp[0].st).s));
+				(yyval.st).f = operacionFloats((yyvsp[-1].st).operador, (yyvsp[-2].st).f, getFloatFromTable(tabla, size, (yyvsp[0].st).s));
 				(yyval.st).type = "float";
 				(yyval.st).a = createASTAsignacion(createAST((yyvsp[-1].st).operador, (yyvsp[-2].st).a, (yyvsp[0].st).a));
 				(yyval.st).error = "empty";
@@ -1953,13 +1853,13 @@ yyreduce:
 				(yyval.st).error = "Variable de tipo incorrecto";
 			}
 			
-		} else {yyerror("Variable not declared");}
+		} else {yyerrorLine("Variable not declared", yylineno);}
 	}
-#line 1959 "y.tab.c"
+#line 1859 "y.tab.c"
     break;
 
   case 13:
-#line 345 "./src/bison.y"
+#line 245 "./src/bison.y"
                {
 		if(strcmp((yyvsp[0].st).type, "integer")==0) {
 			(yyval.st).i = (yyvsp[0].st).i;
@@ -1976,27 +1876,27 @@ yyreduce:
 		}
 			
 	}
-#line 1980 "y.tab.c"
+#line 1880 "y.tab.c"
     break;
 
   case 14:
-#line 364 "./src/bison.y"
+#line 264 "./src/bison.y"
                     {
 		(yyval.st).type = "integer";
 	}
-#line 1988 "y.tab.c"
+#line 1888 "y.tab.c"
     break;
 
   case 15:
-#line 367 "./src/bison.y"
+#line 267 "./src/bison.y"
                     {
 		(yyval.st).type = "float";
 	}
-#line 1996 "y.tab.c"
+#line 1896 "y.tab.c"
     break;
 
   case 16:
-#line 373 "./src/bison.y"
+#line 273 "./src/bison.y"
                                                                              {
 		(yyval.st).s = "Declaracion de variable Integer o Float";
 		if(strcmp((yyvsp[-1].st).error, "empty")==0){
@@ -2022,11 +1922,11 @@ yyreduce:
 		}
 		
 	}
-#line 2026 "y.tab.c"
+#line 1926 "y.tab.c"
     break;
 
   case 17:
-#line 399 "./src/bison.y"
+#line 299 "./src/bison.y"
                                                           {
 		(yyval.st).s = "Declaracion de variable Integer o Float vacia";
 		if(strcmp((yyvsp[-1].st).type, "integer")==0){
@@ -2045,24 +1945,24 @@ yyreduce:
 			}	
 		}
 	}
-#line 2049 "y.tab.c"
+#line 1949 "y.tab.c"
     break;
 
   case 18:
-#line 419 "./src/bison.y"
+#line 319 "./src/bison.y"
                                                                                   {
 			if(searchVar(tabla, size, (yyvsp[-6].st).s) && checkVarAndType(tabla, size, (yyvsp[-1].st).s, "boolean")) {
 				(yyval.st).error = "empty";
-				insertarElemento(tabla, &size, 0, "", 0.0, (yyvsp[-6].st).s, retrieveBoolFromTable(tabla, size, (yyvsp[-1].st).s), &elementosOcupados, "boolean", true );
+				insertarElemento(tabla, &size, 0, "", 0.0, (yyvsp[-6].st).s, getBooleanFromTable(tabla, size, (yyvsp[-1].st).s), &elementosOcupados, "boolean", true );
 				(yyval.st).a = createASTAsignacion((yyvsp[-1].st).a);
 			} else {(yyval.st).error = "Variable declared or wrong type";}
 			(yyval.st).s = "Declaracion de variable Boolean a operacion booleana";
 		}
-#line 2062 "y.tab.c"
+#line 1962 "y.tab.c"
     break;
 
   case 19:
-#line 427 "./src/bison.y"
+#line 327 "./src/bison.y"
                                                                           {
 			if(strcmp((yyvsp[-1].st).error,"empty") == 0 ){
 				if(searchVar(tabla, size, (yyvsp[-6].st).s)) {
@@ -2077,11 +1977,11 @@ yyreduce:
 			
 			(yyval.st).s = "Declaracion de variable Boolean a operacion booleana";
 		}
-#line 2081 "y.tab.c"
+#line 1981 "y.tab.c"
     break;
 
   case 20:
-#line 442 "./src/bison.y"
+#line 342 "./src/bison.y"
                                                                 {
 		(yyval.st).s = "asignación de variable a cualquier cosa";
 		if(strcmp((yyvsp[-1].st).error,"empty") == 0 ) {
@@ -2158,11 +2058,11 @@ yyreduce:
 			(yyval.st).error = (yyvsp[-1].st).error;
 		}
 	}
-#line 2162 "y.tab.c"
+#line 2062 "y.tab.c"
     break;
 
   case 21:
-#line 520 "./src/bison.y"
+#line 420 "./src/bison.y"
                                                       {
 			(yyval.st).s = "Declaracion de variable Boolean vacia";
 			if (searchVar(tabla, size, (yyvsp[-3].st).s)) {
@@ -2172,26 +2072,26 @@ yyreduce:
 				(yyval.st).error = "Variable declared";
 			}
 		}
-#line 2176 "y.tab.c"
+#line 2076 "y.tab.c"
     break;
 
   case 22:
-#line 529 "./src/bison.y"
+#line 429 "./src/bison.y"
                                                                                  {
 			(yyval.st).s = "Declaracion de variable String igual a variable String"; 
 			if(searchVar(tabla, size, (yyvsp[-6].st).s) && checkVarAndType(tabla, size, (yyvsp[-1].st).s,"string")) {
 				(yyval.st).error = "empty";
-				insertarElemento(tabla, &size, 0, retrieveStringFromTable(tabla, size, (yyvsp[-1].st).s), 0.0, (yyvsp[-6].st).s, false, &elementosOcupados, "string", true );
+				insertarElemento(tabla, &size, 0, getStringFromTable(tabla, size, (yyvsp[-1].st).s), 0.0, (yyvsp[-6].st).s, false, &elementosOcupados, "string", true );
 				(yyval.st).a = createASTAsignacion((yyvsp[-1].st).a);
 			} else {
 				(yyval.st).error = "Variable declared or wrong type";
 			}
 		}
-#line 2191 "y.tab.c"
+#line 2091 "y.tab.c"
     break;
 
   case 23:
-#line 539 "./src/bison.y"
+#line 439 "./src/bison.y"
                                                                         {
 			(yyval.st).s = "Declaracion con string";
 			if(searchVar(tabla, size, (yyvsp[-6].st).s)) {
@@ -2203,184 +2103,184 @@ yyreduce:
 				(yyval.st).error = "Variable declared or wrong type";
 			}
 		}
-#line 2207 "y.tab.c"
+#line 2107 "y.tab.c"
     break;
 
   case 24:
-#line 550 "./src/bison.y"
+#line 450 "./src/bison.y"
                                                      {
 			(yyval.st).s = "Declaracion de variable String vacia";
 			if (searchVar(tabla, size, (yyvsp[-3].st).s)) {
 			(yyval.st).error = "empty";insertarElemento(tabla, &size, 0, "", 0.0, (yyvsp[-3].st).s, false, &elementosOcupados, "string", false );} else {(yyval.st).error = "Variable declared";}
 		}
-#line 2217 "y.tab.c"
+#line 2117 "y.tab.c"
     break;
 
   case 25:
-#line 556 "./src/bison.y"
+#line 456 "./src/bison.y"
                                                                        {(yyval.st).s = "Tipo Variable en rango entero";}
-#line 2223 "y.tab.c"
+#line 2123 "y.tab.c"
     break;
 
   case 26:
-#line 557 "./src/bison.y"
+#line 457 "./src/bison.y"
                                                                                                                                  {(yyval.st).s = "Tipo Variable declaraccion array entero de Variable";}
-#line 2229 "y.tab.c"
+#line 2129 "y.tab.c"
     break;
 
   case 27:
-#line 558 "./src/bison.y"
+#line 458 "./src/bison.y"
                                                                                                                        {(yyval.st).s = "Declaracion de array";}
-#line 2235 "y.tab.c"
+#line 2135 "y.tab.c"
     break;
 
   case 28:
-#line 563 "./src/bison.y"
+#line 463 "./src/bison.y"
                 {(yyval.st) = (yyvsp[0].st);}
-#line 2241 "y.tab.c"
+#line 2141 "y.tab.c"
     break;
 
   case 29:
-#line 564 "./src/bison.y"
+#line 464 "./src/bison.y"
                    {(yyval.st) = (yyvsp[0].st); }
-#line 2247 "y.tab.c"
+#line 2147 "y.tab.c"
     break;
 
   case 30:
-#line 567 "./src/bison.y"
+#line 467 "./src/bison.y"
                      {}
-#line 2253 "y.tab.c"
+#line 2153 "y.tab.c"
     break;
 
   case 31:
-#line 568 "./src/bison.y"
+#line 468 "./src/bison.y"
           {}
-#line 2259 "y.tab.c"
+#line 2159 "y.tab.c"
     break;
 
   case 32:
-#line 572 "./src/bison.y"
+#line 472 "./src/bison.y"
              {(yyval.st).operador = "+";}
-#line 2265 "y.tab.c"
+#line 2165 "y.tab.c"
     break;
 
   case 33:
-#line 573 "./src/bison.y"
+#line 473 "./src/bison.y"
                 {(yyval.st).operador = "-";}
-#line 2271 "y.tab.c"
+#line 2171 "y.tab.c"
     break;
 
   case 34:
-#line 574 "./src/bison.y"
+#line 474 "./src/bison.y"
                {(yyval.st).operador = "*";}
-#line 2277 "y.tab.c"
+#line 2177 "y.tab.c"
     break;
 
   case 35:
-#line 575 "./src/bison.y"
+#line 475 "./src/bison.y"
               {(yyval.st).operador = "/";}
-#line 2283 "y.tab.c"
+#line 2183 "y.tab.c"
     break;
 
   case 36:
-#line 579 "./src/bison.y"
+#line 479 "./src/bison.y"
                {(yyval.st).i = (yyvsp[0].eval); (yyval.st).type = "integer"; (yyval.st).error="empty"; (yyval.st).a = createNum((yyvsp[0].eval));}
-#line 2289 "y.tab.c"
+#line 2189 "y.tab.c"
     break;
 
   case 37:
-#line 580 "./src/bison.y"
+#line 480 "./src/bison.y"
                       {(yyval.st).f = (yyvsp[0].fval); (yyval.st).type = "float"; (yyval.st).error="empty"; (yyval.st).a = createNum((yyvsp[0].fval));}
-#line 2295 "y.tab.c"
+#line 2195 "y.tab.c"
     break;
 
   case 38:
-#line 584 "./src/bison.y"
+#line 484 "./src/bison.y"
                  {
 		(yyval.st).type = (yyvsp[0].st).type;
 		(yyval.st).a = (yyvsp[0].st).a;
 		if (strcmp("integer", (yyvsp[0].st).type) == 0) {(yyval.st).i = (yyvsp[0].st).i;} else {(yyval.st).f = (yyvsp[0].st).f;}
 	}
-#line 2305 "y.tab.c"
+#line 2205 "y.tab.c"
     break;
 
   case 39:
-#line 589 "./src/bison.y"
+#line 489 "./src/bison.y"
                             {
 		if(strcmp((yyvsp[-2].st).type, "float") == 0 && strcmp((yyvsp[0].st).type, "float") == 0) {
-			(yyval.st).f = operateFloat((yyvsp[-1].st).operador, (yyvsp[-2].st).f, (yyvsp[0].st).f);
+			(yyval.st).f = operacionFloats((yyvsp[-1].st).operador, (yyvsp[-2].st).f, (yyvsp[0].st).f);
 			(yyval.st).type = "float";
 		} else if (strcmp((yyvsp[0].st).type, "float") == 0) {
-			(yyval.st).f = operateFloat((yyvsp[-1].st).operador, (float)(yyvsp[-2].st).i, (yyvsp[0].st).f);
+			(yyval.st).f = operacionFloats((yyvsp[-1].st).operador, (float)(yyvsp[-2].st).i, (yyvsp[0].st).f);
 			(yyval.st).type = "float";
 		} else if (strcmp((yyvsp[-2].st).type, "float") == 0) {
-			(yyval.st).f = operateFloat((yyvsp[-1].st).operador, (yyvsp[-2].st).f, (float)(yyvsp[0].st).i);
+			(yyval.st).f = operacionFloats((yyvsp[-1].st).operador, (yyvsp[-2].st).f, (float)(yyvsp[0].st).i);
 			(yyval.st).type = "float";
 		} else {
-			(yyval.st).i = operateInt((yyvsp[-1].st).operador, (yyvsp[-2].st).i, (yyvsp[0].st).i);
+			(yyval.st).i = operacionEnteros((yyvsp[-1].st).operador, (yyvsp[-2].st).i, (yyvsp[0].st).i);
 			(yyval.st).type = "integer";
 		}
 		(yyval.st).a = createAST((yyvsp[-1].st).operador, (yyvsp[-2].st).a, (yyvsp[0].st).a);
 	}
-#line 2326 "y.tab.c"
+#line 2226 "y.tab.c"
     break;
 
   case 40:
-#line 605 "./src/bison.y"
+#line 505 "./src/bison.y"
                                                   {if(strcmp((yyvsp[-1].st).type, "float") == 0) {(yyval.st).f = (yyvsp[-1].st).f;} else {(yyval.st).i = (yyvsp[-1].st).i;}}
-#line 2332 "y.tab.c"
+#line 2232 "y.tab.c"
     break;
 
   case 41:
-#line 608 "./src/bison.y"
+#line 508 "./src/bison.y"
                         {(yyval.st).s = "IGUAL";(yyval.st).operador = "==";}
-#line 2338 "y.tab.c"
+#line 2238 "y.tab.c"
     break;
 
   case 42:
-#line 609 "./src/bison.y"
+#line 509 "./src/bison.y"
                                         {(yyval.st).s = "DESIGUAL";(yyval.st).operador = "!=";}
-#line 2344 "y.tab.c"
+#line 2244 "y.tab.c"
     break;
 
   case 43:
-#line 610 "./src/bison.y"
+#line 510 "./src/bison.y"
                                         {(yyval.st).s = "MENOR";(yyval.st).operador = "<";}
-#line 2350 "y.tab.c"
+#line 2250 "y.tab.c"
     break;
 
   case 44:
-#line 611 "./src/bison.y"
+#line 511 "./src/bison.y"
                                         {(yyval.st).s = "MAYOR";(yyval.st).operador = ">";}
-#line 2356 "y.tab.c"
+#line 2256 "y.tab.c"
     break;
 
   case 45:
-#line 612 "./src/bison.y"
+#line 512 "./src/bison.y"
                                         {(yyval.st).s = "MENOR IGUAL";(yyval.st).operador = "<=";}
-#line 2362 "y.tab.c"
+#line 2262 "y.tab.c"
     break;
 
   case 46:
-#line 613 "./src/bison.y"
+#line 513 "./src/bison.y"
                                         {(yyval.st).s = "MAYOR IGUAL";(yyval.st).operador = ">=";}
-#line 2368 "y.tab.c"
+#line 2268 "y.tab.c"
     break;
 
   case 47:
-#line 617 "./src/bison.y"
+#line 517 "./src/bison.y"
                     {(yyval.st) = (yyvsp[0].st); (yyval.st).type = "boolean";}
-#line 2374 "y.tab.c"
+#line 2274 "y.tab.c"
     break;
 
   case 48:
-#line 618 "./src/bison.y"
+#line 518 "./src/bison.y"
                {(yyval.st) = (yyvsp[0].st); (yyval.st).type = "boolean";}
-#line 2380 "y.tab.c"
+#line 2280 "y.tab.c"
     break;
 
   case 49:
-#line 622 "./src/bison.y"
+#line 522 "./src/bison.y"
                                                 {
 		(yyval.st).s = "INT OP BOOL INT";
 		(yyval.st).error = "empty";
@@ -2398,11 +2298,11 @@ yyreduce:
 			(yyval.st).a = createAST((yyvsp[-1].st).operador, (yyvsp[-2].st).a, (yyvsp[0].st).a); 
 		}  
 	}
-#line 2402 "y.tab.c"
+#line 2302 "y.tab.c"
     break;
 
   case 50:
-#line 640 "./src/bison.y"
+#line 540 "./src/bison.y"
                                                                 {
 
 		(yyval.st).s = "VAR OP BOOL INT";
@@ -2410,22 +2310,22 @@ yyreduce:
 			(yyval.st).error = "empty";
 			if(strcmp(getVarType(tabla, size, (yyvsp[-2].st).s), "integer")==0 && strcmp((yyvsp[0].st).type, "integer")==0) {
 
-				(yyval.st).boo = compare((yyvsp[-1].st).operador, (float)retrieveIntFromTable(tabla, size, (yyvsp[-2].st).s), (float)(yyvsp[0].st).i);
+				(yyval.st).boo = compare((yyvsp[-1].st).operador, (float)getIntFromTable(tabla, size, (yyvsp[-2].st).s), (float)(yyvsp[0].st).i);
 				(yyval.st).a = createASTAsignacion(createAST((yyvsp[-1].st).operador, (yyvsp[-2].st).a, (yyvsp[0].st).a));
 
 			} else if(strcmp(getVarType(tabla, size, (yyvsp[-2].st).s), "float")==0 && strcmp((yyvsp[0].st).type, "integer")==0) {
 
-				(yyval.st).boo = compare((yyvsp[-1].st).operador, retrieveFloatFromTable(tabla, size, (yyvsp[-2].st).s), (float)(yyvsp[0].st).i);
+				(yyval.st).boo = compare((yyvsp[-1].st).operador, getFloatFromTable(tabla, size, (yyvsp[-2].st).s), (float)(yyvsp[0].st).i);
 				(yyval.st).a = createASTAsignacion(createAST((yyvsp[-1].st).operador, (yyvsp[-2].st).a, (yyvsp[0].st).a));
 
 			} else if(strcmp(getVarType(tabla, size, (yyvsp[-2].st).s), "integer")==0 && strcmp((yyvsp[0].st).type, "float")==0) {
 				
-				(yyval.st).boo = compare((yyvsp[-1].st).operador, (float)retrieveIntFromTable(tabla, size, (yyvsp[-2].st).s), (yyvsp[0].st).f);
+				(yyval.st).boo = compare((yyvsp[-1].st).operador, (float)getIntFromTable(tabla, size, (yyvsp[-2].st).s), (yyvsp[0].st).f);
 				(yyval.st).a = createASTAsignacion(createAST((yyvsp[-1].st).operador, (yyvsp[-2].st).a, (yyvsp[0].st).a));
 
 			} else if(strcmp(getVarType(tabla, size, (yyvsp[-2].st).s), "float")==0 && strcmp((yyvsp[0].st).type, "float")==0) {
 				
-				(yyval.st).boo = compare((yyvsp[-1].st).operador, retrieveFloatFromTable(tabla, size, (yyvsp[-2].st).s), (yyvsp[0].st).f);
+				(yyval.st).boo = compare((yyvsp[-1].st).operador, getFloatFromTable(tabla, size, (yyvsp[-2].st).s), (yyvsp[0].st).f);
 				(yyval.st).a = createASTAsignacion(createAST((yyvsp[-1].st).operador, (yyvsp[-2].st).a, (yyvsp[0].st).a));
 
 			} else {
@@ -2433,36 +2333,36 @@ yyreduce:
 				(yyval.st).error = "Variable de tipo incorrecto";
 			}
 			
-		} else {yyerror("Variable not declared");}
+		} else {yyerrorLine("Variable not declared", yylineno);}
 
 		}
-#line 2440 "y.tab.c"
+#line 2340 "y.tab.c"
     break;
 
   case 51:
-#line 674 "./src/bison.y"
+#line 574 "./src/bison.y"
                                                                 {
 			(yyval.st).s = "INT OP BOOL VAR";
 			if(!searchVar(tabla, size, (yyvsp[0].st).s)) { 
 				(yyval.st).error = "empty";
 				if(strcmp((yyvsp[-2].st).type, "integer")==0 && strcmp(getVarType(tabla, size, (yyvsp[0].st).s), "integer")==0) {
 
-					(yyval.st).boo = compare((yyvsp[-1].st).operador, (float)(yyvsp[-2].st).i, (float)retrieveIntFromTable(tabla, size, (yyvsp[0].st).s));
+					(yyval.st).boo = compare((yyvsp[-1].st).operador, (float)(yyvsp[-2].st).i, (float)getIntFromTable(tabla, size, (yyvsp[0].st).s));
 					(yyval.st).a = createASTAsignacion(createAST((yyvsp[-1].st).operador, (yyvsp[-2].st).a, (yyvsp[0].st).a));
 
 				} else if(strcmp((yyvsp[-2].st).type, "float")==0 && strcmp(getVarType(tabla, size, (yyvsp[0].st).s), "integer")==0) {
 
-					(yyval.st).boo = compare((yyvsp[-1].st).operador, (yyvsp[-2].st).f, (float)retrieveIntFromTable(tabla, size, (yyvsp[0].st).s));
+					(yyval.st).boo = compare((yyvsp[-1].st).operador, (yyvsp[-2].st).f, (float)getIntFromTable(tabla, size, (yyvsp[0].st).s));
 					(yyval.st).a = createASTAsignacion(createAST((yyvsp[-1].st).operador, (yyvsp[-2].st).a, (yyvsp[0].st).a));
 
 				} else if(strcmp((yyvsp[-2].st).type, "integer")==0 && strcmp(getVarType(tabla, size, (yyvsp[0].st).s), "float")==0) {
 					
-					(yyval.st).boo = compare((yyvsp[-1].st).operador, (float)(yyvsp[-2].st).i, retrieveFloatFromTable(tabla, size, (yyvsp[0].st).s));
+					(yyval.st).boo = compare((yyvsp[-1].st).operador, (float)(yyvsp[-2].st).i, getFloatFromTable(tabla, size, (yyvsp[0].st).s));
 					(yyval.st).a = createASTAsignacion(createAST((yyvsp[-1].st).operador, (yyvsp[-2].st).a, (yyvsp[0].st).a));
 
 				} else if(strcmp((yyvsp[-2].st).type, "float")==0 && strcmp(getVarType(tabla, size, (yyvsp[0].st).s), "float")==0) {
 
-					(yyval.st).boo = compare((yyvsp[-1].st).operador, (yyvsp[-2].st).f, retrieveFloatFromTable(tabla, size, (yyvsp[0].st).s));
+					(yyval.st).boo = compare((yyvsp[-1].st).operador, (yyvsp[-2].st).f, getFloatFromTable(tabla, size, (yyvsp[0].st).s));
 					(yyval.st).a = createASTAsignacion(createAST((yyvsp[-1].st).operador, (yyvsp[-2].st).a, (yyvsp[0].st).a));
 
 				} else {
@@ -2470,29 +2370,29 @@ yyreduce:
 				}
 			
 			} else {
-				yyerror("Variable not declared");
+				yyerrorLine("Variable not declared", yylineno);
 			}
 		}
-#line 2477 "y.tab.c"
+#line 2377 "y.tab.c"
     break;
 
   case 52:
-#line 707 "./src/bison.y"
+#line 607 "./src/bison.y"
                                                                         {
 			(yyval.st).s = "VAR OP BOOL VAR";
 			if(!searchVar(tabla, size, (yyvsp[-2].st).s) && !searchVar(tabla, size, (yyvsp[0].st).s)) {
 				(yyval.st).error = "empty";
 				if((strcmp("integer", getVarType(tabla, size, (yyvsp[-2].st).s)) == 0) && (strcmp("integer", getVarType(tabla, size, (yyvsp[0].st).s)) == 0)){
-					(yyval.st).boo = compare((yyvsp[-1].st).operador,	(float)retrieveIntFromTable(tabla, size, (yyvsp[-2].st).s), (float)retrieveIntFromTable(tabla, size, (yyvsp[0].st).s));
+					(yyval.st).boo = compare((yyvsp[-1].st).operador,	(float)getIntFromTable(tabla, size, (yyvsp[-2].st).s), (float)getIntFromTable(tabla, size, (yyvsp[0].st).s));
 					(yyval.st).a=createAST((yyvsp[-1].st).operador, (yyvsp[-2].st).a, (yyvsp[0].st).a);
 				} else if((strcmp("float", getVarType(tabla, size, (yyvsp[-2].st).s))  == 0) && (strcmp("float", getVarType(tabla, size, (yyvsp[0].st).s))  == 0)){
-					(yyval.st).boo = compare((yyvsp[-1].st).operador, retrieveFloatFromTable(tabla, size, (yyvsp[-2].st).s), retrieveFloatFromTable(tabla, size, (yyvsp[0].st).s));
+					(yyval.st).boo = compare((yyvsp[-1].st).operador, getFloatFromTable(tabla, size, (yyvsp[-2].st).s), getFloatFromTable(tabla, size, (yyvsp[0].st).s));
 					(yyval.st).a=createAST((yyvsp[-1].st).operador, (yyvsp[-2].st).a, (yyvsp[0].st).a);
 				} else if ((strcmp("integer", getVarType(tabla, size, (yyvsp[-2].st).s))  == 0) && (strcmp("float", getVarType(tabla, size, (yyvsp[0].st).s))  == 0)) {
-					(yyval.st).boo = compare((yyvsp[-1].st).operador, (float)retrieveIntFromTable(tabla, size, (yyvsp[-2].st).s), retrieveFloatFromTable(tabla, size, (yyvsp[0].st).s));
+					(yyval.st).boo = compare((yyvsp[-1].st).operador, (float)getIntFromTable(tabla, size, (yyvsp[-2].st).s), getFloatFromTable(tabla, size, (yyvsp[0].st).s));
 					(yyval.st).a=createAST((yyvsp[-1].st).operador, (yyvsp[-2].st).a, (yyvsp[0].st).a);
 				} else if ((strcmp("float", getVarType(tabla, size, (yyvsp[-2].st).s))  == 0) && (strcmp("integer", getVarType(tabla, size, (yyvsp[0].st).s))  == 0)) {
-					(yyval.st).boo = compare((yyvsp[-1].st).operador, retrieveFloatFromTable(tabla, size, (yyvsp[-2].st).s), (float)retrieveIntFromTable(tabla, size, (yyvsp[0].st).s));
+					(yyval.st).boo = compare((yyvsp[-1].st).operador, getFloatFromTable(tabla, size, (yyvsp[-2].st).s), (float)getIntFromTable(tabla, size, (yyvsp[0].st).s));
 					(yyval.st).a=createAST((yyvsp[-1].st).operador, (yyvsp[-2].st).a, (yyvsp[0].st).a);
 				} else {
 					(yyval.st).error = "Esta variable tiene un tipo incorrecto";
@@ -2500,22 +2400,22 @@ yyreduce:
 				
 			} else {(yyval.st).error = "Variable declared or wrong type";}
 		}
-#line 2504 "y.tab.c"
+#line 2404 "y.tab.c"
     break;
 
   case 53:
-#line 729 "./src/bison.y"
+#line 629 "./src/bison.y"
                                                         {(yyval.st).s = "PARENTESIS BOOL PARENTESIS"; (yyval.st).boo = (yyvsp[-1].st).boo;}
-#line 2510 "y.tab.c"
+#line 2410 "y.tab.c"
     break;
 
   case 54:
-#line 730 "./src/bison.y"
+#line 630 "./src/bison.y"
                           {
 		(yyval.st).s = "PARENTESIS BOOL PARENTESIS";
 		if(!searchVar(tabla, size, (yyvsp[0].st).s)){
 			if(strcmp("boolean", getVarType(tabla, size, (yyvsp[0].st).s)) == 0){
-				(yyval.st).boo = retrieveBoolFromTable(tabla, size, (yyvsp[0].st).s);
+				(yyval.st).boo = getBooleanFromTable(tabla, size, (yyvsp[0].st).s);
 			} else {
 				(yyval.st).error = "La variable no es un boolean";
 			}
@@ -2523,23 +2423,23 @@ yyreduce:
 			(yyval.st).error = "variable no declarada";
 		}
 	}
-#line 2527 "y.tab.c"
+#line 2427 "y.tab.c"
     break;
 
   case 55:
-#line 742 "./src/bison.y"
+#line 642 "./src/bison.y"
                {(yyval.st).boo=1; (yyval.st).a = createBOOLVAR("True");}
-#line 2533 "y.tab.c"
+#line 2433 "y.tab.c"
     break;
 
   case 56:
-#line 743 "./src/bison.y"
+#line 643 "./src/bison.y"
                 {(yyval.st).boo=0; (yyval.st).a = createBOOLVAR("False");}
-#line 2539 "y.tab.c"
+#line 2439 "y.tab.c"
     break;
 
   case 57:
-#line 747 "./src/bison.y"
+#line 647 "./src/bison.y"
                       {
 		(yyval.st).s="Expresiones booleanas con AND\n";
 		(yyval.st).error = "empty";
@@ -2549,11 +2449,11 @@ yyreduce:
 			(yyval.st).boo = 0;
 		}
 	}
-#line 2553 "y.tab.c"
+#line 2453 "y.tab.c"
     break;
 
   case 58:
-#line 756 "./src/bison.y"
+#line 656 "./src/bison.y"
                        {
 		(yyval.st).s="Expresiones booleanas con OR\n";
 		(yyval.st).error = "empty";
@@ -2563,80 +2463,80 @@ yyreduce:
 			(yyval.st).boo = 0;
 		}
 	}
-#line 2567 "y.tab.c"
+#line 2467 "y.tab.c"
     break;
 
   case 59:
-#line 767 "./src/bison.y"
+#line 667 "./src/bison.y"
                                 {(yyval.st).s = "WHILE BOOL LOOP";}
-#line 2573 "y.tab.c"
+#line 2473 "y.tab.c"
     break;
 
   case 60:
-#line 768 "./src/bison.y"
+#line 668 "./src/bison.y"
                                         {(yyval.st).s = "FOR BOOL LOOP";}
-#line 2579 "y.tab.c"
+#line 2479 "y.tab.c"
     break;
 
   case 61:
-#line 769 "./src/bison.y"
+#line 669 "./src/bison.y"
                                 {(yyval.st).s = "END LOOP SEMICOLON";}
-#line 2585 "y.tab.c"
+#line 2485 "y.tab.c"
     break;
 
   case 62:
-#line 772 "./src/bison.y"
+#line 672 "./src/bison.y"
                                         {
 		(yyval.st).s = "IF BOOL THEN";
 		mipsIns_if((yyvsp[-1].st).boo);
 	}
-#line 2594 "y.tab.c"
+#line 2494 "y.tab.c"
     break;
 
   case 63:
-#line 776 "./src/bison.y"
+#line 676 "./src/bison.y"
                 {
 		(yyval.st).s = "ELSE";
 		mipsIns_else();
 		}
-#line 2603 "y.tab.c"
+#line 2503 "y.tab.c"
     break;
 
   case 64:
-#line 780 "./src/bison.y"
+#line 680 "./src/bison.y"
                                 {(yyval.st).s = "ELSEIF BOOL THEN";}
-#line 2609 "y.tab.c"
+#line 2509 "y.tab.c"
     break;
 
   case 65:
-#line 781 "./src/bison.y"
+#line 681 "./src/bison.y"
                                         {
 		(yyval.st).s = "END IF SEMICOLON";
 		mipsIns_endIf();
 		}
-#line 2618 "y.tab.c"
+#line 2518 "y.tab.c"
     break;
 
   case 66:
-#line 787 "./src/bison.y"
+#line 687 "./src/bison.y"
                  {(yyval.st).s = (yyvsp[0].sval); (yyval.st).a = createSTR((yyvsp[0].sval));}
-#line 2624 "y.tab.c"
+#line 2524 "y.tab.c"
     break;
 
   case 67:
-#line 790 "./src/bison.y"
+#line 690 "./src/bison.y"
             {(yyval.st).s = (yyvsp[0].sval); (yyval.st).a = createSTR((yyvsp[0].sval));}
-#line 2630 "y.tab.c"
+#line 2530 "y.tab.c"
     break;
 
   case 68:
-#line 793 "./src/bison.y"
+#line 693 "./src/bison.y"
                                 {(yyval.sval) = "COMENTARIO";}
-#line 2636 "y.tab.c"
+#line 2536 "y.tab.c"
     break;
 
 
-#line 2640 "y.tab.c"
+#line 2540 "y.tab.c"
 
       default: break;
     }
@@ -2874,555 +2774,10 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 796 "./src/bison.y"
-
-//FUNCIONES 
-
-void iniArrayTabla(struct symb *tabla, int inicio, int fin) {
-    for (int i = inicio; i < fin; i++) {
-        tabla[i].vname = "._empty";
-    }
-	
-}
-
-void iniArrayNodos(struct ast *nodos, int inicio, int fin) {
-    for (int i = inicio; i < fin; i++) {
-        nodos[i].nodetype = "._empty";
-    }
-}
+#line 696 "./src/bison.y"
 
 
 
-
-//FUNCIONES DEL AST
-struct ast *createFlow(struct ast *cond) {
-
-    struct flow *a = malloc(sizeof(struct flow));
-
-    if (!a)
-    {
-        yyerror("out of space");
-        exit(0);
-    }
-
-    a->nodetype = "IF";
-    a->cond = cond;
-
-    return (struct ast *)a;
-}
-
-struct ast *createFlow2(struct ast *cond) {
-
-    struct flow *a = malloc(sizeof(struct flow));
-
-    if (!a)
-    {
-        yyerror("out of space");
-        exit(0);
-    }
-
-    a->nodetype = "WHILE";
-    a->cond = cond;
-
-    return (struct ast *)a;
-}
-
-struct ast *createASTAsignacion(struct ast *op)
-{
-
-    struct asign *a = malloc(sizeof(struct asign));
-    if (!a)
-    {
-        yyerror("out of space");
-        exit(0);
-    }
-    a->nodetype = "=";
-    a->as = op;
-
-    return (struct ast *)a;
-}
-
-struct ast *createAST(char *nodetype, struct ast *l, struct ast *r)
-{
-    struct ast *a = malloc(sizeof(struct ast));
-
-    if (!a)
-    {
-        yyerror("out of space");
-        exit(0);
-    }
-    a->nodetype = nodetype;
-    a->l = l;
-    a->r = r;
-    return a;
-}
-
-struct ast *createBOO(char *nodetype, struct ast *l, struct ast *r)
-{
-
-    struct boo *a = malloc(sizeof(struct boo));
-
-    if (!a)
-    {
-        yyerror("out of space");
-        exit(0);
-    }
-    a->nodetype = nodetype;
-    a->l = l;
-    a->r = r;
-    return (struct ast *)a;
-}
-
-struct ast *createNum(double d)
-{
-    struct numval *a = malloc(sizeof(struct numval));
-    if (!a)
-    {
-        yyerror("out of space");
-        exit(0);
-    }
-    a->nodetype = "Constante";
-    a->number = d;
-    return (struct ast *)a;
-}
-
-struct ast *createSTR(char *s)
-{
-    struct strval *a = malloc(sizeof(struct strval));
-    if (!a)
-    {
-        yyerror("out of space");
-        exit(0);
-    }
-    a->nodetype = "String";
-    a->str = s;
-    return (struct ast *)a;
-}
-
-struct ast *createBOOLVAR(char *s)
-{
-    struct strval *a = malloc(sizeof(struct strval));
-    if (!a)
-    {
-        yyerror("out of space");
-        exit(0);
-    }
-    a->nodetype = "Boolean_var";
-    a->str = s;
-    return (struct ast *)a;
-}
-
-void evalAST(struct ast a, int *size)
-{
-
-    int i = 0;
-    int encontrado = 0;
-    while (i < *size && encontrado == 0)
-    {
-        if ((strcmp(nodos[i].nodetype, "._empty") == 0) && (strcmp(a.nodetype, "String") != 0) && (strcmp(a.nodetype, "Constante") != 0))
-        {
-            nodos[i] = a;
-            numnodo = numnodo + 1;
-            encontrado = 1;
-        }
-        else
-        {
-            i++;
-        }
-    }
-}
-
-void printAST(struct ast nodos[], int i, int encontrado, int salida)
-{
-    struct ast temp[52];
-    iniArrayNodos(temp, 0, 52);
-
-    while (encontrado == 0 && salida == 0)
-    {
-        if (strcmp(nodos[i].nodetype, "._empty") == 0)
-        {
-            encontrado = 1;
-            salida = 1;
-        }
-        else
-        {
-            if (strcmp(nodos[i].nodetype, "IF") == 0)
-            {
-                write_file(ast_text, "\n");
-                write_file(ast_text, nodos[i].nodetype);
-                write_file(ast_text, "\n");
-                temp[0] = *nodos[i].l;
-                printAST(temp, 0, 0, 0);
-            }
-            else if (strcmp(nodos[i].nodetype, "WHILE") == 0)
-            {
-                write_file(ast_text, "\n");
-                write_file(ast_text, nodos[i].nodetype);
-                write_file(ast_text, "\n");
-                temp[0] = *nodos[i].l;
-                printAST(temp, 0, 0, 0);
-            }
-            else if ((strcmp(nodos[i].nodetype, ">") == 0) || (strcmp(nodos[i].nodetype, "<") == 0) || (strcmp(nodos[i].nodetype, ">=") == 0) ||
-                     (strcmp(nodos[i].nodetype, "<=") == 0) || (strcmp(nodos[i].nodetype, "!=") == 0) || (strcmp(nodos[i].nodetype, "==") == 0))
-            {
-
-                write_file(ast_text, nodos[i].nodetype);
-                write_file(ast_text, "\n");
-                temp[0] = *nodos[i].l;
-                printAST(temp, 0, 0, 0);
-                write_file(ast_text, "\n");
-                temp[0] = *nodos[i].r;
-                printAST(temp, 0, 0, 0);
-                write_file(ast_text, "\n");
-                salida = 1;
-            }
-            else if (strcmp(nodos[i].nodetype, "=") == 0)
-            {
-                write_file(ast_text, "\n");
-                write_file(ast_text, nodos[i].nodetype);
-                write_file(ast_text, "\n");
-                if ((strcmp(nodos[i].l->nodetype, "+") == 0) || (strcmp(nodos[i].l->nodetype, "-") == 0) || (strcmp(nodos[i].l->nodetype, "/") == 0) ||
-                    (strcmp(nodos[i].l->nodetype, "*") == 0))
-                {
-
-                    temp[0] = *nodos[i].l;
-                    printAST(temp, 0, 0, 0);
-                }
-                else
-                {
-                    temp[0] = *nodos[i].l;
-                    printAST(temp, 0, 0, 0);
-                }
-            }
-            else if ((strcmp(nodos[i].nodetype, "+") == 0) || (strcmp(nodos[i].nodetype, "-") == 0) || (strcmp(nodos[i].nodetype, "/") == 0) ||
-                     (strcmp(nodos[i].nodetype, "*") == 0))
-            {
-
-                write_file(ast_text, nodos[i].nodetype);
-                write_file(ast_text, "\n");
-                temp[0] = *nodos[i].l;
-                printAST(temp, 0, 0, 0);
-                write_file(ast_text, "\n");
-                temp[0] = *nodos[i].r;
-                printAST(temp, 0, 0, 0);
-                write_file(ast_text, "\n");
-            }
-            else if (strcmp(nodos[i].nodetype, "String") == 0)
-            {
-
-                write_file(ast_text, nodos[i].nodetype);
-                write_file(ast_text, "\n");
-                salida = 1;
-            }
-            else if (strcmp(nodos[i].nodetype, "Constante") == 0)
-            {
-                write_file(ast_text, nodos[i].nodetype);
-                write_file(ast_text, "\n");
-                salida = 1;
-                encontrado = 1;
-            }
-        }
-        i++;
-    }
-}
-
-//FUNCIONES TABLA AUXILIAR DE SIMBOLOS
-int buscarValor(struct symb *tabla, char *nombre, char *tipo, int *size)
-{
-    int i = 0;
-    int status = -1;
-    while (i < *size && status == -1)
-    {
-        if (strcmp(tabla[i].vname, nombre) == 0 && (strcmp(tabla[i].type, tipo) == 0))
-        {
-            status = i;
-        }
-        else if (strcmp(tabla[i].vname, nombre) == 0)
-        {
-            status = i;
-        }
-        else
-        {
-            i++;
-        }
-    }
-    return status;
-}
-
-void insertarElemento(struct symb *tabla, int *size, int valor, char *svalor, float fvalor, char *variable, bool bvalor, int *elementosOcupados, char *type, bool assigned)
-{
-    int elementIndex = 0;
-
-    elementIndex = buscarValor(tabla, variable, type, size);
-
-    if (elementIndex != -1)
-    {
-        if (strcmp(type, "integer") == 0)
-        {
-            tabla[elementIndex].vname = variable;
-            tabla[elementIndex].vvali = valor;
-            tabla[elementIndex].type = type;
-        }
-        else if (strcmp(type, "float") == 0)
-        {
-            tabla[elementIndex].vname = variable;
-            tabla[elementIndex].vvalf = fvalor;
-            tabla[elementIndex].type = type;
-        }
-        else if (strcmp(type, "string") == 0)
-        {
-            tabla[elementIndex].vname = variable;
-            tabla[elementIndex].vvals = svalor;
-            tabla[elementIndex].type = type;
-        }
-        else if (strcmp(type, "boolean") == 0)
-        {
-            tabla[elementIndex].vname = variable;
-            tabla[elementIndex].vbool = bvalor;
-            tabla[elementIndex].type = type;
-        }
-        tabla[elementIndex].assigned = assigned;
-    }
-    else
-    {
-        int i = 0;
-        int encontrado = 0;
-
-        while (i < *size && encontrado == 0)
-        {
-
-            if (strcmp(tabla[i].vname, "._empty") == 0)
-            {
-                if (strcmp(type, "integer") == 0)
-                {
-                    tabla[i].vname = variable;
-                    tabla[i].vvali = valor;
-                    tabla[i].type = type;
-                    *elementosOcupados = *elementosOcupados + 1;
-                    encontrado = 1;
-                }
-                else if (strcmp(type, "float") == 0)
-                {
-                    tabla[i].vname = variable;
-                    tabla[i].vvalf = fvalor;
-                    tabla[i].type = type;
-                    *elementosOcupados = *elementosOcupados + 1;
-                    encontrado = 1;
-                }
-                else if (strcmp(type, "string") == 0)
-                {
-                    tabla[i].vname = variable;
-                    tabla[i].vvals = svalor;
-                    tabla[i].type = type;
-                    *elementosOcupados = *elementosOcupados + 1;
-                    encontrado = 1;
-                }
-                else if (strcmp(type, "boolean") == 0)
-                {
-                    tabla[i].vname = variable;
-                    tabla[i].vbool = bvalor;
-                    tabla[i].type = type;
-                    *elementosOcupados = *elementosOcupados + 1;
-                    encontrado = 1;
-                }
-                tabla[i].assigned = assigned;
-                *elementosOcupados = *elementosOcupados + 1;
-                encontrado = 1;
-            }
-            else
-            {
-                i++;
-            }
-        }
-    }
-}
-
-int compare(char *operator, float left, float right)
-{
-    if (strcmp(operator, ">") == 0)
-    {
-        return left > right ? 1 : 0;
-    }
-    else if (strcmp(operator, "<") == 0)
-    {
-        return left < right ? 1 : 0;
-    }
-    else if (strcmp(operator, ">=") == 0)
-    {
-        return left >= right ? 1 : 0;
-    }
-    else if (strcmp(operator, "<=") == 0)
-    {
-        return left <= right ? 1 : 0;
-    }
-    else if (strcmp(operator, "==") == 0)
-    {
-        return left == right ? 1 : 0;
-    }
-    else if (strcmp(operator, "!=") == 0)
-    {
-        return left != right ? 1 : 0;
-    }
-}
-
-char *getVarType(struct symb *tabla, int size, char *name)
-{
-    for (int i = 0; i < size; i++)
-    {
-        if (strcmp(tabla[i].vname, "._empty") == 0)
-        {
-            continue;
-        }
-        else if (strcmp(tabla[i].vname, name) == 0)
-        {
-            return tabla[i].type;
-        }
-    }
-}
-
-bool searchVar(struct symb *tabla, int size, char *name)
-{
-    int elementIndex = -1;
-    for (int i = 0; i < size; i++)
-    {
-        if (strcmp(tabla[i].vname, "._empty") == 0)
-        {
-            continue;
-        }
-        else if (strcmp(tabla[i].vname, name) == 0)
-        {
-            elementIndex = i;
-            break;
-        }
-    }
-
-    if (elementIndex != -1)
-    {
-        return false;
-    }
-
-    return true;
-}
-
-bool checkVarAndType(struct symb *tabla, int size, char *name, char *type)
-{
-    int elementIndex = -1;
-    for (int i = 0; i < size; i++)
-    {
-        if (strcmp(tabla[i].vname, "._empty") == 0)
-        {
-            continue;
-        }
-        else if (strcmp(tabla[i].vname, name) == 0)
-        {
-            elementIndex = i;
-            break;
-        }
-    }
-
-    if (elementIndex == -1)
-    {
-        return false;
-    }
-
-    if (strcmp(tabla[elementIndex].type, type) != 0)
-    {
-        return false;
-    }
-
-    return true;
-}
-
-int retrieveIntFromTable(struct symb *tabla, int size, char *name)
-{
-    int elementIndex = -1;
-    for (int i = 0; i < size; i++)
-    {
-        if (strcmp(tabla[i].vname, name) == 0)
-        {
-            elementIndex = i;
-            break;
-        }
-    }
-
-    return tabla[elementIndex].vvali;
-}
-
-float retrieveFloatFromTable(struct symb *tabla, int size, char *name)
-{
-    int elementIndex = -1;
-    for (int i = 0; i < size; i++)
-    {
-        if (strcmp(tabla[i].vname, name) == 0)
-        {
-            elementIndex = i;
-            break;
-        }
-    }
-
-    return tabla[elementIndex].vvalf;
-}
-
-char *retrieveStringFromTable(struct symb *tabla, int size, char *name)
-{
-    int elementIndex = -1;
-    for (int i = 0; i < size; i++)
-    {
-        if (strcmp(tabla[i].vname, name) == 0)
-        {
-            elementIndex = i;
-            break;
-        }
-    }
-
-    return tabla[elementIndex].vvals;
-}
-
-bool retrieveBoolFromTable(struct symb *tabla, int size, char *name)
-{
-    int elementIndex = -1;
-    for (int i = 0; i < size; i++)
-    {
-        if (strcmp(tabla[i].vname, name) == 0)
-        {
-            elementIndex = i;
-            break;
-        }
-    }
-
-    return tabla[elementIndex].vbool;
-}
-
-int operateInt(char* operator, int left, int right){
-	if(strcmp(operator, "+")==0){
-		return left + right;
-	} else if(strcmp(operator, "-")==0){
-		return left - right;
-	} else if(strcmp(operator, "*")==0){
-		return left * right;
-	} else if(strcmp(operator, "/")==0){
-		return left / right;
-	} else {
-		return -500;
-	}
-}
-
-float operateFloat(char* operator, float left, float right){
-	if(strcmp(operator, "+")==0){
-		return left + right;
-	} else if(strcmp(operator, "-")==0){
-		return left - right;
-	} else if(strcmp(operator, "*")==0){
-		return left * right;
-	} else if(strcmp(operator, "/")==0){
-		return left / right;
-	} else {
-		return -500;
-	}
-}
-
-
-//FUNCIONES
 int main(int argc, char *argv[])
 {
 	mipsVar_create_data();
@@ -3434,9 +2789,8 @@ int main(int argc, char *argv[])
     iniArrayNodos(nodos, 0, size);
 
 	yyin = fopen(argv[1], "rt");
-	printf("\n");
 	yyparse();
-
+	printf("\n");
 	printf("\nTabla de simbolos:");
 	for (int b = 0; b < 52; b++)
 	{
