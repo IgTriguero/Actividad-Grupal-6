@@ -273,23 +273,26 @@ DECL:
 	NOMBRE_VARIABLE COLON TYPEDECLARATION COLON EQUAL ALLOPERS SEMICOLON {
 		$$.s = "Declaracion de variable Integer o Float";
 		if(strcmp($6.error, "empty")==0){
-			$$.error = $6.error;
-			if(strcmp($3.type, "integer")==0 && strcmp($6.type, "integer")==0){
-				insertarElemento(tabla, &size, $6.i, "", 0.0, $1.s, false, &elementosOcupados, "integer", true );
-				mipsVar_insert_mips_variable_declaration($3.type, $1.s, $6.i, NULL, -500, false);
-				$$.a = $6.a;
-			} else if(strcmp($3.type, "float")==0 && strcmp($6.type, "float")==0){
-				insertarElemento(tabla, &size, 0, "", $6.f, $1.s, false, &elementosOcupados, "float", true );
-				mipsVar_insert_mips_variable_declaration($3.type, $1.s, -500, NULL, $6.f, false);
-				$$.a = $6.a;
-			} else if(strcmp($3.type, "float")==0 && strcmp($6.type, "integer")==0){
-				insertarElemento(tabla, &size, 0, "", (float)$6.i, $1.s, false, &elementosOcupados, "float", true );
-				mipsVar_insert_mips_variable_declaration($3.type, $1.s, -500, NULL, $6.f, false);
-				$$.a = $6.a;
+			if (!searchVar(tabla, size, $1.s)) {
+				$$.error = $6.error;
+				if(strcmp($3.type, "integer")==0 && strcmp($6.type, "integer")==0){
+					insertarElemento(tabla, &size, $6.i, "", 0.0, $1.s, false, &elementosOcupados, "integer", true );
+					mipsVar_insert_mips_variable_declaration($3.type, $1.s, $6.i, NULL, -500, false);
+					$$.a = $6.a;
+				} else if(strcmp($3.type, "float")==0 && strcmp($6.type, "float")==0){
+					insertarElemento(tabla, &size, 0, "", $6.f, $1.s, false, &elementosOcupados, "float", true );
+					mipsVar_insert_mips_variable_declaration($3.type, $1.s, -500, NULL, $6.f, false);
+					$$.a = $6.a;
+				} else if(strcmp($3.type, "float")==0 && strcmp($6.type, "integer")==0){
+					insertarElemento(tabla, &size, 0, "", (float)$6.i, $1.s, false, &elementosOcupados, "float", true );
+					mipsVar_insert_mips_variable_declaration($3.type, $1.s, -500, NULL, $6.f, false);
+					$$.a = $6.a;
+				} else {
+					$$.error = "Error diferente tipo de variable (int, float)";
+				}
 			} else {
-				$$.error = "Error diferente tipo de variable (int, float)";
+				$$.error = "Variable already declared";
 			}
-
 		} else {
 			$$.error = $6.error;
 		}
