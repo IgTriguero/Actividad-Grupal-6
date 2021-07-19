@@ -1,0 +1,46 @@
+Nombre no esta definida, es Hello. (tipo=string) 
+Inicio -> procedure
+Se declara la variable: integer1 
+integer1 no esta definida, es integer1. (tipo=entero) 
+Se declara la variable: number1 
+number1 no esta definida, es number1. (tipo=entero) 
+Se declara la variable: integer2 
+integer2 no esta definida, es integer2. (tipo=entero) 
+begin
+Condicion: 0 
+CORRECTO - Se ha declarado la variable: integer1 
+integer1 ya esta definida, es 1. (tipo=entero)
+integer1 se actualiza a: 1
+RESULTADO - De integer1:    1
+Condicion: 0 
+CORRECTO - Se ha declarado la variable: integer2 
+integer2 ya esta definida, es 1. (tipo=entero)
+integer2 se actualiza a: 1
+RESULTADO - De integer2:    1
+variable
+CORRECTO - Variable si existe: integer1 
+**Condicion MENORQ
+CORRECTO - Es menor
+variable
+CORRECTO - Variable si existe: integer1 
+Suma
+Suma (tipo=string)
+Condicion: 0 
+CORRECTO - Se ha declarado la variable: integer1 
+integer1 ya esta definida, es 2. (tipo=entero)
+integer1 se actualiza a: 2
+RESULTADO - De integer1:    2
+variable
+CORRECTO - Variable si existe: integer2 
+Multiplicacion
+Mult (tipo=string)
+Condicion: 0 
+CORRECTO - Se ha declarado la variable: integer2 
+integer2 ya esta definida, es 2. (tipo=entero)
+integer2 se actualiza a: 2
+RESULTADO - De integer2:    2
+while
+Bucle WHILE
+CORRECTO - Coinciden los nombres
+Final -> end
+TODO OK

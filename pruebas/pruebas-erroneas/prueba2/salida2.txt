@@ -1,6 +1,0 @@
-Contenido: Declaracion de variable Integer o Float	 Linea: 3
-Error:	 syntax error	
-
-
-Tabla de simbolos:
-Nombre variable_int1 INT 12 FLOAT 0.000000 STRING (null) TIPO integer BOOLEAN	false	ASSIGNED	true	

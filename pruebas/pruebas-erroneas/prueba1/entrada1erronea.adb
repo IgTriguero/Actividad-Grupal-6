@@ -1,14 +1,18 @@
 procedure Main is
+   variableint1 : Integer;
+   variableint2 : Integer ;
+   variablefloat1 : Float;
+begin
+   variableint1 := 2 + 10 ;
+   variableint2 := 3 + 7 ;
+   variablefloat1 := 2.9;
 
-   variable_int1 : Integer := 2 + 10 ;
-   variable_int2 : Integer := 3 + 7 ;
-   variable_float1 : Float := 2.9;
-   variable_bool : Boolean :=  2.9 == variable_float1 ;
 
+   variablefloat2:=2.0;
 
-   if variable_float1 > 0.0 and variable_bool then
-     variable_int1 := variable_int1 * 2;
+   if variablefloat1 > 0.0 then
+     variableint1 := variableint1 * 2;
      else
-      variable_int2 := variable_int1 / 2;
+      variableint2 := variableint1 / 2;
    end if;
-end Secondary ;
+end Main ;

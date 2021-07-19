@@ -1,21 +1,0 @@
-Contenido: Declaracion con string	 Linea: 3
-Contenido: Declaracion de variable Integer o Float	 Linea: 4
-Contenido: Declaracion de variable Integer o Float	 Linea: 5
-Contenido: Declaracion de variable Integer o Float	 Linea: 6
-Contenido: Declaracion de variable Boolean a operacion booleana	 Linea: 7
-Contenido: Declaracion de variable Boolean a operacion booleana	 Linea: 8
-Contenido: Procedure Empieza y termina igual	 Linea: 10
-
-
-Tabla de simbolos:
-Nombre variable_string1 INT 0 FLOAT 0.000000 STRING "String 1" TIPO string BOOLEAN	false	ASSIGNED	true	
-
-Nombre variable_int1 INT 12 FLOAT 0.000000 STRING (null) TIPO integer BOOLEAN	false	ASSIGNED	true	
-
-Nombre variable_int2 INT 10 FLOAT 0.000000 STRING (null) TIPO integer BOOLEAN	false	ASSIGNED	true	
-
-Nombre variable_float1 INT 0 FLOAT 1.800000 STRING (null) TIPO float BOOLEAN	false	ASSIGNED	true	
-
-Nombre variable_bool INT 0 FLOAT 0.000000 STRING (null) TIPO boolean BOOLEAN	false	ASSIGNED	true	
-
-Nombre variable_ops1 INT 0 FLOAT 0.000000 STRING (null) TIPO boolean BOOLEAN	true	ASSIGNED	true	

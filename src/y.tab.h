@@ -49,139 +49,115 @@ extern int yydebug;
 # define YYTOKENTYPE
   enum yytokentype
   {
-    ENTERO = 258,
-    FLOAT = 259,
-    STR = 260,
-    VAR_NAME = 261,
-    TRUE = 262,
-    FALSE = 263,
-    SUMA = 264,
-    RESTA = 265,
-    MULT = 266,
-    DIV = 267,
-    MENOR = 268,
-    MAYOR = 269,
-    MENOR_IGUAL = 270,
-    MAYOR_IGUAL = 271,
-    DESIGUAL = 272,
-    IGUAL = 273,
-    AND = 274,
-    OR = 275,
-    PROCEDURE = 276,
-    COLON = 277,
-    EQUAL = 278,
-    SEMICOLON = 279,
-    COMMA = 280,
-    DOTDOT = 281,
-    ABRIR_LLAVE = 282,
-    CERRAR_LLAVE = 283,
-    ABRIR_PARENTESIS = 284,
-    CERRAR_PARENTESIS = 285,
-    WHILE = 286,
-    FOR = 287,
-    CASE = 288,
-    LOOP = 289,
-    IF = 290,
-    THEN = 291,
-    ELSE = 292,
-    ELSEIF = 293,
-    END = 294,
-    WHEN = 295,
-    IS = 296,
-    RANGE = 297,
-    OF = 298,
-    TYPE = 299,
-    COMMENT = 300,
-    QUIT = 301,
-    DECLINTEGER = 302,
-    DECLFLOAT = 303,
-    DECLBOOLEAN = 304,
-    DECLARRAY = 305,
-    DECLSTRING = 306,
-    PLUS = 307,
-    MINUS = 308,
-    MULTIPLY = 309,
-    DIVIDE = 310
+    MAS = 258,
+    MENOS = 259,
+    POR = 260,
+    DIV = 261,
+    PAR_I = 262,
+    PAR_D = 263,
+    IF = 264,
+    THEN = 265,
+    MAYOR_Q = 266,
+    MENOR_Q = 267,
+    ELSE = 268,
+    PROCEDURE = 269,
+    IS = 270,
+    END = 271,
+    BEGINN = 272,
+    DOSPUNTOS = 273,
+    INTEGER = 274,
+    FLOAT = 275,
+    STRING = 276,
+    BOOLEAN = 277,
+    IDENTIFICADORSIMB = 278,
+    PIZQ_COM = 279,
+    DOSPUNTOS_IGUAL = 280,
+    PDECH_COM = 281,
+    PUTLINE = 282,
+    ENDIF = 283,
+    TRUE = 284,
+    FALSE = 285,
+    COMENTARIO = 286,
+    WHILE = 287,
+    LOOP = 288,
+    ENDLOOP = 289,
+    IGUAL = 290,
+    FOR = 291,
+    IN = 292,
+    RANGO = 293,
+    FUNCION = 294,
+    RETURN = 295,
+    PUNTO_COMA = 296,
+    NUMENTERO = 297,
+    NUMREAL = 298,
+    IDENTIFICADOR = 299
   };
 #endif
 /* Tokens.  */
-#define ENTERO 258
-#define FLOAT 259
-#define STR 260
-#define VAR_NAME 261
-#define TRUE 262
-#define FALSE 263
-#define SUMA 264
-#define RESTA 265
-#define MULT 266
-#define DIV 267
-#define MENOR 268
-#define MAYOR 269
-#define MENOR_IGUAL 270
-#define MAYOR_IGUAL 271
-#define DESIGUAL 272
-#define IGUAL 273
-#define AND 274
-#define OR 275
-#define PROCEDURE 276
-#define COLON 277
-#define EQUAL 278
-#define SEMICOLON 279
-#define COMMA 280
-#define DOTDOT 281
-#define ABRIR_LLAVE 282
-#define CERRAR_LLAVE 283
-#define ABRIR_PARENTESIS 284
-#define CERRAR_PARENTESIS 285
-#define WHILE 286
-#define FOR 287
-#define CASE 288
-#define LOOP 289
-#define IF 290
-#define THEN 291
-#define ELSE 292
-#define ELSEIF 293
-#define END 294
-#define WHEN 295
-#define IS 296
-#define RANGE 297
-#define OF 298
-#define TYPE 299
-#define COMMENT 300
-#define QUIT 301
-#define DECLINTEGER 302
-#define DECLFLOAT 303
-#define DECLBOOLEAN 304
-#define DECLARRAY 305
-#define DECLSTRING 306
-#define PLUS 307
-#define MINUS 308
-#define MULTIPLY 309
-#define DIVIDE 310
+#define MAS 258
+#define MENOS 259
+#define POR 260
+#define DIV 261
+#define PAR_I 262
+#define PAR_D 263
+#define IF 264
+#define THEN 265
+#define MAYOR_Q 266
+#define MENOR_Q 267
+#define ELSE 268
+#define PROCEDURE 269
+#define IS 270
+#define END 271
+#define BEGINN 272
+#define DOSPUNTOS 273
+#define INTEGER 274
+#define FLOAT 275
+#define STRING 276
+#define BOOLEAN 277
+#define IDENTIFICADORSIMB 278
+#define PIZQ_COM 279
+#define DOSPUNTOS_IGUAL 280
+#define PDECH_COM 281
+#define PUTLINE 282
+#define ENDIF 283
+#define TRUE 284
+#define FALSE 285
+#define COMENTARIO 286
+#define WHILE 287
+#define LOOP 288
+#define ENDLOOP 289
+#define IGUAL 290
+#define FOR 291
+#define IN 292
+#define RANGO 293
+#define FUNCION 294
+#define RETURN 295
+#define PUNTO_COMA 296
+#define NUMENTERO 297
+#define NUMREAL 298
+#define IDENTIFICADOR 299
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 19 "./src/bison.y"
+#line 85 "./src/bison.y"
 
-	int eval;
-	float fval;
-	char* sval;
-
-	struct atributos{
-		int i;
-		float f;
-		char* operador;
-		char* s;
-		char* type;
+        int number;
+        double numberf;
+        char *string;
+	struct {
+     		char *tipo;
+    		int valor;
+    		double valord;
+    		char *texto;
+ 		int booleanCond;
 		struct ast *a;
-		char* error;
-		int boo;
+		struct flow *f;
+		struct fncall *fun;
+  		} snum;
 
-	}st;
-
-#line 185 "y.tab.h"
+#line 161 "y.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;
@@ -189,23 +165,9 @@ typedef union YYSTYPE YYSTYPE;
 # define YYSTYPE_IS_DECLARED 1
 #endif
 
-/* Location type.  */
-#if ! defined YYLTYPE && ! defined YYLTYPE_IS_DECLARED
-typedef struct YYLTYPE YYLTYPE;
-struct YYLTYPE
-{
-  int first_line;
-  int first_column;
-  int last_line;
-  int last_column;
-};
-# define YYLTYPE_IS_DECLARED 1
-# define YYLTYPE_IS_TRIVIAL 1
-#endif
-
 
 extern YYSTYPE yylval;
-extern YYLTYPE yylloc;
+
 int yyparse (void);
 
 #endif /* !YY_YY_Y_TAB_H_INCLUDED  */

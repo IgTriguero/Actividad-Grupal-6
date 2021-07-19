@@ -1,0 +1,62 @@
+Declaracion -> int
+Declaracion -> int
+Declaracion -> int
+..............................................
+.data
+number1: .word 1
+message: .asciiz "FIN"
+.text
+lw $t0, number1($zero)
+li $v0, 1
+add $a0, $zero, $t-2
+syscall
+..............................................
+..............................................
+.data
+number1: .word 1
+message: .asciiz "FIN"
+.text
+lw $t0, number1($zero)
+li $v0, 1
+add $a0, $zero, $t-2
+syscall
+..............................................
+..............................................
+.data
+number6: .word 1
+number5: .word 10
+number4: .word 1
+number3: .word 1
+number2: .word 1
+number1: .word 2
+message: .asciiz "FIN"
+.text
+addi $t0, $zero, 1
+addi $t1, $zero, 10
+while:
+bgt $t0, $t1, exit
+jal  operation
+addi $t0, $t0, 1
+j while
+exit:
+li $v0, 4
+la $a0, message
+syscall
+li $v0, 10
+syscall
+operation:
+lw $t2, number1($zero)
+lw $t3, number2($zero)
+lw $t4, number3($zero)
+lw $t5, number4($zero)
+add $t6, $t5, $t4
+mul $t8, $t3, $t2
+li $v0, 1
+add $a0, $zero, $t8
+syscall
+add $a0, $zero, $t6
+syscall
+jr $ra
+syscall
+..............................................
+TODO OK

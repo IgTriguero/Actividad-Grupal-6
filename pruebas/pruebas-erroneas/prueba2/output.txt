@@ -1,0 +1,19 @@
+Nombre no esta definida, es Hello. (tipo=string) 
+Inicio -> procedure
+Se declara la variable: variableint1 
+variableint1 no esta definida, es variableint1. (tipo=entero) 
+begin
+Suma
+Suma (tipo=entero)
+Condicion: 0 
+CORRECTO - Se ha declarado la variable: variableint1 
+variableint1 ya esta definida, es 12. (tipo=entero)
+variableint1 se actualiza a: 12
+RESULTADO - De variableint1:   12
+Suma
+Suma (tipo=entero)
+Condicion: 0 
+ERROR - No se ha declarado la variable: variableint2 
+variable
+ERROR - Variable no existe: variableint2 
+ERROR - No es mayor

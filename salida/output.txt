@@ -1,23 +1,110 @@
-Contenido: Declaracion con string	 Linea: 3
-Contenido: Declaracion de variable Integer o Float	 Linea: 4
-Contenido: Declaracion de variable Integer o Float	 Linea: 5
-Contenido: Declaracion de variable Integer o Float	 Linea: 6
-Contenido: Declaracion de variable Boolean a operacion booleana	 Linea: 7
-Contenido: IF BOOL THEN	 Linea: 10
-Contenido: asignación de variable a cualquier cosa	 Linea: 11
-Contenido: ELSE	 Linea: 12
-Contenido: asignación de variable a cualquier cosa	 Linea: 13
-Contenido: END IF SEMICOLON	 Linea: 14
-Contenido: Procedure Empieza y termina igual	 Linea: 15
-
-
-Tabla de simbolos:
-Nombre variable_string1 INT 0 FLOAT 0.000000 STRING "String 1" TIPO string BOOLEAN	false	ASSIGNED	true	
-
-Nombre variable_int1 INT 5 FLOAT 0.000000 STRING (null) TIPO integer BOOLEAN	false	ASSIGNED	true	
-
-Nombre variable_int2 INT 10 FLOAT 0.000000 STRING (null) TIPO integer BOOLEAN	false	ASSIGNED	true	
-
-Nombre variable_float1 INT 0 FLOAT 1.800000 STRING (null) TIPO float BOOLEAN	false	ASSIGNED	true	
-
-Nombre variable_bool INT 0 FLOAT 0.000000 STRING (null) TIPO boolean BOOLEAN	false	ASSIGNED	true	
+Nombre no esta definida, es Hello. (tipo=string) 
+Inicio -> procedure
+Se declara la variable: Marcos 
+Marcos no esta definida, es Marcos. (tipo=entero) 
+Se declara la variable: Paula 
+Paula no esta definida, es Paula. (tipo=entero) 
+Se declara la variable: Maria 
+Maria no esta definida, es Maria. (tipo=entero) 
+Se declara la variable: Jose 
+Jose no esta definida, es Jose. (tipo=entero) 
+Se declara la variable: Rosa 
+Rosa no esta definida, es Rosa. (tipo=entero) 
+Se declara la variable: Alberto 
+Alberto no esta definida, es Alberto. (tipo=entero) 
+Se declara la variable: Numero 
+Numero no esta definida, es Numero. (tipo=entero) 
+begin
+Suma
+Suma (tipo=entero)
+Condicion: 0 
+CORRECTO - Se ha declarado la variable: Numero 
+Numero ya esta definida, es 20. (tipo=entero)
+Numero se actualiza a: 20
+RESULTADO - De Numero:   20
+**Condicion MENORQ
+CORRECTO - Es menor
+Multiplicacion
+Mult (tipo=entero)
+Condicion: 0 
+CORRECTO - Se ha declarado la variable: Marcos 
+Marcos ya esta definida, es 6. (tipo=entero)
+Marcos se actualiza a: 6
+RESULTADO - De Marcos:    6
+variable
+CORRECTO - Variable si existe: Marcos 
+Suma
+Suma (tipo=string)
+Condicion: 0 
+CORRECTO - Se ha declarado la variable: Paula 
+Paula ya esta definida, es 7. (tipo=entero)
+Paula se actualiza a: 7
+RESULTADO - De Paula:    7
+while
+Bucle WHILE
+Suma
+Suma (tipo=entero)
+Resta
+Resta (tipo=entero)
+Condicion: 0 
+CORRECTO - Se ha declarado la variable: Maria 
+Maria ya esta definida, es 25. (tipo=entero)
+Maria se actualiza a: 25
+RESULTADO - De Maria:   25
+variable
+CORRECTO - Variable si existe: Maria 
+Multiplicacion
+Mult (tipo=string)
+Condicion: 0 
+CORRECTO - Se ha declarado la variable: Jose 
+Jose ya esta definida, es 50. (tipo=entero)
+Jose se actualiza a: 50
+RESULTADO - De Jose:   50
+Division
+Div (tipo=entero)
+Condicion: 0 
+CORRECTO - Se ha declarado la variable: Rosa 
+Rosa ya esta definida, es 250. (tipo=entero)
+Rosa se actualiza a: 250
+RESULTADO - De Rosa:  250
+variable
+CORRECTO - Variable si existe: Rosa 
+variable
+CORRECTO - Variable si existe: Jose 
+Suma
+Suma (tipo=string)
+Suma
+Suma (tipo=string)
+Condicion: 0 
+CORRECTO - Se ha declarado la variable: Alberto 
+Alberto ya esta definida, es 305. (tipo=entero)
+Alberto se actualiza a: 305
+RESULTADO - De Alberto:  305
+Multiplicacion
+Mult (tipo=entero)
+Resta
+Resta (tipo=entero)
+Condicion: 0 
+CORRECTO - Se ha declarado la variable: Marcos 
+Marcos ya esta definida, es 90. (tipo=entero)
+Marcos se actualiza a: 90
+RESULTADO - De Marcos:   90
+**Condicion MENORQ
+CORRECTO - Es menor
+Multiplicacion
+Mult (tipo=entero)
+Condicion: 0 
+CORRECTO - Se ha declarado la variable: Marcos 
+Marcos ya esta definida, es 1000. (tipo=entero)
+Marcos se actualiza a: 1000
+RESULTADO - De Marcos: 1000
+Resta
+Resta (tipo=entero)
+Condicion: 0 
+CORRECTO - Se ha declarado la variable: Marcos 
+Marcos ya esta definida, es 3. (tipo=entero)
+Marcos se actualiza a: 3
+RESULTADO - De Marcos:    3
+CORRECTO - Coinciden los nombres
+Final -> end
+TODO OK

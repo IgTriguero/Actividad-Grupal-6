@@ -1,20 +1,0 @@
-Contenido: Declaracion de variable Integer o Float	 Linea: 3
-Contenido: Declaracion de variable Integer o Float	 Linea: 4
-Contenido: Declaracion de variable Integer o Float	 Linea: 5
-Contenido: Declaracion de variable Boolean a operacion booleana	 Linea: 6
-Contenido: IF BOOL THEN	 Linea: 9
-Contenido: asignación de variable a cualquier cosa	 Linea: 10
-Contenido: ELSE	 Linea: 11
-Contenido: asignación de variable a cualquier cosa	 Linea: 12
-Contenido: END IF SEMICOLON	 Linea: 13
-Error:	 Procedure empieza y termina diferente	 Line: 14
-
-
-Tabla de simbolos:
-Nombre variable_int1 INT 24 FLOAT 0.000000 STRING (null) TIPO integer BOOLEAN	false	ASSIGNED	true	
-
-Nombre variable_int2 INT 12 FLOAT 0.000000 STRING (null) TIPO integer BOOLEAN	false	ASSIGNED	true	
-
-Nombre variable_float1 INT 0 FLOAT 2.900000 STRING (null) TIPO float BOOLEAN	false	ASSIGNED	true	
-
-Nombre variable_bool INT 0 FLOAT 0.000000 STRING (null) TIPO boolean BOOLEAN	true	ASSIGNED	true	

@@ -1,0 +1,40 @@
+Nombre no esta definida, es Secondary. (tipo=string) 
+Inicio -> procedure
+Se declara la variable: variableint1 
+variableint1 no esta definida, es variableint1. (tipo=entero) 
+Se declara la variable: variablefloat1 
+variablefloat1 no esta definida, es variablefloat1. (tipo=float) 
+begin
+Suma
+Suma (tipo=entero)
+Condicion: 0 
+CORRECTO - Se ha declarado la variable: variableint1 
+variableint1 ya esta definida, es 12. (tipo=entero)
+variableint1 se actualiza a: 12
+RESULTADO - De variableint1:   12
+Condicion: 0 
+CORRECTO - Se ha declarado la variable: variablefloat1 
+variablefloat1 ya esta definida, es 2. (tipo=entero)
+variablefloat1 se actualiza a: 2
+RESULTADO - De variablefloat1:  2.9
+variable
+CORRECTO - Variable si existe: variablefloat1 
+CORRECTO - Es mayor
+variable
+CORRECTO - Variable si existe: variableint1 
+Multiplicacion
+Mult (tipo=string)
+Condicion: 0 
+CORRECTO - Se ha declarado la variable: variableint1 
+variableint1 ya esta definida, es 24. (tipo=entero)
+variableint1 se actualiza a: 24
+RESULTADO - De variableint1:   24
+variable
+CORRECTO - Variable si existe: variableint1 
+Division
+Div (tipo=string)
+Condicion: 0 
+CORRECTO - Se ha declarado la variable: variablefloat1 
+variablefloat1 ya esta definida, es 12. (tipo=entero)
+variablefloat1 se actualiza a: 12
+RESULTADO - De variablefloat1:   12
