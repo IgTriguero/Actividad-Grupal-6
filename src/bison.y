@@ -99,30 +99,23 @@ symrec *act;
 }
 
 
-%start programa
+%start comp
 
 %%
 
-programa: cuerpo {
- 	// fprintf(yyout, ".data\n");
-	// dataOper($$.a);
- 	// fprintf(yyout, ".text\n");
-	// textIf(globalSignCond,$$.f);
-	// textWhile(globalSignCond, $$.f);
-
+comp: cuerpo {
 	printf("TODO OK\n"); 
-	fprintf(yyout, "TODO OK\n");
 }
 ;
 
-cuerpo: inicio  sentencias fin
+cuerpo: initproc sentencias endproc
 ;
 
 
-inicio: PROCEDURE nombreI IS {printf("Inicio -> procedure\n");}
+initproc: PROCEDURE nombreI IS {printf("Inicio -> procedure\n");}
 ;
 
-fin: END nombreF PUNTO_COMA {printf("Final -> end\n");}
+endproc: END nombreF PUNTO_COMA {printf("Final -> end\n");}
 ;
 
 nombreI: IDENTIFICADOR {
@@ -160,21 +153,21 @@ declaracion: IDENTIFICADOR DOSPUNTOS tipo PUNTO_COMA {
 
 
 tipo: INTEGER {
-	globalTipo= "entero";
-	fprintf(yyout, "Declaracion -> int\n");
-	}
+			globalTipo= "entero";
+			printf("Declaracion -> int\n");
+		}
       |FLOAT {
-	globalTipo= "float";
-	//fprintf(yyout, "Declaracion -> float\n");
-	}
+			globalTipo= "float";
+			printf("Declaracion -> float\n");
+		}
       |STRING {
-	globalTipo= "string";
-	//fprintf(yyout, "Declaracion -> string\n");
-	}
+			globalTipo= "string";
+			printf("Declaracion -> string\n");
+		}
       |BOOLEAN {
-	globalTipo= "boolean";
-	//fprintf(yyout, "Declaracion -> boolean\n");
-	}
+			globalTipo= "boolean";
+			printf("Declaracion -> bool\n");
+		}	
 ;
 
 sentencia: sentencia  expr 
@@ -197,7 +190,6 @@ expr: IDENTIFICADOR  DOSPUNTOS_IGUAL calc PUNTO_COMA {
 
 	}
 
-	//printTree($3.a, 10);
 
 	printf("Condicion: %d \n", $$.booleanCond);
 
@@ -255,7 +247,7 @@ sentencia_if: IF calc THEN  sentencia  ENDIF PUNTO_COMA {
 
 	}
 
-	| IF calc THEN  sentencia  ELSE  sentencia  ENDIF { 
+	| IF calc THEN  sentencia  ELSE  sentencia  ENDIF PUNTO_COMA { 
 		//$$.f = newflow('I', $2.f, $5.f, $9.f); 
  		fprintf(yyout, "..............................................\n");
  		fprintf(yyout, ".data\n");
@@ -274,7 +266,7 @@ calc:  calc MAS calc {
 		printf("Suma\n");
 		globalContadorOper = globalContadorOper + 1;
 
-		if (globalError ==0) { //No hay errores
+		if (globalError ==0) { //No hay errores //comprobación de tipos
 			if (($1.tipo == "entero") && ($3.tipo == "entero")) {
 				$$.a = newast('+', $1.a,$3.a); 
 				evalprint($$.a);

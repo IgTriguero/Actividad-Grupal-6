@@ -16,7 +16,7 @@ letraysimb [a-zA-Z_\.]
 
 \n   ;
 
-s
+
 "+" 		return MAS;
 "-" 		return MENOS;
 "*" 		return POR;
